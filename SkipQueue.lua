@@ -1,8 +1,14 @@
+if game.PlaceId == 124608038008436 then
 local myGui = loadstring(game:HttpGet("https://raw.githubusercontent.com/TheJellyfish1412/Workspace/refs/heads/main/gui2.lua"))()()
 
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local RunService = game:GetService("RunService")
+local VirtualUser = game:GetService("VirtualUser")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local PositionData = require(ReplicatedStorage.Modules.Economy.PositionData)
+local TestQuestionData = require(ReplicatedStorage.Modules.Economy.TestQuestionData)
 
 -- Function to shorten numbers
 local function shortenNumber(number)
@@ -55,10 +61,11 @@ local function createFloatingGui(player)
 		-- Update the GUI with player's money
 		local function updateMoneyDisplay()
 			local money = player:GetAttribute("Money")
+			local price = PositionData[player:GetAttribute("Position")]["Money"]
 			if money then
-				textLabel.Text = shortenNumber(money)
+				textLabel.Text = shortenNumber(money) .. "/" .. shortenNumber(price)
 			else
-				textLabel.Text = "0"
+				textLabel.Text = "0/0"
 			end
 		end
 
@@ -123,7 +130,7 @@ myGui:toggle("Auto Cut Queue", false, function(t)
   _G.AutoCutQueue = t
   while _G.AutoCutQueue do
     task.wait()
-    game:GetService("ReplicatedStorage").Events.PositionEvent:FireServer("SkipAhead")
+    ReplicatedStorage.Events.PositionEvent:FireServer("SkipAhead")
   end
 end)
 myGui:toggle("Auto Return", false, function(t)
@@ -131,15 +138,15 @@ myGui:toggle("Auto Return", false, function(t)
   while _G.AutoReturn do
     wait()
     if LocalPlayer:GetAttribute("Position") == -1 then
-      game:GetService("ReplicatedStorage").Events.PositionEvent:FireServer("ReturnLine")
+      ReplicatedStorage.Events.PositionEvent:FireServer("ReturnLine")
     end
   end
 end)
 myGui:toggle("Auto Quiz", false, function(t)
   _G.AutoQuiz = t
   while _G.AutoQuiz do
-    wait(1)
-    game:GetService("ReplicatedStorage").Events.QuizEvent:FireServer("ReturnLine")
+    wait(5)
+    ReplicatedStorage.Events.QuizEvent:FireServer(_G.Answer)
   end
 end)
 myGui:toggle("Show Money", true, function(t)
@@ -159,3 +166,20 @@ myGui:toggle("Show Money", true, function(t)
         print("Not Show")
     end
 end)
+
+Players.LocalPlayer.Idled:Connect(function()
+    VirtualUser:CaptureController()
+    VirtualUser:ClickButton2(Vector2.new())
+    print("Idel Detect")
+end)
+
+ReplicatedStorage.Events.QuizEvent.OnClientEvent:Connect(function(x)
+    _G.Question = x.Question
+    for _,data in pairs(TestQuestionData) do
+        if data["question"] == x.Question then
+            _G.Answer = data["answer"]
+        end
+    end
+end)
+
+end
