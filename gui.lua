@@ -13,7 +13,7 @@ local GUI_V1 = function()
 
 	Frame.Parent = ScreenGui
 	Frame.BackgroundColor3 = Color3.fromRGB(93, 64, 255)
-	Frame.BackgroundTransparency = 0.900
+	Frame.BackgroundTransparency = 0.5
 	Frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	Frame.BorderSizePixel = 0
 	Frame.Size = UDim2.new(0.5, 0, 1, 0)
