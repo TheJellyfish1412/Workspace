@@ -6,14 +6,19 @@ local RunService = game:GetService("RunService")
 
 -- Function to shorten numbers
 local function shortenNumber(number)
-	if number >= 1e6 then
-		return string.format("%.1fm", number / 1e6)
+	if number >= 1e12 then
+		return string.format("%.1ft", number / 1e12)  -- trillion
+	elseif number >= 1e9 then
+		return string.format("%.1fb", number / 1e9)   -- billion
+	elseif number >= 1e6 then
+		return string.format("%.1fm", number / 1e6)   -- million
 	elseif number >= 1e3 then
-		return string.format("%.1fk", number / 1e3)
+		return string.format("%.1fk", number / 1e3)   -- thousand
 	else
 		return tostring(number)
 	end
 end
+
 
 -- Create and manage the floating money GUI for a player
 local function createFloatingGui(player)
