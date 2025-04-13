@@ -1,7 +1,7 @@
 local TweenService = game:GetService("TweenService")
 
 
-local function GUI_V1()
+local GUI_V1 = function()
 	local ScreenGui = Instance.new("ScreenGui")
 	local Frame = Instance.new("Frame")
 	local ScrollingFrame = Instance.new("ScrollingFrame")
