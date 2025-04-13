@@ -122,15 +122,17 @@ end)
 myGui:toggle("Auto Cut Queue", false, function(t)
   _G.AutoCutQueue = t
   while _G.AutoCutQueue do
-    wait()
+    task.wait()
     game:GetService("ReplicatedStorage").Events.PositionEvent:FireServer("SkipAhead")
   end
 end)
 myGui:toggle("Auto Return", false, function(t)
   _G.AutoReturn = t
   while _G.AutoReturn do
-    wait(1)
-    game:GetService("ReplicatedStorage").Events.PositionEvent:FireServer("ReturnLine")
+    wait()
+    if LocalPlayer:GetAttribute("Position") == -1 then
+      game:GetService("ReplicatedStorage").Events.PositionEvent:FireServer("ReturnLine")
+    end
   end
 end)
 myGui:toggle("Auto Quiz", false, function(t)
@@ -157,5 +159,3 @@ myGui:toggle("Show Money", true, function(t)
         print("Not Show")
     end
 end)
-
-print(time.Value)
