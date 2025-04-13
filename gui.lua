@@ -81,6 +81,14 @@ local function GUI_V1()
 		TextLabel.TextStrokeColor3 = Color3.fromRGB(255, 255, 255)
 		TextLabel.TextWrapped = true
 		TextLabel.Text = text
+
+        local func = {}
+
+        function func:change(text)
+            TextLabel.Text = text
+        end
+
+        return func
     end
 
 	function items:toggle(name, setup, callback)
