@@ -54,42 +54,44 @@ local GUI_V1 = function()
 	
 	local items = {}
 	
-    function items:label(text)
-		local Frame = Instance.new("Frame")
-		local TextLabel = Instance.new("TextLabel")
+	function items:label(text)
+	    local Frame = Instance.new("Frame")
+	    local TextLabel = Instance.new("TextLabel")
+	
+	    Frame.Parent = ScrollingFrame
+	    Frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	    Frame.BackgroundTransparency = 1.000
+	    Frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	    Frame.BorderSizePixel = 0
+	    Frame.Position = UDim2.new(0.406911135, 0, 0.03164557, 0)
+	    Frame.Size = UDim2.new(1, 0, 0, 40)
+	
+	    TextLabel.Parent = Frame
+	    TextLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+	    TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	    TextLabel.BackgroundTransparency = 1.000
+	    TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	    TextLabel.BorderSizePixel = 0
+	    TextLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
+	    TextLabel.Size = UDim2.new(0.699999988, 0, 1, 0)
+	    TextLabel.Font = Enum.Font.SourceSansBold
+	    TextLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
+	    TextLabel.TextScaled = true
+	    TextLabel.TextSize = 14.000
+	    TextLabel.TextStrokeColor3 = Color3.fromRGB(255, 255, 255)  -- Stroke color (white)
+	    TextLabel.TextStrokeTransparency = 0.5  -- Stroke transparency (0 for solid, 1 for no stroke)
+	    TextLabel.TextWrapped = true
+	    TextLabel.Text = text
+	
+	    local func = {}
+	
+	    function func:change(newText)
+		TextLabel.Text = newText
+	    end
+	
+	    return func
+	end
 
-		Frame.Parent = ScrollingFrame
-		Frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-		Frame.BackgroundTransparency = 1.000
-		Frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
-		Frame.BorderSizePixel = 0
-		Frame.Position = UDim2.new(0.406911135, 0, 0.03164557, 0)
-		Frame.Size = UDim2.new(1, 0, 0, 40)
-
-		TextLabel.Parent = Frame
-		TextLabel.AnchorPoint = Vector2.new(0.5, 0.5)
-		TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-		TextLabel.BackgroundTransparency = 1.000
-		TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
-		TextLabel.BorderSizePixel = 0
-		TextLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
-		TextLabel.Size = UDim2.new(0.699999988, 0, 1, 0)
-		TextLabel.Font = Enum.Font.SourceSansBold
-		TextLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
-		TextLabel.TextScaled = true
-		TextLabel.TextSize = 14.000
-		TextLabel.TextStrokeColor3 = Color3.fromRGB(255, 255, 255)
-		TextLabel.TextWrapped = true
-		TextLabel.Text = text
-
-        local func = {}
-
-        function func:change(text)
-            TextLabel.Text = text
-        end
-
-        return func
-    end
 
 	function items:toggle(name, setup, callback)
 		local Frame = Instance.new("Frame")
