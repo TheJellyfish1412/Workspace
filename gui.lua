@@ -182,7 +182,9 @@ local GUI_V1 = function()
 			callback(turnOn)
 		end)
 		if (turnOn) then
-			callback(turnOn)
+			spawn(function()
+				callback(turnOn)
+			end)
 		end
 	end
 	
