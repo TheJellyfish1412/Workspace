@@ -20,6 +20,25 @@ local GUI_V1 = function()
 	Frame.Position = UDim2.new(0.251385659, 0, 0.228879645, 0)
 	Frame.Size = UDim2.new(0.496314496, 0, 0.540453136, 0)
 
+    local ui_toggle = Instance.new("ImageButton")
+    local UICorner = Instance.new("UICorner")
+    
+    ui_toggle.Name = "ui_toggle"
+    ui_toggle.Parent = ScreenGui
+    ui_toggle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    ui_toggle.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    ui_toggle.BorderSizePixel = 0
+    ui_toggle.Position = UDim2.new(0.472950816, 0, 0.0472636819, 0)
+    ui_toggle.Size = UDim2.new(0, 55, 0, 55)
+    ui_toggle.Image = "http://www.roblox.com/asset/?id=119926900664966"
+    
+    UICorner.CornerRadius = UDim.new(0, 20)
+    UICorner.Parent = ui_toggle
+    
+    ui_toggle.MouseButton1Click:Connect(function()
+        Frame.Visible = not Frame.Visible
+    end)
+
 	UICorner.Parent = Frame
 
 	Frame_2.Parent = Frame
