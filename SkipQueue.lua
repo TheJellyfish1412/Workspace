@@ -142,7 +142,7 @@ myGui:toggle("Auto Return", false, function(t)
     end
   end
 end)
-myGui:toggle("Auto Quiz", false, function(t)
+myGui:toggle("Auto Quiz", true, function(t)
   _G.AutoQuiz = t
   while _G.AutoQuiz do
     wait(5)
