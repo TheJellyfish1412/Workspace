@@ -419,7 +419,7 @@ local GUI_V1 = function()
 				UICorner.CornerRadius = UDim.new(1, 0)
 				UICorner.Parent = TextButton4
 				
-				itemWithButton[item] = option
+				itemWithButton[tostring(item)] = option
 				
 				TextButton4.MouseButton1Click:Connect(function()
 					coroutine.wrap(callback)(item)
@@ -431,6 +431,7 @@ local GUI_V1 = function()
 			end
 			
 			function extra_func:Remove(item)
+			    item = tostring(item)
 				if itemWithButton[item] then
 					itemWithButton[item]:Destroy()
 					itemWithButton[item] = nil
@@ -453,5 +454,3 @@ local GUI_V1 = function()
 	
 	return func
 end
-
-return GUI_V1
