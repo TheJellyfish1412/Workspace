@@ -166,6 +166,30 @@ myGui:toggle("Auto Push", false, function(t)
                     ReplicatedStorage.Events.PositionEvent:FireServer("SkipAhead")
                 end
             end
+        else
+            ReplicatedStorage.Events.PositionEvent:FireServer("SkipBehind")
+        end
+    end
+end)
+myGui:toggle("Auto Pull", false, function(t)
+    _G.AutoPull = t
+    while _G.AutoPull do
+        task.wait()
+        local tarPla = game.Players:FindFirstChild(_G.target)
+        if tarPla then
+            local myPos = LocalPlayer:GetAttribute("Position")
+            local tarPos = tarPla:GetAttribute("Position")
+            if myPos < tarPos + 2 then
+                ReplicatedStorage.Events.PositionEvent:FireServer("SkipBehind")
+            else
+                if myPos - tarPos == 2 then
+                    ReplicatedStorage.Events.PositionEvent:FireServer("ShoveAhead")
+                else
+                    ReplicatedStorage.Events.PositionEvent:FireServer("SkipAhead")
+                end
+            end
+        else
+            ReplicatedStorage.Events.PositionEvent:FireServer("SkipBehind")
         end
     end
 end)
