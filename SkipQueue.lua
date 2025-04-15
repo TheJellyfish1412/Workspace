@@ -236,7 +236,7 @@ if game.PlaceId == 124608038008436 then
         end
     end)
 
-    ETC:Toggle("Render3D", false, function(mode)
+    ETC:Toggle("Render3D", true, function(mode)
         RunService:Set3dRenderingEnabled(mode)
     end)
     
