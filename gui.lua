@@ -439,6 +439,7 @@ local GUI_V1 = function()
 					itemWithButton[item]:Destroy()
 					itemWithButton[item] = nil
 				end
+				options.CanvasSize = UDim2.new(0,0,0,UIListLayout.AbsoluteContentSize.Y)
 			end
 			
 			for _,item in pairs(args) do
