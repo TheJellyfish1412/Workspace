@@ -235,6 +235,10 @@ if game.PlaceId == 124608038008436 then
             print("Not Show")
         end
     end)
+
+    ETC:Toggle("Render3D", false, function(mode)
+        RunService:Set3dRenderingEnabled(mode)
+    end)
     
     LocalPlayer.Idled:Connect(function()
         VirtualUser:CaptureController()
