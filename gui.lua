@@ -22,7 +22,7 @@ local GUI_V1 = function()
 
     local ui_toggle = Instance.new("ImageButton")
     local UICorner = Instance.new("UICorner")
-    local UIDragDetector = Instance.new("UIDragDetector")
+    -- local UIDragDetector = Instance.new("UIDragDetector")
     
     ui_toggle.Name = "ui_toggle"
     ui_toggle.Parent = ScreenGui
@@ -36,7 +36,7 @@ local GUI_V1 = function()
     UICorner.CornerRadius = UDim.new(0, 20)
     UICorner.Parent = ui_toggle
 	
-	UIDragDetector.Parent = ui_toggle
+	-- UIDragDetector.Parent = ui_toggle
     
     ui_toggle.MouseButton1Click:Connect(function()
         Frame.Visible = not Frame.Visible
