@@ -98,6 +98,7 @@ local GUI_V1 = function()
 		Frame3.BorderSizePixel = 0
 		Frame3.Position = UDim2.new(0.264489919, 0, 0.0474561527, 0)
 		Frame3.Size = UDim2.new(0.713057816, 0, 0.903057814, 0)
+		Frame3.Visible = false
 
 		UICorner.Parent = Frame3
 		
