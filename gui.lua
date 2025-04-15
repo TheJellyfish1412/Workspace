@@ -454,3 +454,5 @@ local GUI_V1 = function()
 	
 	return func
 end
+
+return GUI_V1
