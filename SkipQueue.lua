@@ -1,5 +1,5 @@
 if game.PlaceId == 124608038008436 then
-local myGui = loadstring(game:HttpGet("https://raw.githubusercontent.com/TheJellyfish1412/Workspace/refs/heads/main/gui2.lua"))()()
+local myGui = loadstring(game:HttpGet("https://raw.githubusercontent.com/TheJellyfish1412/Workspace/refs/heads/main/gui.lua"))()()
 
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
@@ -148,6 +148,26 @@ myGui:toggle("Auto Quiz", false, function(t)
     wait(5)
     ReplicatedStorage.Events.QuizEvent:FireServer(_G.Answer)
   end
+end)
+myGui:toggle("Auto Push", false, function(t)
+    _G.AutoPush = t
+    while _G.AutoPush do
+        task.wait()
+        local tarPla = game.Players:FindFirstChild(_G.target)
+        if tarPla then
+            local myPos = LocalPlayer:GetAttribute("Position")
+            local tarPos = tarPla:GetAttribute("Position")
+            if myPos < tarPos then
+                ReplicatedStorage.Events.PositionEvent:FireServer("SkipBehind")
+            else
+                if myPos-tarPos == 1 then
+                    ReplicatedStorage.Events.PositionEvent:FireServer("ShoveAhead")
+                else
+                    ReplicatedStorage.Events.PositionEvent:FireServer("SkipAhead")
+                end
+            end
+        end
+    end
 end)
 myGui:toggle("Show Money", true, function(t)
     if t then
