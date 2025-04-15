@@ -316,6 +316,8 @@ local GUI_V1 = function()
 			TextButton.TextWrapped = true
 			if (default) then
 				TextButton.Text = tostring(default)
+			else
+				TextButton.Text = ""
 			end
 
 			UICorner.CornerRadius = UDim.new(1, 0)
