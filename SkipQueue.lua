@@ -175,7 +175,7 @@ if game.PlaceId == 124608038008436 then
                     end
                 end
             else
-                ReplicatedStorage.Events.PositionEvent:FireServer("SkipBehind")
+                -- ReplicatedStorage.Events.PositionEvent:FireServer("SkipBehind")
             end
         end
     end)
