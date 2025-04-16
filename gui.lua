@@ -187,10 +187,10 @@ local GUI_V1 = function()
 
 			local toggle = Instance.new("Frame")
 			local TextLabel = Instance.new("TextLabel")
-			local Frame = Instance.new("Frame")
+			local Frame = Instance.new("TextButton")
 			local UICorner = Instance.new("UICorner")
 			local UIPadding = Instance.new("UIPadding")
-			local TextButton = Instance.new("TextButton")
+			local TextButton = Instance.new("Frame")
 			local UICorner_2 = Instance.new("UICorner")
 
 			toggle.Name = "toggle"
@@ -226,11 +226,13 @@ local GUI_V1 = function()
 			Frame.BorderSizePixel = 0
 			Frame.Position = UDim2.new(0.800000012, 0, 0.5, 0)
 			Frame.Size = UDim2.new(0.100000001, 0, 0.400000006, 0)
+			Frame.Text = ""
 
 			UICorner.CornerRadius = UDim.new(1, 1)
 			UICorner.Parent = Frame
 
 			TextButton.Parent = Frame
+			TextButton.Active = false
 			TextButton.AnchorPoint = Vector2.new(0.5, 0.5)
 			TextButton.BackgroundColor3 = Color3.fromRGB(34, 255, 0)
 			TextButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
@@ -238,10 +240,6 @@ local GUI_V1 = function()
 			TextButton.Position = UDim2.new(0.25, 0, 0.5, 0)
 			TextButton.Size = UDim2.new(0.899999976, 0, 0.899999976, 0)
 			TextButton.SizeConstraint = Enum.SizeConstraint.RelativeYY
-			TextButton.Font = Enum.Font.SourceSans
-			TextButton.Text = ""
-			TextButton.TextColor3 = Color3.fromRGB(0, 0, 0)
-			TextButton.TextSize = 14.000
 
 			UICorner_2.CornerRadius = UDim.new(1, 0)
 			UICorner_2.Parent = TextButton
@@ -276,7 +274,7 @@ local GUI_V1 = function()
 				coroutine.wrap(callback)(now_state)
 			end
 			
-			TextButton.MouseButton1Click:Connect(moveButton)
+			Frame.MouseButton1Click:Connect(moveButton)
 			
 			if state then
 				moveButton()
