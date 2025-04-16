@@ -33,7 +33,7 @@ local GUI_V1 = function()
     ui_toggle.Size = UDim2.new(0, 55, 0, 55)
     ui_toggle.Image = "http://www.roblox.com/asset/?id=104428241405328"
     
-    UICorner.CornerRadius = UDim.new(0, 20)
+    UICorner.CornerRadius = UDim.new(1,0)
     UICorner.Parent = ui_toggle
 	
 	-- UIDragDetector.Parent = ui_toggle
