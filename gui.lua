@@ -1,7 +1,47 @@
 local TweenService = game:GetService("TweenService")
+local HttpService = game:GetService("HttpService")
 
 
 local GUI_V1 = function()
+	local FolderGamePath = "RFManager/"..game.PlaceId
+	local PlayerFilePath = FolderGamepATH .. "/" .. game.Players.LocalPlayer.UserId .. ".json"
+	
+        local FT = {}
+	function FT:Encode(data)
+		return HttpService:JSONEncode(data)
+	end
+	function FT:Decode(data)
+		return HttpService:JSONDecode(data)
+	end
+	
+	local JS = {}
+	function JS:Write(data)
+		writefile(PlayerFilePath,FT:Encode(data))
+	end
+	function JS:Read()
+		return FT:Decode(readfile(PlayerFilePath))
+	end
+	function JS:Store()
+		writefile(PlayerFilePath,FT:Encode(getgenv()["RFManager"]))
+	end
+	getgenv()["Function"] = FT
+	getgenv()["JS"] = JS
+
+	if not isfolder(FolderGamePath) then
+	    	makefolder(FolderGamePath)
+	end
+	if not getgenv()["RFManager"] then
+		getgenv()["RFManager"] = {}
+	end
+	if not isfile(PlayerFilePath) then
+	    	JS:Write({})
+	else
+		for i,v in pairs(JS:Read()) do
+			if getgenv()["RFManager"][i] then continue end
+			getgenv()["RFManager"][i] = v
+		end
+	end
+	
 	local ScreenGui = Instance.new("ScreenGui")
 	local Frame = Instance.new("Frame")
 	local UICorner = Instance.new("UICorner")
