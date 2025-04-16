@@ -146,6 +146,28 @@ if game.PlaceId == 124608038008436 then
         end
       end
     end)
+    main:Toggle("Auto HopServer", false, function(t)
+      _G.AutoHop = t
+      while _G.AutoHop do
+        wait()
+        if LocalPlayer:GetAttribute("Position") == -1 then
+            if (_G.Server and #_G.Server > 0) then
+                local jobList = _G.Server
+                local currentJobId = game.JobId
+                
+                local currentIndex = table.find(jobList, currentJobId)
+                local nextIndex = currentIndex and currentIndex + 1 or 1
+                
+                if nextIndex > #jobList then
+                    nextIndex = 1
+                end
+                
+                local nextJobId = jobList[nextIndex]
+                TeleportService:TeleportToPlaceInstance(game.PlaceId, nextJobId, LocalPlayer)
+            end
+        end
+      end
+    end)
     main:Toggle("Auto Quiz", true, function(t)
       _G.AutoQuiz = t
       while _G.AutoQuiz do
