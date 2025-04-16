@@ -31,7 +31,7 @@ local GUI_V1 = function()
     ui_toggle.BorderSizePixel = 0
     ui_toggle.Position = UDim2.new(0.472950816, 0, 0.0472636819, 0)
     ui_toggle.Size = UDim2.new(0, 55, 0, 55)
-    ui_toggle.Image = "http://www.roblox.com/asset/?id=119926900664966"
+    ui_toggle.Image = "http://www.roblox.com/asset/?id=104428241405328"
     
     UICorner.CornerRadius = UDim.new(0, 20)
     UICorner.Parent = ui_toggle
