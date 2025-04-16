@@ -75,7 +75,7 @@ local GUI_V1 = function()
 		local TextButton = Instance.new("TextButton")
 		local Frame3 = Instance.new("Frame")
 		table.insert(frame_store, Frame3)
-		local UICorner = Instance.new("UICorner")
+		local UICorner9 = Instance.new("UICorner")
 		
 		page.Name = "page"
 		page.Parent = ScrollingFrame
@@ -122,7 +122,7 @@ local GUI_V1 = function()
 		Frame3.Size = UDim2.new(0.713057816, 0, 0.903057814, 0)
 		Frame3.Visible = false
 
-		UICorner.Parent = Frame3
+		UICorner9.Parent = Frame3
 		
 		local ScrollingFrame = Instance.new("ScrollingFrame")
 		local UIListLayout = Instance.new("UIListLayout")
