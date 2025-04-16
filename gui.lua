@@ -234,7 +234,7 @@ local GUI_V1 = function()
 			TextButton.Parent = Frame
 			TextButton.Active = false
 			TextButton.AnchorPoint = Vector2.new(0.5, 0.5)
-			TextButton.BackgroundColor3 = Color3.fromRGB(34, 255, 0)
+			TextButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
 			TextButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
 			TextButton.BorderSizePixel = 0
 			TextButton.Position = UDim2.new(0.25, 0, 0.5, 0)
@@ -268,7 +268,7 @@ local GUI_V1 = function()
 						TweenInfo.new(.5),
 						{
 							Position = UDim2.new(0.25, 0, 0.5, 0),
-							BackgroundColor3 = Color3.fromRGB(255, 34, 0)
+							BackgroundColor3 = Color3.fromRGB(255, 0, 0)
 						}
 					)
 					tween:Play()
