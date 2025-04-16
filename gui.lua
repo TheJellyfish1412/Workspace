@@ -21,8 +21,8 @@ local GUI_V1 = function()
 	Frame.Size = UDim2.new(0.496314496, 0, 0.540453136, 0)
 
     local ui_toggle = Instance.new("ImageButton")
-    local UICorner = Instance.new("UICorner")
-    -- local UIDragDetector = Instance.new("UIDragDetector")
+    local UICorner_88 = Instance.new("UICorner")
+    local UIDragDetector = Instance.new("UIDragDetector")
     
     ui_toggle.Name = "ui_toggle"
     ui_toggle.Parent = ScreenGui
@@ -33,10 +33,10 @@ local GUI_V1 = function()
     ui_toggle.Size = UDim2.new(0, 55, 0, 55)
     ui_toggle.Image = "http://www.roblox.com/asset/?id=104428241405328"
     
-    UICorner.CornerRadius = UDim.new(1,0)
-    UICorner.Parent = ui_toggle
+    UICorner_88.CornerRadius = UDim.new(1,0)
+    UICorner_88.Parent = ui_toggle
 	
-	-- UIDragDetector.Parent = ui_toggle
+	UIDragDetector.Parent = Frame
     
     ui_toggle.MouseButton1Click:Connect(function()
         Frame.Visible = not Frame.Visible
