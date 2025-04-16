@@ -146,9 +146,11 @@ if game.PlaceId == 124608038008436 then
         end
       end
     end)
-    main:Toggle("Auto HopServer", false, function(t)
-      _G.AutoHop = t
-      while _G.AutoHop do
+    main:Toggle("Auto HopServer", getgenv()["RFManager"]["AutoHop"], function(t)
+      getgenv()["RFManager"]["AutoHop"] = t
+      getgenv()["JS"]:Store()
+            
+      while getgenv()["RFManager"]["AutoHop"] do
         wait()
         if LocalPlayer:GetAttribute("Position") == -1 then
             if (_G.Server and #_G.Server > 0) then
