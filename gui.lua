@@ -4,7 +4,7 @@ local HttpService = game:GetService("HttpService")
 
 local GUI_V1 = function()
 	local FolderGamePath = "RFManager/"..game.PlaceId
-	local PlayerFilePath = FolderGamepATH .. "/" .. game.Players.LocalPlayer.UserId .. ".json"
+	local PlayerFilePath = FolderGamePath .. "/" .. game.Players.LocalPlayer.UserId .. ".json"
 	
         local FT = {}
 	function FT:Encode(data)
