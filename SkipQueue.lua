@@ -131,9 +131,11 @@ if game.PlaceId == 124608038008436 then
     
     local main = myGui:Page("Main")
     
-    main:Toggle("Auto Cut Queue", false, function(t)
-      _G.AutoCutQueue = t
-      while _G.AutoCutQueue do
+    main:Toggle("Auto Cut Queue", getgenv()["RFManager"]["AutoCutQueue"], function(t)
+      getgenv()["RFManager"]["AutoCutQueue"] = t
+      getgenv()["JS"]:Store()
+            
+      while getgenv()["RFManager"]["AutoCutQueue"] do
         task.wait()
         ReplicatedStorage.Events.PositionEvent:FireServer("SkipAhead")
       end
