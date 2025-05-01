@@ -12,11 +12,11 @@ LocalPlayer.Idled:connect(function()
     wait(1)
     VirtualUser:Button2Up(Vector2.new(0,0), game.Workspace.CurrentCamera.CFrame)
 end)
---game:GetService("CoreGui")
-do local ui = game.Players.LocalPlayer.PlayerGui:FindFirstChild("PlasmaHub")  if ui then ui:Destroy() end end
-do local ui = game.Players.LocalPlayer.PlayerGui:FindFirstChild("PlasmaNotify")  if ui then ui:Destroy() end end
-do local ui = game.Players.LocalPlayer.PlayerGui:FindFirstChild("PlasmaHub_mobile")  if ui then ui:Destroy() end end
-do local ui = game.Players.LocalPlayer.PlayerGui:FindFirstChild("PlasmaHubRightFrame")  if ui then ui:Destroy() end end
+
+do local ui = game:GetService("CoreGui"):FindFirstChild("PlasmaHub")  if ui then ui:Destroy() end end
+do local ui = game:GetService("CoreGui"):FindFirstChild("PlasmaNotify")  if ui then ui:Destroy() end end
+do local ui = game:GetService("CoreGui"):FindFirstChild("PlasmaHub_mobile")  if ui then ui:Destroy() end end
+do local ui = game:GetService("CoreGui"):FindFirstChild("PlasmaHubRightFrame")  if ui then ui:Destroy() end end
 
 _G.Color = Color3.fromRGB(0, 204, 0)
 _G.Color1 = Color3.fromRGB(255,255,255)
@@ -26,7 +26,7 @@ local PlasmaNotify = Instance.new("ScreenGui")
 local PlasmaHubRightFrame = Instance.new("ScreenGui")
 local Plasma_mobile = Instance.new("ScreenGui")
 
-Plasma_mobile.Parent = game.Players.LocalPlayer.PlayerGui
+Plasma_mobile.Parent = game:GetService("CoreGui")
 Plasma_mobile.Name = "PlasmaHub_mobile"
 Plasma_mobile.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
@@ -48,19 +48,15 @@ Ui_mobile_img.Size = UDim2.new(1, 0, 1, 0)
 Ui_mobile_img.Image = "rbxassetid://11390492777"
 Ui_mobile_img.ZIndex = 10
 
--- Ui_mobile_img.MouseButton1Click:Connect(function()
---     VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.RightControl, false, game)
--- end)
-
-PlasmaCourseScreen.Parent = game.Players.LocalPlayer.PlayerGui
+PlasmaCourseScreen.Parent = game:GetService("CoreGui")
 PlasmaCourseScreen.Name = "PlasmaHub"
 PlasmaCourseScreen.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
-PlasmaNotify.Parent = game.Players.LocalPlayer.PlayerGui
+PlasmaNotify.Parent = game:GetService("CoreGui")
 PlasmaNotify.Name = "PlasmaNotify"
 PlasmaNotify.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
-PlasmaHubRightFrame.Parent = game.Players.LocalPlayer.PlayerGui
+PlasmaHubRightFrame.Parent = game:GetService("CoreGui")
 PlasmaHubRightFrame.Name = "PlasmaHubRightFrame"
 PlasmaHubRightFrame.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 PlasmaHubRightFrame.Enabled = false
@@ -152,6 +148,8 @@ game:GetService("UserInputService").InputBegan:Connect(function(input)
     end)
 end)
 
+
+
 local function MakeDraggable(topbarobject, object)
     local UIDragDetector = Instance.new("UIDragDetector")
     UIDragDetector.Parent = topbarobject
@@ -209,8 +207,7 @@ function create:Win(text, logo)
 
 
     local NameOfGame = Instance.new("TextLabel")
-	--local GameName = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name
-	local GameName = "Test"
+	local GameName = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name
 
     NameOfGame.Name = "NameOfGame"
     NameOfGame.Parent = MainFrame
@@ -269,6 +266,27 @@ function create:Win(text, logo)
             )
         end
     )
+    
+    Ui_mobile_img.MouseButton1Click:Connect(pcall(function()
+        if library.toggledui == false then
+            library.toggledui = true
+            TweenService:Create(
+                MainFrame,
+                TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.In),
+                {Size = UDim2.new(0, 0, 0, 0)}
+            ):Play()
+            wait(.3)
+            PlasmaCourseScreen.Enabled = false
+        else
+            library.toggledui = false
+            TweenService:Create(
+                MainFrame,
+                TweenInfo.new(0.4, Enum.EasingStyle.Back),
+                {Size = UDim2.new(0, 550, 0, 500)}
+            ):Play()
+            PlasmaCourseScreen.Enabled = true
+        end
+    end))
 
     local imageclickframe = Instance.new("ImageLabel")
 
@@ -3979,8 +3997,19 @@ function create:Win(text, logo)
     local UIScale = Instance.new("UIScale")
     UIScale.Scale = PlasmaCourseScreen.AbsoluteSize.Y * 0.97 / 560
     UIScale.Parent = PlasmaCourseScreen
-    
+
     return top
 end
+    
+local Window = create:Win("Plasma", 11390492777)
+local Main = Window:Taps("Main")
+local Main_1 = Main:newpage()
+Main_1:Button("Tp Lobby", function()
+    print("adwad")
+end)
 
-return create
+local Main2 = Window:Taps("Main2")
+local Main_2 = Main2:newpage()
+Main_2:Button("Tp Lobby", function()
+    print("adwad")
+end)
