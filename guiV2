@@ -4001,15 +4001,4 @@ function create:Win(text, logo)
     return top
 end
     
-local Window = create:Win("Plasma", 11390492777)
-local Main = Window:Taps("Main")
-local Main_1 = Main:newpage()
-Main_1:Button("Tp Lobby", function()
-    print("adwad")
-end)
-
-local Main2 = Window:Taps("Main2")
-local Main_2 = Main2:newpage()
-Main_2:Button("Tp Lobby", function()
-    print("adwad")
-end)
+return create
