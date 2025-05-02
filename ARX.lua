@@ -195,8 +195,9 @@ if not isfile(PlayerFilePath) then
     func_RFM:Write({})
 else
     for i,v in pairs(func_RFM:Read()) do
-        if getgenv()["RFManager"][i] != nil then continue end
-        getgenv()["RFManager"][i] = v
+        if getgenv()["RFManager"][i] == nil then
+            getgenv()["RFManager"][i] = v
+        end
     end
 end
 
@@ -4054,7 +4055,7 @@ local Craft = Window:Taps("Auto Craft")
 local Craft_1 = Craft:newpage()
 
 Craft_1:Toggle("adwad", getgenv()["Craft"], false, function()
-
+    print("adwadaw")
 end)
 
 
