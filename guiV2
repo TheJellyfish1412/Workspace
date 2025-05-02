@@ -304,24 +304,39 @@ function create:Win(text, logo)
     )
     
     Ui_mobile_img.MouseButton1Click:Connect(function()
-        if library.toggledui == false then
-            library.toggledui = true
-            TweenService:Create(
-                MainFrame,
-                TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.In),
-                {Size = UDim2.new(0, 0, 0, 0)}
-            ):Play()
-            wait(.3)
-            PlasmaCourseScreen.Enabled = false
-        else
-            library.toggledui = false
-            TweenService:Create(
-                MainFrame,
-                TweenInfo.new(0.4, Enum.EasingStyle.Back),
-                {Size = UDim2.new(0, 550, 0, 500)}
-            ):Play()
-            PlasmaCourseScreen.Enabled = true
-        end
+		pcall(function()
+	        if library.toggledui == false then
+	            library.toggledui = true
+	            TweenService:Create(
+	                MainFrame,
+	                TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.In),
+	                {Size = UDim2.new(0, 0, 0, 0)}
+	            ):Play()
+	            wait(.3)
+	            PlasmaCourseScreen.Enabled = false
+	        else
+	            library.toggledui = false
+	            TweenService:Create(
+	                MainFrame,
+	                TweenInfo.new(0.4, Enum.EasingStyle.Back),
+	                {Size = UDim2.new(0, 550, 0, 500)}
+	            ):Play()
+	            PlasmaCourseScreen.Enabled = true
+	        end
+	    end)
+		pcall(function()
+		    if lib.toggledui == false then
+				lib.toggledui = true
+				wait(.5)
+				TweenService:Create(UiToggle,TweenInfo.new(0.5,Enum.EasingStyle.Back),{Size = UDim2.new(0, 170, 0, 50)}):Play()
+				PlasmaHubRightFrame.Enabled = true
+		    else
+				lib.toggledui = false
+				TweenService:Create(UiToggle,TweenInfo.new(0.5,Enum.EasingStyle.Back,Enum.EasingDirection.In),{Size = UDim2.new(0, 0, 0, 0)}):Play()
+				wait(.5)
+				PlasmaHubRightFrame.Enabled = false
+		    end
+	    end)
     end)
 
     local imageclickframe = Instance.new("ImageLabel")
