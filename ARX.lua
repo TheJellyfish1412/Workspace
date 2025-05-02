@@ -183,8 +183,6 @@ function func_RFM:Store(path)
     writefile(path or PlayerFilePath, func_RFM:Encode(getgenv()["RFManager"]))
 end
 
-create["func_RFM"] = func_RFM
-
 if not isfolder(FolderGamePath) then
     makefolder(FolderGamePath)
 end
