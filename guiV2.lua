@@ -752,23 +752,21 @@ function create:Win(text, logo)
                 end
             )
 
-            UIGridLayout_Pagefrist:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(
-                function()
-                    ScrollingFrame_Pagefrist.CanvasSize =
-                        UDim2.new(0, 0, 0, UIGridLayout_Pagefrist.AbsoluteContentSize.Y + 50)
-                end
-            )
+            -- UIGridLayout_Pagefrist:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(
+            --     function()
+            --         ScrollingFrame_Pagefrist.CanvasSize =
+            --             UDim2.new(0, 0, 0, UIGridLayout_Pagefrist.AbsoluteContentSize.Y + 50)
+            --     end
+            -- )
 
             game:GetService("RunService").Stepped:Connect(
                 function()
                     pcall(
                         function()
-                            ScrollingFrame_Menubar.CanvasSize =
-                                UDim2.new(0, UIListLayout_Menubar.AbsoluteContentSize.X, 0, 0)
-                            ScrollingFrame_Pageframe.CanvasSize =
-                                UDim2.new(0, 0, 0, UIListLayout_Pageframe.AbsoluteContentSize.Y + 20)
-                            ScrollingFrame_Pagefrist.CanvasSize =
-                                UDim2.new(0, 0, 0, UIGridLayout_Pagefrist.AbsoluteContentSize.Y + 40)
+                            ScrollingFrame_Menubar.CanvasSize = UDim2.new(0, UIListLayout_Menubar.AbsoluteContentSize.X, 0, 0)
+                            ScrollingFrame_Pageframe.CanvasSize = UDim2.new(0, 0, 0, UIListLayout_Pageframe.AbsoluteContentSize.Y + 20)
+							local y_count = UIGridLayout_Pagefrist.AbsoluteCellCount.Y
+                            ScrollingFrame_Pagefrist.CanvasSize = UDim2.new(0, 0, 0, (y_count * UIGridLayout_Pagefrist.AbsoluteCellSize.Y) + (y_count * 15) + 20)
                         end
                     )
                 end
