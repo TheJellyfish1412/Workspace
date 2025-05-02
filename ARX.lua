@@ -109,6 +109,7 @@ AutoFarm_1:Toggle("Auto Craft", getgenv().RFManager["Auto Craft"], false, functi
     getgenv().RFManager["Auto Craft"] = t
     func_RFM:Store()
     if t and IsLobby then
+        print("Start Select Map")
         SelectMap()
     end
 end)
@@ -148,7 +149,6 @@ end)
 AutoFarm_2:Toggle("Auto Vote Next", getgenv().RFManager["VoteNext"], false, function(t)
     getgenv().RFManager["VoteNext"] = t
     func_RFM:Store()
-
     if not IsLobby then
         local voteNext = function(x)
             if x and getgenv().RFManager["VoteNext"] then
