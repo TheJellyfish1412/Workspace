@@ -184,4 +184,4 @@ else
     make_writeable(meta, false)
 end
 
-getgenv().RFManager.Loaded = true
+getgenv().Loaded = true
