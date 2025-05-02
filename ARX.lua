@@ -2,10 +2,12 @@ local create, func_RFM = loadstring(game:HttpGet("https://raw.githubusercontent.
 
 -- ===========================================================
 
+local TeleportService = game:GetService("TeleportService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 -- ===========================================================
 
+local LocalPlayer = game.Players.LocalPlayer
 local IsLobby = game.Workspace:FindFirstChild("Lobby")
 
 local EventRemote = ReplicatedStorage:WaitForChild("Remote"):WaitForChild("Server"):WaitForChild("PlayRoom"):WaitForChild("Event")
@@ -15,7 +17,11 @@ local CraftingRecipes = require(ReplicatedStorage.Shared.Info.CraftingRecipes)
 
 -- ===========================================================
 
+local SelectingMap = false
 function SelectMap()
+    if SelectingMap then return end
+    SelectingMap = true
+
     if getgenv().RFManager["Auto Craft"] then
         local CraftFound = false
         local Requirement = {}
@@ -32,34 +38,55 @@ function SelectMap()
                 for Chapter, ChapterData in pairs(WorldData) do
                     for _, ItemData in pairs(ChapterData.Items) do
                         if Requirement[ItemData.Name] then
-                            EventRemote:FireServer("Create")
-                            wait(1)
-                            EventRemote:FireServer(
-                                "Change-World",
-                                {
-                                    World = World
-                                }
-                            )
-                            wait(1)
-                            EventRemote:FireServer(
-                                "Change-Chapter",
-                                {
-                                    Chapter = Chapter
-                                }
-                            )
-                            wait(1)
-                            if not string.find(Chapter, "Ranger") then
+                            if IsLobby then
+                                print(World, Chapter)
+                                EventRemote:FireServer("Create")
+                                wait(1)
+                                local IsRanger = string.find(Chapter, "Ranger")
+                                if IsRanger then
+                                    ReplicatedStorage.Remote.Server.PlayRoom.Event:FireServer(
+                                        "Change-Mode",
+                                        {
+                                            Mode = "Ranger Stage"
+                                        }
+                                    )
+                                    wait(1)
+                                end
                                 EventRemote:FireServer(
-                                    "Change-Difficulty",
+                                    "Change-World",
                                     {
-                                        Difficulty = "Nightmare"
+                                        World = World
                                     }
                                 )
                                 wait(1)
+                                EventRemote:FireServer(
+                                    "Change-Chapter",
+                                    {
+                                        Chapter = Chapter
+                                    }
+                                )
+                                wait(1)
+                                if not IsRanger then
+                                    EventRemote:FireServer(
+                                        "Change-Difficulty",
+                                        {
+                                            Difficulty = "Nightmare"
+                                        }
+                                    )
+                                    wait(1)
+                                end
+                                EventRemote:FireServer("Submit")
+                                wait(1)
+                                -- EventRemote:FireServer("Start")
+                            else
+                                if ChapterData.Requirements.Required_Levels == ReplicatedStorage.Values.Game.Level.Value then
+                                    ReplicatedStorage.Remote.Server.OnGame.Voting.VoteNext:FireServer()
+                                else
+                                    TeleportService:Teleport(game.PlaceId, LocalPlayer)
+                                end
                             end
-                            EventRemote:FireServer("Submit")
-                            wait(1)
-                            EventRemote:FireServer("Start")
+
+                            SelectingMap = false
                             return
                         end
                     end
@@ -67,6 +94,8 @@ function SelectMap()
             end
         end
     end
+
+    SelectingMap = false
 end
 
 -- ===========================================================
