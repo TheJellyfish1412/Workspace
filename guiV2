@@ -148,8 +148,6 @@ game:GetService("UserInputService").InputBegan:Connect(function(input)
     end)
 end)
 
-
-
 local function MakeDraggable(topbarobject, object)
     local UIDragDetector = Instance.new("UIDragDetector")
     UIDragDetector.Parent = topbarobject
@@ -162,7 +160,45 @@ local function Tween(instance, properties,style,wa)
     TweenService:Create(instance,TweenInfo.new(wa,Enum.EasingStyle[style]),{properties}):Play()
 end
 
+local FolderGamePath = "RFManager/"..game.PlaceId
+local PlayerFilePath = FolderGamePath .. "/" .. LocalPlayer.UserId .. ".json"
+
 local create = {}
+local func_RFM = {}
+
+function func_RFM:Encode(data)
+    return HttpService:JSONEncode(data)
+end
+function func_RFM:Decode(data)
+    return HttpService:JSONDecode(data)
+end
+
+function func_RFM:Write(data, path)
+    writefile(path or PlayerFilePath,func_RFM:Encode(data))
+end
+function func_RFM:Read(path)
+    return func_RFM:Decode(readfile(path or PlayerFilePath))
+end
+function func_RFM:Store(path)
+    writefile(path or PlayerFilePath, func_RFM:Encode(getgenv()["RFManager"]))
+end
+
+if not isfolder(FolderGamePath) then
+    makefolder(FolderGamePath)
+end
+if not getgenv()["RFManager"] then
+    getgenv()["RFManager"] = {}
+end
+if not isfile(PlayerFilePath) then
+    func_RFM:Write({})
+else
+    for i,v in pairs(func_RFM:Read()) do
+        if getgenv()["RFManager"][i] == nil then
+            getgenv()["RFManager"][i] = v
+        end
+    end
+end
+
 function create:Win(text, logo)
     local fs = false
 
@@ -402,9 +438,9 @@ function create:Win(text, logo)
 
     local top = {}
 
-    -- function top:TimeSet(text)
-    --     TimeGlobal.Text = text
-    -- end
+    function top:SetTextBottomLeft(text)
+        TimeGlobal.Text = text
+    end
 
     local NotiFrame = Instance.new("Frame")
     NotiFrame.Name = "NotiFrame"
@@ -723,7 +759,11 @@ function create:Win(text, logo)
             )
             local items = {}
 
-            function items:Toggle(text, config, callback)
+            function items:Toggle(text, config, config2, callback)
+                if config == nil then
+                    config = config2
+                end
+
                 local Toggle = Instance.new("Frame")
 
                 Toggle.Parent = ScrollingFrame_Pageframe
@@ -4000,5 +4040,5 @@ function create:Win(text, logo)
 
     return top
 end
-    
-return create
+
+return { create, func_RFM }
