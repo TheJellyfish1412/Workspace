@@ -766,7 +766,7 @@ function create:Win(text, logo)
                             ScrollingFrame_Menubar.CanvasSize = UDim2.new(0, UIListLayout_Menubar.AbsoluteContentSize.X, 0, 0)
                             ScrollingFrame_Pageframe.CanvasSize = UDim2.new(0, 0, 0, UIListLayout_Pageframe.AbsoluteContentSize.Y + 20)
 							local y_count = UIGridLayout_Pagefrist.AbsoluteCellCount.Y
-                            ScrollingFrame_Pagefrist.CanvasSize = UDim2.new(0, 0, 0, (y_count * UIGridLayout_Pagefrist.AbsoluteCellSize.Y) + (y_count * 15) + 20)
+                            ScrollingFrame_Pagefrist.CanvasSize = UDim2.new(0, 0, 0, (y_count * UIGridLayout_Pagefrist.AbsoluteCellSize.Y) + (y_count * 15))
                         end
                     )
                 end
