@@ -90,41 +90,45 @@ AutoFarm_2:Toggle("Auto Vote Start", getgenv().RFManager["VoteStart"], true, fun
     getgenv().RFManager["VoteStart"] = t
     func_RFM:Store()
 
-    local voteStart = function(x)
-        if x and getgenv().RFManager["VoteStart"] then
-            ReplicatedStorage.Remote.Server.OnGame.Voting.VotePlaying:FireServer()
+    if not IsLobby then
+        local voteStart = function(x)
+            if x and getgenv().RFManager["VoteStart"] then
+                ReplicatedStorage.Remote.Server.OnGame.Voting.VotePlaying:FireServer()
+            end
         end
+        ReplicatedStorage.Values.Game.VotePlaying.VoteEnabled.Changed:Connect(voteStart)
+        voteStart(t)
     end
-    ReplicatedStorage.Values.Game.VotePlaying.VoteEnabled.Changed:Connect(voteStart)
-    voteStart(t)
 end)
 
 AutoFarm_2:Toggle("Auto Vote Retry", getgenv().RFManager["VoteRetry"], true, function(t)
     getgenv().RFManager["VoteRetry"] = t
     func_RFM:Store()
 
-    local voteRetry = function(x)
-        if x and getgenv().RFManager["VoteRetry"] then
-            ReplicatedStorage.Remote.Server.OnGame.Voting.VoteRetry:FireServer()
+    if not IsLobby then
+        local voteRetry = function(x)
+            if x and getgenv().RFManager["VoteRetry"] then
+                ReplicatedStorage.Remote.Server.OnGame.Voting.VoteRetry:FireServer()
+            end
         end
+        ReplicatedStorage.Values.Game.VoteRetry.VoteEnabled.Changed:Connect(voteRetry)
+        voteRetry(t)
     end
-    ReplicatedStorage.Values.Game.VoteRetry.VoteEnabled.Changed:Connect(voteRetry)
-    voteRetry(t)
 end)
 
 AutoFarm_2:Toggle("Auto Vote Next", getgenv().RFManager["VoteNext"], true, function(t)
     getgenv().RFManager["VoteNext"] = t
     func_RFM:Store()
 
-    local voteNext = function(x)
-        if x and getgenv().RFManager["VoteNext"] then
-            ReplicatedStorage.Remote.Server.OnGame.Voting.VoteNext:FireServer()
+    if not IsLobby then
+        local voteNext = function(x)
+            if x and getgenv().RFManager["VoteNext"] then
+                ReplicatedStorage.Remote.Server.OnGame.Voting.VoteNext:FireServer()
+            end
         end
+        ReplicatedStorage.Values.Game.VoteNext.VoteEnabled.Changed:Connect(voteNext)
+        voteNext(t)
     end
-
-
-    ReplicatedStorage.Values.Game.VoteNext.VoteEnabled.Changed:Connect(voteNext)
-    voteNext(t)
 end)
 
 
