@@ -644,7 +644,7 @@ function create:Win(text, logo)
         MainPage.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         MainPage.BorderSizePixel = 0
         MainPage.Position = UDim2.new(0.5, 0, 0.5, 0) -- UDim2.new(0.0149812736, 0, 0.13, 0)
-        MainPage.Size = UDim2.new(0, 518, 0, 365)
+        MainPage.Size = UDim2.new(0, 518, 0, 360)
         MainPage.BackgroundTransparency = 1
         MainPage.ClipsDescendants = true
         MainPage.Visible = true
@@ -720,7 +720,7 @@ function create:Win(text, logo)
             Pageframe.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
             Pageframe.BorderSizePixel = 0
             Pageframe.Position = UDim2.new(0.028957529, 0, 0.0496277921, 0)
-            Pageframe.Size = UDim2.new(0, 240, 0, 379)
+            Pageframe.Size = UDim2.new(1, 0, 1, 0)
 
             local ScrollingFrame_Pageframe = Instance.new("ScrollingFrame")
 
@@ -728,8 +728,8 @@ function create:Win(text, logo)
             ScrollingFrame_Pageframe.Active = true
             ScrollingFrame_Pageframe.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
             ScrollingFrame_Pageframe.BorderSizePixel = 0
-            ScrollingFrame_Pageframe.Position = UDim2.new(0, 0, -0.0101253344, 0)
-            ScrollingFrame_Pageframe.Size = UDim2.new(0, 240, 0, 379)
+            ScrollingFrame_Pageframe.Position = UDim2.new(0, 0, 0, 0)
+            ScrollingFrame_Pageframe.Size = UDim2.new(1, 0, 1, 0)
             ScrollingFrame_Pageframe.ScrollBarThickness = 4
             ScrollingFrame_Pageframe.ScrollBarImageColor3 = Color3.fromRGB(222, 222, 222)
 
