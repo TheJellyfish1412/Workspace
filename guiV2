@@ -706,11 +706,11 @@ function create:Win(text, logo)
         UIGridLayout_Pagefrist.Parent = ScrollingFrame_Pagefrist
         UIGridLayout_Pagefrist.SortOrder = Enum.SortOrder.LayoutOrder
         UIGridLayout_Pagefrist.CellPadding = UDim2.new(0, 13, 0, 15)
-        UIGridLayout_Pagefrist.CellSize = UDim2.new(0, 240, 0, 325)
+        UIGridLayout_Pagefrist.CellSize = UDim2.new(0, 242, 0, 340)
 
         UIPadding_Pagefrist.Parent = ScrollingFrame_Pagefrist
         UIPadding_Pagefrist.PaddingLeft = UDim.new(0, 10)
-        UIPadding_Pagefrist.PaddingTop = UDim.new(0, 20)
+        UIPadding_Pagefrist.PaddingTop = UDim.new(0, 10)
 
         local page = {}
 
