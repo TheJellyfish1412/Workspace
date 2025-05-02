@@ -2,6 +2,7 @@ local create, func_RFM = loadstring(game:HttpGet("https://raw.githubusercontent.
 
 -- ===========================================================
 
+local RunService = game:GetService("RunService")
 local TeleportService = game:GetService("TeleportService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
@@ -77,7 +78,7 @@ function SelectMap()
                                 end
                                 EventRemote:FireServer("Submit")
                                 wait(1)
-                                -- EventRemote:FireServer("Start")
+                                EventRemote:FireServer("Start")
                             else
                                 if ChapterData.Requirements.Required_Levels == ReplicatedStorage.Values.Game.Level.Value then
                                     ReplicatedStorage.Remote.Server.OnGame.Voting.VoteNext:FireServer()
@@ -183,34 +184,46 @@ end
 n = nil
 TempCraft = nil
 
-local meta = getrawmetatable(game)
-local old = meta.__namecall
+-- ==============================
 
-if setreadonly then
-    setreadonly(meta, false)
-else
-    make_writeable(meta, true)
-end
 
-local callMethod = getnamecallmethod or get_namecall_method
-local newClosure = newcclosure or function(f)
-    return f
-end
+local Setting = Window:Taps("Setting")
+local Setting_1 = Setting:newpage()
 
-meta.__namecall = newClosure(function(Event, ...)
-    local cmethod = callMethod()
-    local fmethod = (tostring(cmethod) == "Fire") or nil
-    local arguments = {...}
-    if fmethod and tostring(Event) == "AddColorToTable" then
-        return
-    end
-    return old(Event, ...)
+Setting_1:Toggle(name, getgenv().RFManager["Render"], true, function(mode)
+    RunService:Set3dRenderingEnabled(mode)
 end)
 
-if setreadonly then
-    setreadonly(meta, true)
-else
-    make_writeable(meta, false)
-end
+-- ==============================
+
+-- local meta = getrawmetatable(game)
+-- local old = meta.__namecall
+
+-- if setreadonly then
+--     setreadonly(meta, false)
+-- else
+--     make_writeable(meta, true)
+-- end
+
+-- local callMethod = getnamecallmethod or get_namecall_method
+-- local newClosure = newcclosure or function(f)
+--     return f
+-- end
+
+-- meta.__namecall = newClosure(function(Event, ...)
+--     local cmethod = callMethod()
+--     local fmethod = (tostring(cmethod) == "Fire") or nil
+--     local arguments = {...}
+--     if fmethod and tostring(Event) == "AddColorToTable" then
+--         return
+--     end
+--     return old(Event, ...)
+-- end)
+
+-- if setreadonly then
+--     setreadonly(meta, true)
+-- else
+--     make_writeable(meta, false)
+-- end
 
 getgenv().Loaded = true
