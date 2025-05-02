@@ -38,9 +38,8 @@ function SelectMap()
             for World, WorldData in pairs(GameWorld) do
                 for Chapter, ChapterData in pairs(WorldData) do
                     for _, ItemData in pairs(ChapterData.Items) do
-                        if Requirement[ItemData.Name] then
+                        if Requirement[ItemData.Name] and not ReplicatedStorage.Player_Data[LocalPlayer.Name].RangerStage:FindFirstChild(Chapter) then
                             if IsLobby then
-                                print(World, Chapter)
                                 EventRemote:FireServer("Create")
                                 wait(1)
                                 local IsRanger = string.find(Chapter, "Ranger")
