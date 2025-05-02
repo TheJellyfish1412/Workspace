@@ -198,7 +198,7 @@ end)
 
 -- ==============================
 
-game:GetService("ReplicatedStorage").Remote.Client.UI.GameEndedUI.OnClientEvent:Connect(function(...)
+ReplicatedStorage.Remote.Client.UI.GameEndedUI.OnClientEvent:Connect(function(...)
     local x = {...}
     if x[1] == "GameEnded_TextAnimation" then
         SelectMap()
