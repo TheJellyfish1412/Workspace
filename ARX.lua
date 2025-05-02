@@ -88,7 +88,13 @@ function SelectMap()
         end
     end
 
-    if getgenv().RFManager["Auto Challenge"] then
+    if getgenv().RFManager["Auto Easter"] then
+        EventRemote:FireServer("Easter-Event")
+        wait(1)
+        EventRemote:FireServer("Start")
+        SelectingMap = false
+        return
+    elseif getgenv().RFManager["Auto Challenge"] then
         EventRemote:FireServer(
             "Create",
             {
@@ -141,11 +147,17 @@ function SelectMapEnded()
         end
     end
 
-    if getgenv().RFManager["Auto Challenge"] then
+    if getgenv().RFManager["Auto Easter"] then
+        ReplicatedStorage.Remote.Server.OnGame.Voting.VoteRetry:FireServer()
+        SelectingMapEnded = false
+        return 
+    elseif getgenv().RFManager["Auto Challenge"] then
         ReplicatedStorage.Remote.Server.OnGame.Voting.VoteRetry:FireServer()
         SelectingMapEnded = false
         return 
     end
+
+
 
     SelectingMapEnded = false
 end
@@ -159,6 +171,15 @@ local AutoFarm = Window:Taps("Auto Farm")
 local AutoFarm_1 = AutoFarm:newpage()
 AutoFarm_1:Toggle("Auto Craft", getgenv().RFManager["Auto Craft"], false, function(t)
     getgenv().RFManager["Auto Craft"] = t
+    func_RFM:Store()
+    if t and IsLobby then
+        print("Start Select Map")
+        SelectMap()
+    end
+end)
+
+AutoFarm_1:Toggle("Auto Easter", getgenv().RFManager["Auto Easter"], false, function(t)
+    getgenv().RFManager["Auto Easter"] = t
     func_RFM:Store()
     if t and IsLobby then
         print("Start Select Map")
@@ -249,6 +270,24 @@ TempCraft = nil
 
 local Setting = Window:Taps("Setting")
 local Setting_1 = Setting:newpage()
+
+Setting_1:Toggle("Claim All Quest", getgenv().RFManager["Claim All Quest"], true, function(mode)
+    getgenv().RFManager["Claim All Quest"] = mode
+    func_RFM:Store()
+
+    if mode and IsLobby then
+        ReplicatedStorage.Remote.Server.Gameplay.QuestEvent:FireServer("ClaimAll")
+    end
+end)
+
+-- Setting_1:Toggle("Claim Hourly Egg", getgenv().RFManager["Claim Hourly Egg"], true, function(mode)
+--     getgenv().RFManager["Claim Hourly Egg"] = mode
+--     func_RFM:Store()
+
+--     if mode and IsLobby then
+--         ReplicatedStorage.Remote.Server.Gameplay.QuestEvent:FireServer("ClaimAll")
+--     end
+-- end)
 
 Setting_1:Toggle("Render3D", getgenv().RFManager["Render"], true, function(mode)
     getgenv().RFManager["Render"] = mode
