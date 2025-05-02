@@ -6,6 +6,8 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 -- ===========================================================
 
+local IsLobby = game.Workspace:FindFirstChild("Lobby")
+
 local EventRemote = ReplicatedStorage:WaitForChild("Remote"):WaitForChild("Server"):WaitForChild("PlayRoom"):WaitForChild("Event")
 
 local GameWorld = require(ReplicatedStorage.Shared.Info.GameWorld.Levels)
@@ -77,10 +79,52 @@ local AutoFarm_1 = AutoFarm:newpage()
 AutoFarm_1:Toggle("Auto Craft", getgenv().RFManager["Auto Craft"], false, function(t)
     getgenv().RFManager["Auto Craft"] = t
     func_RFM:Store()
-    if t then
+    if t and IsLobby then
         SelectMap()
     end
 end)
+
+local AutoFarm_2 = AutoFarm:newpage()
+
+AutoFarm_2:Toggle("Auto Vote Start", getgenv().RFManager["VoteStart"], true, function(t)
+    getgenv().RFManager["VoteStart"] = t
+    func_RFM:Store()
+
+    local voteStart = function(t)
+        if t and getgenv().RFManager["VoteStart"] then
+            ReplicatedStorage.Remote.Server.OnGame.Voting.VotePlaying:FireServer()
+        end
+    end
+    ReplicatedStorage.Values.Game.VotePlaying.VoteEnabled.Changed:Connect(voteStart)
+    voteStart(true)
+end)
+
+AutoFarm_2:Toggle("Auto Vote Retry", getgenv().RFManager["VoteRetry"], true, function(t)
+    getgenv().RFManager["VoteRetry"] = t
+    func_RFM:Store()
+
+    local voteRetry = function(t)
+        if t and getgenv().RFManager["VoteRetry"] then
+            ReplicatedStorage.Remote.Server.OnGame.Voting.VoteRetry:FireServer()
+        end
+    end
+    ReplicatedStorage.Values.Game.VoteRetry.VoteEnabled.Changed:Connect(voteRetry)
+    voteRetry(true)
+end)
+
+AutoFarm_2:Toggle("Auto Vote Next", getgenv().RFManager["VoteNext"], true, function(t)
+    getgenv().RFManager["VoteNext"] = t
+    func_RFM:Store()
+
+    local voteNext = function(t)
+        if t and getgenv().RFManager["VoteNext"] then
+            ReplicatedStorage.Remote.Server.OnGame.Voting.VoteNext:FireServer()
+        end
+    end
+    ReplicatedStorage.Values.Game.VoteNext.VoteEnabled.Changed:Connect(voteNext)
+    voteNext(true)
+end)
+
 
 -- ===============================
 
