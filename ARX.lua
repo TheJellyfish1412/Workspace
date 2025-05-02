@@ -180,6 +180,7 @@ end)
 
 AutoFarm_1:Toggle("Auto Easter", getgenv().RFManager["Auto Easter"], false, function(t)
     getgenv().RFManager["Auto Easter"] = t
+    getgenv().RFManager["Auto Easter"] = false
     func_RFM:Store()
     if t and IsLobby then
         print("Start Select Map")
