@@ -189,7 +189,7 @@ TempCraft = nil
 local Setting = Window:Taps("Setting")
 local Setting_1 = Setting:newpage()
 
-Setting_1:Toggle(name, getgenv().RFManager["Render"], true, function(mode)
+Setting_1:Toggle("Render3D", getgenv().RFManager["Render"], true, function(mode)
     getgenv().RFManager["Render"] = mode
     func_RFM:Store()
 
