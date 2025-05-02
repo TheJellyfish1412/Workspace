@@ -711,6 +711,7 @@ function create:Win(text, logo)
         UIPadding_Pagefrist.Parent = ScrollingFrame_Pagefrist
         UIPadding_Pagefrist.PaddingLeft = UDim.new(0, 10)
         UIPadding_Pagefrist.PaddingTop = UDim.new(0, 10)
+        UIPadding_Pagefrist.PaddingBottom = UDim.new(0, 10)
 
         local page = {}
 
