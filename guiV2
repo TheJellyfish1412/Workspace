@@ -644,7 +644,7 @@ function create:Win(text, logo)
         MainPage.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         MainPage.BorderSizePixel = 0
         MainPage.Position = UDim2.new(0.5, 0, 0.5, 0) -- UDim2.new(0.0149812736, 0, 0.13, 0)
-        MainPage.Size = UDim2.new(0, 518, 0, 375)
+        MainPage.Size = UDim2.new(0, 518, 0, 365)
         MainPage.BackgroundTransparency = 1
         MainPage.ClipsDescendants = true
         MainPage.Visible = true
@@ -695,7 +695,7 @@ function create:Win(text, logo)
         ScrollingFrame_Pagefrist.Active = true
         ScrollingFrame_Pagefrist.BackgroundColor3 = Color3.fromRGB(23, 23, 23) -- 0, 128, 255
         ScrollingFrame_Pagefrist.BorderSizePixel = 0
-        ScrollingFrame_Pagefrist.Size = UDim2.new(0, 518, 0, 375)
+        ScrollingFrame_Pagefrist.Size = UDim2.new(0, 518, 0, 360)
         ScrollingFrame_Pagefrist.ScrollBarThickness = 4
         ScrollingFrame_Pagefrist.ScrollBarImageColor3 = _G.Color -- 0, 128, 255
 
@@ -706,7 +706,7 @@ function create:Win(text, logo)
         UIGridLayout_Pagefrist.Parent = ScrollingFrame_Pagefrist
         UIGridLayout_Pagefrist.SortOrder = Enum.SortOrder.LayoutOrder
         UIGridLayout_Pagefrist.CellPadding = UDim2.new(0, 13, 0, 15)
-        UIGridLayout_Pagefrist.CellSize = UDim2.new(0, 240, 0, 370)
+        UIGridLayout_Pagefrist.CellSize = UDim2.new(0, 240, 0, 325)
 
         UIPadding_Pagefrist.Parent = ScrollingFrame_Pagefrist
         UIPadding_Pagefrist.PaddingLeft = UDim.new(0, 10)
