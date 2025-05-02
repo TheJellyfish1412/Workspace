@@ -4041,4 +4041,4 @@ function create:Win(text, logo)
     return top
 end
 
-return { create, func_RFM }
+return create, func_RFM
