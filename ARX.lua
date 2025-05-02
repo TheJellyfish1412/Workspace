@@ -154,7 +154,34 @@ end
 n = nil
 TempCraft = nil
 
+local meta = getrawmetatable(game)
+local old = meta.__namecall
 
+if setreadonly then
+    setreadonly(meta, false)
+else
+    make_writeable(meta, true)
+end
 
+local callMethod = getnamecallmethod or get_namecall_method
+local newClosure = newcclosure or function(f)
+    return f
+end
+
+meta.__namecall = newClosure(function(Event, ...)
+    local cmethod = callMethod()
+    local fmethod = (tostring(cmethod) == "Fire") or nil
+    local arguments = {...}
+    if fmethod and tostring(Event) == "AddColorToTable" then
+        return
+    end
+    return old(Event, ...)
+end)
+
+if setreadonly then
+    setreadonly(meta, true)
+else
+    make_writeable(meta, false)
+end
 
 getgenv().RFManager.Loaded = true
