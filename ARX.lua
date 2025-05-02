@@ -23,7 +23,7 @@ function SelectMap()
             if toggle then
                 CraftFound = true
                 for reqName, amount in pairs(CraftingRecipes[ItemName].Requirement) do
-                    totalReq[reqName] = (totalReq[reqName] or 0) + amount
+                    Requirement[reqName] = (Requirement[reqName] or 0) + amount
                 end
             end
         end
