@@ -101,7 +101,7 @@ AutoFarm_2:Toggle("Auto Vote Start", getgenv().RFManager["VoteStart"], true, fun
     end
 end)
 
-AutoFarm_2:Toggle("Auto Vote Retry", getgenv().RFManager["VoteRetry"], true, function(t)
+AutoFarm_2:Toggle("Auto Vote Retry", getgenv().RFManager["VoteRetry"], false, function(t)
     getgenv().RFManager["VoteRetry"] = t
     func_RFM:Store()
 
@@ -116,7 +116,7 @@ AutoFarm_2:Toggle("Auto Vote Retry", getgenv().RFManager["VoteRetry"], true, fun
     end
 end)
 
-AutoFarm_2:Toggle("Auto Vote Next", getgenv().RFManager["VoteNext"], true, function(t)
+AutoFarm_2:Toggle("Auto Vote Next", getgenv().RFManager["VoteNext"], false, function(t)
     getgenv().RFManager["VoteNext"] = t
     func_RFM:Store()
 
