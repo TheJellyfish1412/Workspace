@@ -198,12 +198,14 @@ end)
 
 -- ==============================
 
-ReplicatedStorage.Remote.Client.UI.GameEndedUI.OnClientEvent:Connect(function(...)
-    local x = {...}
-    if x[1] == "GameEnded_TextAnimation" then
-        SelectMap()
-    end
-end)
+if not IsLobby then
+    ReplicatedStorage.Remote.Client.UI.GameEndedUI.OnClientEvent:Connect(function(...)
+        local x = {...}
+        if x[1] == "GameEnded_TextAnimation" then
+            SelectMap()
+        end
+    end)
+end
 
 -- local meta = getrawmetatable(game)
 -- local old = meta.__namecall
