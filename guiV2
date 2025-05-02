@@ -303,7 +303,7 @@ function create:Win(text, logo)
         end
     )
     
-    Ui_mobile_img.MouseButton1Click:Connect(pcall(function()
+    Ui_mobile_img.MouseButton1Click:Connect(function()
         if library.toggledui == false then
             library.toggledui = true
             TweenService:Create(
@@ -322,7 +322,7 @@ function create:Win(text, logo)
             ):Play()
             PlasmaCourseScreen.Enabled = true
         end
-    end))
+    end)
 
     local imageclickframe = Instance.new("ImageLabel")
 
