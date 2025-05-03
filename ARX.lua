@@ -169,7 +169,7 @@ function SelectMapEnded()
                             else
                                 TeleportService:Teleport(game.PlaceId, LocalPlayer)
                             end
-
+                            
                             SelectingMapEnded = false
                             return true
                         end
