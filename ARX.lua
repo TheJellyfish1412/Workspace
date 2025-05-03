@@ -203,11 +203,23 @@ function SelectMapEnded()
     end
 
     if getgenv().RFManager["Auto Easter"] then
-        ReplicatedStorage.Remote.Server.OnGame.Voting.VoteRetry:FireServer()
+        if ReplicatedStorage.Values.Game.Gamemode == "Event" then
+            if ReplicatedStorage.Values.Game.VoteRetry.VoteEnabled then
+                ReplicatedStorage.Remote.Server.OnGame.Voting.VoteRetry:FireServer()
+            end
+        else
+            TeleportService:Teleport(game.PlaceId, LocalPlayer)
+        end
         SelectingMapEnded = false
         return 
     elseif getgenv().RFManager["Auto Challenge"] then
-        ReplicatedStorage.Remote.Server.OnGame.Voting.VoteRetry:FireServer()
+        if ReplicatedStorage.Values.Game.Gamemode == "Challenge" then
+            if ReplicatedStorage.Values.Game.VoteRetry.VoteEnabled then
+                ReplicatedStorage.Remote.Server.OnGame.Voting.VoteRetry:FireServer()
+            end
+        else
+            TeleportService:Teleport(game.PlaceId, LocalPlayer)
+        end
         SelectingMapEnded = false
         return 
     end
