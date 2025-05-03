@@ -1,5 +1,6 @@
 local create, func_RFM = loadstring(game:HttpGet("https://raw.githubusercontent.com/TheJellyfish1412/Workspace/refs/heads/main/guiV2.lua"))()
 local Window = create:Win("Plasma", 11390492777)
+local AutoFarm = Window:Taps("Auto Farm")
 
 -- ===========================================================
 
@@ -92,7 +93,7 @@ function SelectMap()
                 while WorldData[World.."_Chapter"..index_n] do
                     task.wait()
                     local Chapter = World.."_Chapter"..index_n
-                    local ChapterData = WorldData[World.."_RangerStage"..index_n]
+                    local ChapterData = WorldData[Chapter]
                     Window:SetTextBottomLeft("Check " .. Chapter)
                     if temp(Chapter, ChapterData) then
                         return
@@ -102,8 +103,8 @@ function SelectMap()
                 index_n = 1
                 while WorldData[World.."_RangerStage"..index_n] do
                     task.wait()
-                    local Chapter = World.."_Chapter"..index_n
-                    local ChapterData = WorldData[World.."_RangerStage"..index_n]
+                    local Chapter = World.."_RangerStage"..index_n
+                    local ChapterData = WorldData[Chapter]
                     Window:SetTextBottomLeft("Check " .. Chapter)
                     if temp(Chapter, ChapterData) then
                         return
@@ -115,12 +116,14 @@ function SelectMap()
     end
 
     if getgenv().RFManager["Auto Easter"] then
+        Window:SetTextBottomLeft("Select Easter Event")
         EventRemote:FireServer("Easter-Event")
         wait(1)
         EventRemote:FireServer("Start")
         SelectingMap = false
         return
     elseif getgenv().RFManager["Auto Challenge"] then
+        Window:SetTextBottomLeft("Select Challenge")
         EventRemote:FireServer(
             "Create",
             {
@@ -177,7 +180,7 @@ function SelectMapEnded()
                     task.wait()
                     local Chapter = World.."_Chapter"..index_n
                     Window:SetTextBottomLeft("Check " .. Chapter)
-                    local ChapterData = WorldData[World.."_RangerStage"..index_n]
+                    local ChapterData = WorldData[Chapter]
                     if temp(Chapter, ChapterData) then
                         return
                     end
@@ -186,9 +189,9 @@ function SelectMapEnded()
                 index_n = 1
                 while WorldData[World.."_RangerStage"..index_n] do
                     task.wait()
-                    local Chapter = World.."_Chapter"..index_n
+                    local Chapter = World.."_RangerStage"..index_n
                     Window:SetTextBottomLeft("Check " .. Chapter)
-                    local ChapterData = WorldData[World.."_RangerStage"..index_n]
+                    local ChapterData = WorldData[Chapter]
                     if temp(Chapter, ChapterData) then
                         return
                     end
