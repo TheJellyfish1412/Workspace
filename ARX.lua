@@ -303,6 +303,7 @@ if not IsLobby then
     ReplicatedStorage.Remote.Client.UI.GameEndedUI.OnClientEvent:Connect(function(...)
         local x = {...}
         if x[1] == "GameEnded_TextAnimation" then
+            wait(2)
             print("Game End. Start Select Map")
             SelectMapEnded()
         end
