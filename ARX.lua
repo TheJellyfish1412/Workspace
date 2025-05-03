@@ -1,4 +1,5 @@
 local create, func_RFM = loadstring(game:HttpGet("https://raw.githubusercontent.com/TheJellyfish1412/Workspace/refs/heads/main/guiV2.lua"))()
+local Window = create:Win("Plasma", 11390492777)
 
 -- ===========================================================
 
@@ -37,7 +38,9 @@ function SelectMap()
         end
         if CraftFound then
             for World, WorldData in pairs(GameWorld) do
+                task.wait()
                 local function temp(Chapter, ChapterData)
+                    Window:SetTextBottomLeft("Select " .. Chapter)
                     for _, ItemData in pairs(ChapterData.Items) do
                         if Requirement[ItemData.Name] and not ReplicatedStorage.Player_Data[LocalPlayer.Name].RangerStage:FindFirstChild(Chapter) then
                             EventRemote:FireServer("Create")
@@ -87,17 +90,19 @@ function SelectMap()
 
                 local index_n = 1
                 while WorldData[World.."_Chapter"..index_n] do
+                    task.wait()
                     local Chapter = World.."_Chapter"..index_n
                     local ChapterData = WorldData[World.."_RangerStage"..index_n]
-                    print("Check", Chapter)
+                    Window:SetTextBottomLeft("Check " .. Chapter)
                     temp(Chapter, ChapterData)
                     index_n = index_n + 1
                 end
                 index_n = 1
                 while WorldData[World.."_RangerStage"..index_n] do
+                    task.wait()
                     local Chapter = World.."_Chapter"..index_n
                     local ChapterData = WorldData[World.."_RangerStage"..index_n]
-                    print("Check", Chapter)
+                    Window:SetTextBottomLeft("Check " .. Chapter)
                     temp(Chapter, ChapterData)
                     index_n = index_n + 1
                 end
@@ -146,7 +151,9 @@ function SelectMapEnded()
         end
         if CraftFound then
             for World, WorldData in pairs(GameWorld) do
+                task.wait()
                 local function temp(Chapter, ChapterData)
+                    Window:SetTextBottomLeft("Select " .. Chapter)
                     for _, ItemData in pairs(ChapterData.Items) do
                         if Requirement[ItemData.Name] and not ReplicatedStorage.Player_Data[LocalPlayer.Name].RangerStage:FindFirstChild(Chapter) then
                             if ChapterData.Requirements.Required_Levels == ReplicatedStorage.Values.Game.Level.Value then
@@ -163,14 +170,18 @@ function SelectMapEnded()
 
                 local index_n = 1
                 while WorldData[World.."_Chapter"..index_n] do
+                    task.wait()
                     local Chapter = World.."_Chapter"..index_n
+                    Window:SetTextBottomLeft("Check " .. Chapter)
                     local ChapterData = WorldData[World.."_RangerStage"..index_n]
                     temp(Chapter, ChapterData)
                     index_n = index_n + 1
                 end
                 index_n = 1
                 while WorldData[World.."_RangerStage"..index_n] do
+                    task.wait()
                     local Chapter = World.."_Chapter"..index_n
+                    Window:SetTextBottomLeft("Check " .. Chapter)
                     local ChapterData = WorldData[World.."_RangerStage"..index_n]
                     temp(Chapter, ChapterData)
                     index_n = index_n + 1
@@ -195,8 +206,6 @@ function SelectMapEnded()
 end
 
 -- ===========================================================
-
-local Window = create:Win("Plasma", 11390492777)
 
 local AutoFarm = Window:Taps("Auto Farm")
 
