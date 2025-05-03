@@ -86,8 +86,6 @@ function SelectMap()
                 end
 
                 local index_n = 1
-                _RangerStage
-                _Chapter
                 while WorldData[World.."_Chapter"..index_n] do
                     local Chapter = World.."_Chapter"..index_n
                     local ChapterData = WorldData[World.."_RangerStage"..index_n]
@@ -164,8 +162,6 @@ function SelectMapEnded()
                 end
 
                 local index_n = 1
-                _RangerStage
-                _Chapter
                 while WorldData[World.."_Chapter"..index_n] do
                     local Chapter = World.."_Chapter"..index_n
                     local ChapterData = WorldData[World.."_RangerStage"..index_n]
