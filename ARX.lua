@@ -163,7 +163,8 @@ function SelectMapEnded()
                     for _, ItemData in pairs(ChapterData.Items) do
                         if Requirement[ItemData.Name] and not ReplicatedStorage.Player_Data[LocalPlayer.Name].RangerStage:FindFirstChild(Chapter) then
                             Window:SetTextBottomLeft("Select " .. Chapter)
-                            if ChapterData.Requirements.Required_Levels == ReplicatedStorage.Values.Game.Level.Value then
+                            local NowChapter = ReplicatedStorage.Values.Game.Level.Value
+                            if WorldData[NowChapter] and WorldData[NowChapter].NextChapter == Chapter then
                                 ReplicatedStorage.Remote.Server.OnGame.Voting.VoteNext:FireServer()
                             else
                                 TeleportService:Teleport(game.PlaceId, LocalPlayer)
