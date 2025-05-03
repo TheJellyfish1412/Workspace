@@ -231,7 +231,7 @@ function create:Win(text, logo)
     TimeGlobal.Parent = MainFrame
     TimeGlobal.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     TimeGlobal.Position = UDim2.new(1, 0, 1, 0)
-    TimeGlobal.Size = UDim2.new(0, 95, 0, 39)
+    TimeGlobal.Size = UDim2.new(0, 95, 1, 0)
     TimeGlobal.BackgroundTransparency = 1
     TimeGlobal.ZIndex = 3
     TimeGlobal.Font = Enum.Font.GothamBold
