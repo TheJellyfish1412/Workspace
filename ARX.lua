@@ -386,16 +386,16 @@ if not IsLobby then
 end
 
 
-local ws = WebSocket.connect("ws://26.145.139.40:5001/RFManager/ws")
+-- local ws = WebSocket.connect("ws://26.145.139.40:5001/RFManager/ws")
 
-ws.OnMessage:Connect(function(message)
-	print("New msg")
-	print(message)
-end)
+-- ws.OnMessage:Connect(function(message)
+-- 	print("New msg")
+-- 	print(message)
+-- end)
 
-ws.OnClose:Connect(function()
-	print("Closed")
-end)
+-- ws.OnClose:Connect(function()
+-- 	print("Closed")
+-- end)
 
 -- local meta = getrawmetatable(game)
 -- local old = meta.__namecall
