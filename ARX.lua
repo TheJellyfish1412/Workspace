@@ -37,7 +37,7 @@ function SelectMap()
         end
         if CraftFound then
             for World, WorldData in pairs(GameWorld) do
-                for Chapter, ChapterData in pairs(WorldData) do
+                local function temp(Chapter, ChapterData)
                     for _, ItemData in pairs(ChapterData.Items) do
                         if Requirement[ItemData.Name] and not ReplicatedStorage.Player_Data[LocalPlayer.Name].RangerStage:FindFirstChild(Chapter) then
                             EventRemote:FireServer("Create")
@@ -84,6 +84,23 @@ function SelectMap()
                         end
                     end
                 end
+
+                local index_n = 1
+                _RangerStage
+                _Chapter
+                while WorldData[World.."_Chapter"..index_n] do
+                    local Chapter = World.."_Chapter"..index_n
+                    local ChapterData = WorldData[World.."_RangerStage"..index_n]
+                    temp(Chapter, ChapterData)
+                    index_n = index_n + 1
+                end
+                index_n = 1
+                while WorldData[World.."_RangerStage"..index_n] do
+                    local Chapter = World.."_Chapter"..index_n
+                    local ChapterData = WorldData[World.."_RangerStage"..index_n]
+                    temp(Chapter, ChapterData)
+                    index_n = index_n + 1
+                end
             end
         end
     end
@@ -129,7 +146,7 @@ function SelectMapEnded()
         end
         if CraftFound then
             for World, WorldData in pairs(GameWorld) do
-                for Chapter, ChapterData in pairs(WorldData) do
+                local function temp(Chapter, ChapterData)
                     for _, ItemData in pairs(ChapterData.Items) do
                         if Requirement[ItemData.Name] and not ReplicatedStorage.Player_Data[LocalPlayer.Name].RangerStage:FindFirstChild(Chapter) then
                             if ChapterData.Requirements.Required_Levels == ReplicatedStorage.Values.Game.Level.Value then
@@ -142,6 +159,23 @@ function SelectMapEnded()
                             return
                         end
                     end
+                end
+
+                local index_n = 1
+                _RangerStage
+                _Chapter
+                while WorldData[World.."_Chapter"..index_n] do
+                    local Chapter = World.."_Chapter"..index_n
+                    local ChapterData = WorldData[World.."_RangerStage"..index_n]
+                    temp(Chapter, ChapterData)
+                    index_n = index_n + 1
+                end
+                index_n = 1
+                while WorldData[World.."_RangerStage"..index_n] do
+                    local Chapter = World.."_Chapter"..index_n
+                    local ChapterData = WorldData[World.."_RangerStage"..index_n]
+                    temp(Chapter, ChapterData)
+                    index_n = index_n + 1
                 end
             end
         end
