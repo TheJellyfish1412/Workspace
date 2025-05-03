@@ -91,6 +91,7 @@ function SelectMap()
                 while WorldData[World.."_Chapter"..index_n] do
                     local Chapter = World.."_Chapter"..index_n
                     local ChapterData = WorldData[World.."_RangerStage"..index_n]
+                    print("Check", Chapter)
                     temp(Chapter, ChapterData)
                     index_n = index_n + 1
                 end
@@ -98,6 +99,7 @@ function SelectMap()
                 while WorldData[World.."_RangerStage"..index_n] do
                     local Chapter = World.."_Chapter"..index_n
                     local ChapterData = WorldData[World.."_RangerStage"..index_n]
+                    print("Check", Chapter)
                     temp(Chapter, ChapterData)
                     index_n = index_n + 1
                 end
