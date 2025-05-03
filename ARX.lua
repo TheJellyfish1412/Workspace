@@ -268,7 +268,7 @@ AutoFarm_2:Toggle("Auto Upgrade", getgenv().RFManager["Auto Upgrade"], true, fun
 
     if not IsLobby then
         while getgenv().RFManager["Auto Upgrade"] do
-            pcall(function()
+            local pass, err = pcall(function()
                 for _,FolderUnit in pairs(LocalPlayer.UnitsFolder:GetChildren()) do
                     local UnitData = Units[FolderUnit.Name]
                     local MaxLevel = #UnitData.Upgrade
@@ -279,6 +279,9 @@ AutoFarm_2:Toggle("Auto Upgrade", getgenv().RFManager["Auto Upgrade"], true, fun
                     end
                 end
             end)
+            if not pass then
+                print(err)
+            end
             task.wait(0.2)
         end
     end
