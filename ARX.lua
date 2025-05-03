@@ -273,7 +273,7 @@ AutoFarm_2:Toggle("Auto Upgrade", getgenv().RFManager["Auto Upgrade"], true, fun
                     local UnitData = Units[FolderUnit.Name]
                     local MaxLevel = #UnitData.Upgrade
 
-                    while getgenv().RFManager["Auto Upgrade"] and FolderUnit.Upgrade_Folder.Level.Value < MaxLevel do
+                    while getgenv().RFManager["Auto Upgrade"] and FolderUnit.Upgrade_Folder.Level.Value <= MaxLevel do
                         task.wait(0.2)
                         ReplicatedStorage.Remote.Server.Units.Upgrade:FireServer(FolderUnit)
                     end
@@ -384,6 +384,18 @@ if not IsLobby then
         end
     end)
 end
+
+
+local ws = WebSocket.connect("ws://26.145.139.40:5001/RFManager/ws")
+
+ws.OnMessage:Connect(function(message)
+	print("New msg")
+	print(message)
+end)
+
+ws.OnClose:Connect(function()
+	print("Closed")
+end)
 
 -- local meta = getrawmetatable(game)
 -- local old = meta.__namecall
