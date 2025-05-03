@@ -212,10 +212,6 @@ function SelectMapEnded()
         return 
     end
 
-    local ohInstance1 = game:GetService("Players").LocalPlayer.UnitsFolder["Songjinwuu:Evo"]
-
-    game:GetService("ReplicatedStorage").Remote.Server.Units.Upgrade:FireServer(ohInstance1)
-
     SelectingMapEnded = false
     return true
 end
