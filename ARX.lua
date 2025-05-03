@@ -40,9 +40,9 @@ function SelectMap()
             for World, WorldData in pairs(GameWorld) do
                 task.wait()
                 local function temp(Chapter, ChapterData)
-                    Window:SetTextBottomLeft("Select " .. Chapter)
                     for _, ItemData in pairs(ChapterData.Items) do
                         if Requirement[ItemData.Name] and not ReplicatedStorage.Player_Data[LocalPlayer.Name].RangerStage:FindFirstChild(Chapter) then
+                            Window:SetTextBottomLeft("Select " .. Chapter)
                             EventRemote:FireServer("Create")
                             wait(1)
                             local IsRanger = string.find(Chapter, "Ranger")
@@ -83,7 +83,7 @@ function SelectMap()
                             EventRemote:FireServer("Start")
 
                             SelectingMap = false
-                            return
+                            return true
                         end
                     end
                 end
@@ -94,7 +94,9 @@ function SelectMap()
                     local Chapter = World.."_Chapter"..index_n
                     local ChapterData = WorldData[World.."_RangerStage"..index_n]
                     Window:SetTextBottomLeft("Check " .. Chapter)
-                    temp(Chapter, ChapterData)
+                    if temp(Chapter, ChapterData) then
+                        return
+                    end
                     index_n = index_n + 1
                 end
                 index_n = 1
@@ -103,7 +105,9 @@ function SelectMap()
                     local Chapter = World.."_Chapter"..index_n
                     local ChapterData = WorldData[World.."_RangerStage"..index_n]
                     Window:SetTextBottomLeft("Check " .. Chapter)
-                    temp(Chapter, ChapterData)
+                    if temp(Chapter, ChapterData) then
+                        return
+                    end
                     index_n = index_n + 1
                 end
             end
@@ -153,9 +157,9 @@ function SelectMapEnded()
             for World, WorldData in pairs(GameWorld) do
                 task.wait()
                 local function temp(Chapter, ChapterData)
-                    Window:SetTextBottomLeft("Select " .. Chapter)
                     for _, ItemData in pairs(ChapterData.Items) do
                         if Requirement[ItemData.Name] and not ReplicatedStorage.Player_Data[LocalPlayer.Name].RangerStage:FindFirstChild(Chapter) then
+                            Window:SetTextBottomLeft("Select " .. Chapter)
                             if ChapterData.Requirements.Required_Levels == ReplicatedStorage.Values.Game.Level.Value then
                                 ReplicatedStorage.Remote.Server.OnGame.Voting.VoteNext:FireServer()
                             else
@@ -163,7 +167,7 @@ function SelectMapEnded()
                             end
 
                             SelectingMapEnded = false
-                            return
+                            return true
                         end
                     end
                 end
@@ -174,7 +178,9 @@ function SelectMapEnded()
                     local Chapter = World.."_Chapter"..index_n
                     Window:SetTextBottomLeft("Check " .. Chapter)
                     local ChapterData = WorldData[World.."_RangerStage"..index_n]
-                    temp(Chapter, ChapterData)
+                    if temp(Chapter, ChapterData) then
+                        return
+                    end
                     index_n = index_n + 1
                 end
                 index_n = 1
@@ -183,7 +189,9 @@ function SelectMapEnded()
                     local Chapter = World.."_Chapter"..index_n
                     Window:SetTextBottomLeft("Check " .. Chapter)
                     local ChapterData = WorldData[World.."_RangerStage"..index_n]
-                    temp(Chapter, ChapterData)
+                    if temp(Chapter, ChapterData) then
+                        return
+                    end
                     index_n = index_n + 1
                 end
             end
