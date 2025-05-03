@@ -238,7 +238,7 @@ function create:Win(text, logo)
     TimeGlobal.Text = "00:00:00"
     TimeGlobal.TextColor3 = Color3.fromRGB(255, 255, 255)
     TimeGlobal.TextSize = 19.000
-    TimeGlobal.TextXAlignment = Enum.TextXAlignment.Left
+    TimeGlobal.TextXAlignment = Enum.TextXAlignment.Right
 
 
     local NameOfGame = Instance.new("TextLabel")
