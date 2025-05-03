@@ -348,11 +348,11 @@ end)
 --     end
 -- end)
 
-Setting_1:Toggle("Render3D", getgenv().RFManager["Render"], true, function(mode)
+Setting_1:Toggle("No Render3D", getgenv().RFManager["Render"], false, function(mode)
     getgenv().RFManager["Render"] = mode
     func_RFM:Store()
 
-    RunService:Set3dRenderingEnabled(mode)
+    RunService:Set3dRenderingEnabled(not mode)
 end)
 
 -- ==============================
