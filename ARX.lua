@@ -259,9 +259,7 @@ AutoFarm_2:Toggle("Auto Upgrade", getgenv().RFManager["Auto Upgrade"], true, fun
 
     if not IsLobby then
         while getgenv().RFManager["Auto Upgrade"] do
-            local children = LocalPlayer.UnitsFolder:GetChildren()
-            for i = #children, 1, -1 do
-                local FolderUnit = children[i]
+            for _,FolderUnit in pairs(LocalPlayer.UnitsFolder:GetChildren()) do
                 local UnitData = Units[FolderUnit.Name]
                 local MaxLevel = #UnitData.Upgrade
 
