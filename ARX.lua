@@ -9,6 +9,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 -- ===========================================================
 
+local TimeStart = os.time()
 local LocalPlayer = game.Players.LocalPlayer
 local IsLobby = game.Workspace:FindFirstChild("Lobby")
 
@@ -206,6 +207,7 @@ function SelectMapEnded()
         if ReplicatedStorage.Values.Game.Gamemode.Value == "Event" then
             if ReplicatedStorage.Values.Game.VoteRetry.VoteEnabled then
                 ReplicatedStorage.Remote.Server.OnGame.Voting.VoteRetry:FireServer()
+                TimeStart = os.time()
             end
         else
             TeleportService:Teleport(game.PlaceId, LocalPlayer)
@@ -216,6 +218,7 @@ function SelectMapEnded()
         if ReplicatedStorage.Values.Game.Gamemode.Value == "Challenge" then
             if ReplicatedStorage.Values.Game.VoteRetry.VoteEnabled then
                 ReplicatedStorage.Remote.Server.OnGame.Voting.VoteRetry:FireServer()
+                TimeStart = os.time()
             end
         else
             TeleportService:Teleport(game.PlaceId, LocalPlayer)
@@ -249,6 +252,11 @@ AutoFarm_1:Toggle("Auto Easter", getgenv().RFManager["Auto Easter"], false, func
         print("Start Select Map")
         SelectMap()
     end
+end)
+
+AutoFarm_1:Toggle("Delay Easter", getgenv().RFManager["Delay Easter"], false, function(t)
+    getgenv().RFManager["Delay Easter"] = t
+    func_RFM:Store()
 end)
 
 AutoFarm_1:Toggle("Auto Challenge", getgenv().RFManager["Auto Challenge"], false, function(t)
@@ -295,6 +303,7 @@ AutoFarm_2:Toggle("Auto Vote Start", getgenv().RFManager["VoteStart"], true, fun
         local voteStart = function(x)
             if x and getgenv().RFManager["VoteStart"] then
                 ReplicatedStorage.Remote.Server.OnGame.Voting.VotePlaying:FireServer()
+                TimeStart = os.time()
             end
         end
         ReplicatedStorage.Values.Game.VotePlaying.VoteEnabled.Changed:Connect(voteStart)
@@ -377,6 +386,7 @@ if not IsLobby then
             if SelectMapEnded() then
                 if getgenv().RFManager["VoteRetry"] and ReplicatedStorage.Values.Game.VoteRetry.VoteEnabled then
                     ReplicatedStorage.Remote.Server.OnGame.Voting.VoteRetry:FireServer()
+                    TimeStart = os.time()
                 elseif getgenv().RFManager["VoteNext"] and ReplicatedStorage.Values.Game.VoteNext.VoteEnabled then
                     ReplicatedStorage.Remote.Server.OnGame.Voting.VoteNext:FireServer()
                 end
@@ -397,34 +407,36 @@ end
 -- 	print("Closed")
 -- end)
 
--- local meta = getrawmetatable(game)
--- local old = meta.__namecall
+if (getgenv().RFManager["Delay Easter"]) and (not IsLobby) and (ReplicatedStorage.Values.Game.Gamemode.Value == "Event") then
+    local meta = getrawmetatable(game)
+    local old = meta.__namecall
 
--- if setreadonly then
---     setreadonly(meta, false)
--- else
---     make_writeable(meta, true)
--- end
+    if setreadonly then
+        setreadonly(meta, false)
+    else
+        make_writeable(meta, true)
+    end
 
--- local callMethod = getnamecallmethod or get_namecall_method
--- local newClosure = newcclosure or function(f)
---     return f
--- end
+    local callMethod = getnamecallmethod or get_namecall_method
+    local newClosure = newcclosure or function(f)
+        return f
+    end
 
--- meta.__namecall = newClosure(function(Event, ...)
---     local cmethod = callMethod()
---     local fmethod = (tostring(cmethod) == "Fire") or nil
---     local arguments = {...}
---     if fmethod and tostring(Event) == "AddColorToTable" then
---         return
---     end
---     return old(Event, ...)
--- end)
+    meta.__namecall = newClosure(function(Event, ...)
+        local cmethod = callMethod()
+        local fmethod = (tostring(cmethod) == "FireServer") or nil
+        local arguments = {...}
+        if fmethod and tostring(Event) == "Deployment" and os.time() - TimeStart <= 37 then
+            return
+        end
+        return old(Event, ...)
+    end)
 
--- if setreadonly then
---     setreadonly(meta, true)
--- else
---     make_writeable(meta, false)
--- end
+    if setreadonly then
+        setreadonly(meta, true)
+    else
+        make_writeable(meta, false)
+    end
+end
 
 getgenv().Loaded = true
