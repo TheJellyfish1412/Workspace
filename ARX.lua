@@ -16,6 +16,7 @@ local EventRemote = ReplicatedStorage:WaitForChild("Remote"):WaitForChild("Serve
 
 local GameWorld = require(ReplicatedStorage.Shared.Info.GameWorld.Levels)
 local CraftingRecipes = require(ReplicatedStorage.Shared.Info.CraftingRecipes)
+local Units = require(ReplicatedStorage.Shared.Info.Units)
 
 -- ===========================================================
 
@@ -210,7 +211,9 @@ function SelectMapEnded()
         return 
     end
 
+    local ohInstance1 = game:GetService("Players").LocalPlayer.UnitsFolder["Songjinwuu:Evo"]
 
+    game:GetService("ReplicatedStorage").Remote.Server.Units.Upgrade:FireServer(ohInstance1)
 
     SelectingMapEnded = false
     return true
@@ -249,6 +252,28 @@ AutoFarm_1:Toggle("Auto Challenge", getgenv().RFManager["Auto Challenge"], false
 end)
 
 local AutoFarm_2 = AutoFarm:newpage()
+
+AutoFarm_2:Toggle("Auto Upgrade", getgenv().RFManager["Auto Upgrade"], true, function(t)
+    getgenv().RFManager["Auto Upgrade"] = t
+    func_RFM:Store()
+
+    if not IsLobby then
+        while getgenv().RFManager["Auto Upgrade"] do
+            local children = LocalPlayer.UnitsFolder:GetChildren()
+            for i = #children, 1, -1 do
+                local FolderUnit = children[i]
+                local UnitData = Units[FolderUnit.Name]
+                local MaxLevel = #UnitData.Upgrade
+
+                while getgenv().RFManager["Auto Upgrade"] and FolderUnit.Upgrade_Folder.Level.Value < MaxLevel do
+                    task.wait(0.2)
+                    ReplicatedStorage.Remote.Server.Units.Upgrade:FireServer(FolderUnit)
+                end
+            end
+            task.wait(0.2)
+        end
+    end
+end)
 
 AutoFarm_2:Toggle("Auto Vote Start", getgenv().RFManager["VoteStart"], true, function(t)
     getgenv().RFManager["VoteStart"] = t
