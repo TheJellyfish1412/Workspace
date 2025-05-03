@@ -426,7 +426,7 @@ if (getgenv().RFManager["Delay Easter"]) and (not IsLobby) and (ReplicatedStorag
         local cmethod = callMethod()
         local fmethod = (tostring(cmethod) == "FireServer") or nil
         local arguments = {...}
-        if fmethod and tostring(Event) == "Deployment" and os.time() - TimeStart <= 37 then
+        if fmethod and tostring(Event) == "Deployment" and os.time() - TimeStart <= 39 then
             return
         end
         return old(Event, ...)
