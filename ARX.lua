@@ -203,7 +203,7 @@ function SelectMapEnded()
     end
 
     if getgenv().RFManager["Auto Easter"] then
-        if ReplicatedStorage.Values.Game.Gamemode == "Event" then
+        if ReplicatedStorage.Values.Game.Gamemode.Value == "Event" then
             if ReplicatedStorage.Values.Game.VoteRetry.VoteEnabled then
                 ReplicatedStorage.Remote.Server.OnGame.Voting.VoteRetry:FireServer()
             end
@@ -213,7 +213,7 @@ function SelectMapEnded()
         SelectingMapEnded = false
         return 
     elseif getgenv().RFManager["Auto Challenge"] then
-        if ReplicatedStorage.Values.Game.Gamemode == "Challenge" then
+        if ReplicatedStorage.Values.Game.Gamemode.Value == "Challenge" then
             if ReplicatedStorage.Values.Game.VoteRetry.VoteEnabled then
                 ReplicatedStorage.Remote.Server.OnGame.Voting.VoteRetry:FireServer()
             end
