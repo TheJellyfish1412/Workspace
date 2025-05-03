@@ -259,16 +259,17 @@ AutoFarm_2:Toggle("Auto Upgrade", getgenv().RFManager["Auto Upgrade"], true, fun
 
     if not IsLobby then
         while getgenv().RFManager["Auto Upgrade"] do
-            for _,FolderUnit in pairs(LocalPlayer.UnitsFolder:GetChildren()) do
-                local UnitData = Units[FolderUnit.Name]
-                local MaxLevel = #UnitData.Upgrade
+            pcall(function()
+                for _,FolderUnit in pairs(LocalPlayer.UnitsFolder:GetChildren()) do
+                    local UnitData = Units[FolderUnit.Name]
+                    local MaxLevel = #UnitData.Upgrade
 
-                repeat wait() until FolderUnit:FindFirstChild("Upgrade_Folder")
-                while getgenv().RFManager["Auto Upgrade"] and FolderUnit.Upgrade_Folder.Level.Value < MaxLevel do
-                    task.wait(0.2)
-                    ReplicatedStorage.Remote.Server.Units.Upgrade:FireServer(FolderUnit)
+                    while getgenv().RFManager["Auto Upgrade"] and FolderUnit.Upgrade_Folder.Level.Value < MaxLevel do
+                        task.wait(0.2)
+                        ReplicatedStorage.Remote.Server.Units.Upgrade:FireServer(FolderUnit)
+                    end
                 end
-            end
+            end)
             task.wait(0.2)
         end
     end
