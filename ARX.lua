@@ -1,6 +1,5 @@
 local create, func_RFM = loadstring(game:HttpGet("https://raw.githubusercontent.com/TheJellyfish1412/Workspace/refs/heads/main/guiV2.lua"))()
 local Window = create:Win("Plasma", 11390492777)
-local AutoFarm = Window:Taps("Auto Farm")
 
 -- ===========================================================
 
@@ -214,6 +213,7 @@ function SelectMapEnded()
 
 
     SelectingMapEnded = false
+    return true
 end
 
 -- ===========================================================
@@ -268,30 +268,11 @@ end)
 AutoFarm_2:Toggle("Auto Vote Retry", getgenv().RFManager["VoteRetry"], false, function(t)
     getgenv().RFManager["VoteRetry"] = t
     func_RFM:Store()
-
-    if not IsLobby then
-        local voteRetry = function(x)
-            if x and getgenv().RFManager["VoteRetry"] then
-                ReplicatedStorage.Remote.Server.OnGame.Voting.VoteRetry:FireServer()
-            end
-        end
-        ReplicatedStorage.Values.Game.VoteRetry.VoteEnabled.Changed:Connect(voteRetry)
-        voteRetry(t)
-    end
 end)
 
 AutoFarm_2:Toggle("Auto Vote Next", getgenv().RFManager["VoteNext"], false, function(t)
     getgenv().RFManager["VoteNext"] = t
     func_RFM:Store()
-    if not IsLobby then
-        local voteNext = function(x)
-            if x and getgenv().RFManager["VoteNext"] then
-                ReplicatedStorage.Remote.Server.OnGame.Voting.VoteNext:FireServer()
-            end
-        end
-        ReplicatedStorage.Values.Game.VoteNext.VoteEnabled.Changed:Connect(voteNext)
-        voteNext(t)
-    end
 end)
 
 
@@ -356,7 +337,13 @@ if not IsLobby then
         if x[1] == "GameEnded_TextAnimation" then
             wait(2)
             print("Game End. Start Select Map")
-            SelectMapEnded()
+            if SelectMapEnded() then
+                if getgenv().RFManager["VoteRetry"] and ReplicatedStorage.Values.Game.VoteRetry.VoteEnabled then
+                    ReplicatedStorage.Remote.Server.OnGame.Voting.VoteRetry:FireServer()
+                elseif getgenv().RFManager["VoteNext"] and ReplicatedStorage.Values.Game.VoteNext.VoteEnabled then
+                    ReplicatedStorage.Remote.Server.OnGame.Voting.VoteNext:FireServer()
+                end
+            end
         end
     end)
 end
