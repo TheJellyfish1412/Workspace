@@ -505,13 +505,9 @@ if not IsLobby then
             end
             GameResult = {}
             CheckReward = true
-        end
-    end)
 
-    local rewardsUI = LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("RewardsUI")
-    rewardsUI:GetPropertyChangedSignal("Enabled"):Connect(function()
-        if rewardsUI.Enabled then
-            repeat wait() until CheckReward
+            -- =============================================
+
             CheckReward = false
             print("Game End. Start Select Map")
             if SelectMapEnded() then
@@ -524,6 +520,23 @@ if not IsLobby then
             end
         end
     end)
+
+    -- local rewardsUI = LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("RewardsUI")
+    -- rewardsUI:GetPropertyChangedSignal("Enabled"):Connect(function()
+    --     if rewardsUI.Enabled then
+    --         repeat wait() until CheckReward
+    --         CheckReward = false
+    --         print("Game End. Start Select Map")
+    --         if SelectMapEnded() then
+    --             if getgenv().RFManager["VoteRetry"] and ReplicatedStorage.Values.Game.VoteRetry.VoteEnabled then
+    --                 ReplicatedStorage.Remote.Server.OnGame.Voting.VoteRetry:FireServer()
+    --                 TimeStart = os.time()
+    --             elseif getgenv().RFManager["VoteNext"] and ReplicatedStorage.Values.Game.VoteNext.VoteEnabled then
+    --                 ReplicatedStorage.Remote.Server.OnGame.Voting.VoteNext:FireServer()
+    --             end
+    --         end
+    --     end
+    -- end)
 end
 
 
