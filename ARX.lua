@@ -301,9 +301,9 @@ AutoFarm_2:Toggle("Auto Upgrade", getgenv().RFManager["Auto Upgrade"], true, fun
                     end
                 end
             end)
-            if not pass then
-                print(err)
-            end
+            -- if not pass then
+            --     print(err)
+            -- end
             task.wait(0.2)
         end
     end
