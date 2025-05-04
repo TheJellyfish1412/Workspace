@@ -1,4 +1,6 @@
 local create, func_RFM = loadstring(game:HttpGet("https://raw.githubusercontent.com/TheJellyfish1412/Workspace/refs/heads/main/guiV2.lua"))()
+local requestt = http_request or request or syn.request or HttpGet or HttpPost
+
 local Window = create:Win("Plasma", 11390492777)
 
 -- ===========================================================
@@ -9,6 +11,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 -- ===========================================================
 
+local PlayerImage
 local TimeStart = os.time()
 local LocalPlayer = game.Players.LocalPlayer
 local IsLobby = game.Workspace:FindFirstChild("Lobby")
@@ -297,7 +300,9 @@ AutoFarm_2:Toggle("Auto Upgrade", getgenv().RFManager["Auto Upgrade"], true, fun
 
                     while getgenv().RFManager["Auto Upgrade"] and FolderUnit.Upgrade_Folder.Level.Value <= MaxLevel do
                         task.wait(0.2)
-                        ReplicatedStorage.Remote.Server.Units.Upgrade:FireServer(FolderUnit)
+                        if (LocalPlayer.Yen.Value >= UnitData.Upgrade[FolderUnit.Upgrade_Folder.Level.Value+1].Cost) then
+                            ReplicatedStorage.Remote.Server.Units.Upgrade:FireServer(FolderUnit)
+                        end
                     end
                 end
             end)
@@ -373,6 +378,26 @@ Setting_1:Toggle("Claim All Quest", getgenv().RFManager["Claim All Quest"], true
     end
 end)
 
+Setting_1:Toggle("Discord Notify", getgenv().RFManager["Discord Notify"], false, function(mode)
+    if mode then
+        if getgenv().RFManager["webhook"] then
+            getgenv().RFManager["Discord Notify"] = mode
+            func_RFM:Store()
+        else
+            create:Notify("Discord Notify Error", "Webhook Not Found", 2)
+        end
+    end
+end)
+
+Setting_1:TextBox("Webhook", "place webhook", function(url)
+    if string.find(url, "https://discord.com/api/webhooks/") then
+        getgenv().RFManager["webhook"] = url
+        func_RFM:Store()
+    else
+        create:Notify("Webhook Error", "Link Invalid", 2)
+    end
+end)
+
 -- Setting_1:Toggle("Claim Hourly Egg", getgenv().RFManager["Claim Hourly Egg"], true, function(mode)
 --     getgenv().RFManager["Claim Hourly Egg"] = mode
 --     func_RFM:Store()
@@ -381,6 +406,8 @@ end)
 --         ReplicatedStorage.Remote.Server.Gameplay.QuestEvent:FireServer("ClaimAll")
 --     end
 -- end)
+
+Setting_1:Line()
 
 Setting_1:Toggle("No Render3D", getgenv().RFManager["Render"], false, function(mode)
     getgenv().RFManager["Render"] = mode
@@ -392,10 +419,93 @@ end)
 -- ==============================
 
 if not IsLobby then
+    LocalPlayer.PlayerGui.Visual.ChildAdded:Connect(function(ui)
+        if ui.Name == "Showcase_Units" then
+            ui:Destroy()
+        end
+    end)
+
+    local CheckReward = false
+    local GameResult = {}
     ReplicatedStorage.Remote.Client.UI.GameEndedUI.OnClientEvent:Connect(function(...)
         local x = {...}
         if x[1] == "GameEnded_TextAnimation" then
-            wait(2)
+            GameResult["State"] = x[2]
+        elseif x[1] == "Rewards - Items" then
+            GameResult["Items"] = {}
+            for _,item in pairs(LocalPlayer.RewardsShow:GetChildren()) do
+                GameResult["Items"][item.Name] = item.Amount.Value
+            end
+        elseif x[1] == "Update - EndedScreen" then
+            GameResult["Time"] = x[2]["TotalTime"]
+            if getgenv().RFManager["Discord Notify"] then
+                local userId = LocalPlayer.UserId
+                local date = os.date("!*t") -- UTC
+                local timestamp = string.format("%04d-%02d-%02dT%02d:%02d:%02dZ", date.year, date.month, date.day, date.hour, date.min, date.sec)
+                
+                local fields = {
+                    {
+                        name = "Status",
+                        value = GameResult["State"],
+                        inline = true
+                    },
+                    {
+                        name = "Mode",
+                        value = ReplicatedStorage.Values.Game.Gamemode.Value,
+                        inline = true
+                    },
+                    {
+                        name = "Time",
+                        value = GameResult["Time"] .. "s",
+                        inline = true
+                    }
+                }
+                for name, amount in pairs(GameResult["Items"]) do
+                    table.insert(fields, {
+                        name = name,
+                        value = "x"..amount
+                    })
+                end
+
+                if not PlayerImage then
+                    local res = requestt({Url = "https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=" .. userId .. "&size=48x48&format=Png&isCircular=false"})
+                    local decoded = func_RFM:Decode(res.Body)
+                    PlayerImage = decoded.data[1].imageUrl
+                end
+                
+                local body = {
+                    embeds = {
+                        {
+                            title = "Game Result",
+                            color = 65280,
+                            author = {
+                                name = LocalPlayer.Name,
+                                url = "https://www.roblox.com/users/" .. userId .. "/profile",
+                                icon_url = PlayerImage
+                            },
+                            fields = fields,
+                            timestamp = timestamp
+                        }
+                    }
+                }
+                requestt({
+                    Url = getgenv().RFManager["webhook"],
+                    Method = "POST",
+                    Headers = {
+                        ["content-type"] = "application/json",
+                    },
+                    Body = func_RFM:Encode(body)
+                })
+            end
+            GameResult = {}
+            CheckReward = true
+        end
+    end)
+
+    LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("RewardsUI")sUI:GetPropertyChangedSignal("Enabled"):Connect(function()
+        if rewardsUI.Enabled then
+            repeat wait() until CheckReward
+            CheckReward = false
             print("Game End. Start Select Map")
             if SelectMapEnded() then
                 if getgenv().RFManager["VoteRetry"] and ReplicatedStorage.Values.Game.VoteRetry.VoteEnabled then
