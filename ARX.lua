@@ -13,6 +13,12 @@ local TimeStart = os.time()
 local LocalPlayer = game.Players.LocalPlayer
 local IsLobby = game.Workspace:FindFirstChild("Lobby")
 
+local Player_Data_Local = ReplicatedStorage.Player_Data:FindFirstChild(LocalPlayer.Name)
+while not Player_Data_Local do
+    wait()
+    Player_Data_Local = ReplicatedStorage.Player_Data:FindFirstChild(LocalPlayer.Name)
+end
+
 local EventRemote = ReplicatedStorage:WaitForChild("Remote"):WaitForChild("Server"):WaitForChild("PlayRoom"):WaitForChild("Event")
 
 local GameWorld = require(ReplicatedStorage.Shared.Info.GameWorld.Levels)
@@ -43,70 +49,74 @@ function SelectMap()
                 task.wait()
                 local function temp(Chapter, ChapterData)
                     for _, ItemData in pairs(ChapterData.Items) do
-                        if Requirement[ItemData.Name] and not ReplicatedStorage.Player_Data[LocalPlayer.Name].RangerStage:FindFirstChild(Chapter) then
-                            Window:SetTextBottomLeft("Select " .. Chapter)
-                            EventRemote:FireServer("Create")
-                            wait(1)
-                            local IsRanger = string.find(Chapter, "Ranger")
-                            if IsRanger then
-                                EventRemote:FireServer(
-                                    "Change-Mode",
-                                    {
-                                        Mode = "Ranger Stage"
-                                    }
-                                )
-                                wait(1)
-                            end
-                            EventRemote:FireServer(
-                                "Change-World",
-                                {
-                                    World = World
-                                }
-                            )
-                            wait(1)
-                            EventRemote:FireServer(
-                                "Change-Chapter",
-                                {
-                                    Chapter = Chapter
-                                }
-                            )
-                            wait(1)
-                            if not IsRanger then
-                                EventRemote:FireServer(
-                                    "Change-Difficulty",
-                                    {
-                                        Difficulty = "Nightmare"
-                                    }
-                                )
-                                wait(1)
-                            end
-                            EventRemote:FireServer("Submit")
-                            wait(1)
-                            EventRemote:FireServer("Start")
+                        if Requirement[ItemData.Name] then
+                            if Requirement[ItemData.Name] > Player_Data_Local.Items[ItemData.Name].Amount.Value then
+                                if not Player_Data_Local.RangerStage:FindFirstChild(Chapter) then
+                                    Window:SetTextBottomLeft("Select " .. Chapter)
+                                    EventRemote:FireServer("Create")
+                                    wait(1)
+                                    local IsRanger = string.find(Chapter, "Ranger")
+                                    if IsRanger then
+                                        EventRemote:FireServer(
+                                            "Change-Mode",
+                                            {
+                                                Mode = "Ranger Stage"
+                                            }
+                                        )
+                                        wait(1)
+                                    end
+                                    EventRemote:FireServer(
+                                        "Change-World",
+                                        {
+                                            World = World
+                                        }
+                                    )
+                                    wait(1)
+                                    EventRemote:FireServer(
+                                        "Change-Chapter",
+                                        {
+                                            Chapter = Chapter
+                                        }
+                                    )
+                                    wait(1)
+                                    if not IsRanger then
+                                        EventRemote:FireServer(
+                                            "Change-Difficulty",
+                                            {
+                                                Difficulty = "Nightmare"
+                                            }
+                                        )
+                                        wait(1)
+                                    end
+                                    EventRemote:FireServer("Submit")
+                                    wait(1)
+                                    EventRemote:FireServer("Start")
 
-                            SelectingMap = false
-                            return true
+                                    SelectingMap = false
+                                    return true
+                                end
+                            end
                         end
                     end
                 end
 
                 local index_n = 1
-                while WorldData[World.."_Chapter"..index_n] do
+                while WorldData[World.."_RangerStage"..index_n] do
                     task.wait()
-                    local Chapter = World.."_Chapter"..index_n
-                    local ChapterData = WorldData[Chapter]
+                    local Chapter = World.."_RangerStage"..index_n
                     Window:SetTextBottomLeft("Check " .. Chapter)
+                    local ChapterData = WorldData[Chapter]
                     if temp(Chapter, ChapterData) then
                         return
                     end
                     index_n = index_n + 1
                 end
                 index_n = 1
-                while WorldData[World.."_RangerStage"..index_n] do
+                while WorldData[World.."_Chapter"..index_n] do
                     task.wait()
-                    local Chapter = World.."_RangerStage"..index_n
-                    local ChapterData = WorldData[Chapter]
+                    local Chapter = World.."_Chapter"..index_n
                     Window:SetTextBottomLeft("Check " .. Chapter)
+                    local ChapterData = WorldData[Chapter]
                     if temp(Chapter, ChapterData) then
                         return
                     end
@@ -162,25 +172,29 @@ function SelectMapEnded()
                 task.wait()
                 local function temp(Chapter, ChapterData)
                     for _, ItemData in pairs(ChapterData.Items) do
-                        if Requirement[ItemData.Name] and not ReplicatedStorage.Player_Data[LocalPlayer.Name].RangerStage:FindFirstChild(Chapter) then
-                            Window:SetTextBottomLeft("Select " .. Chapter)
-                            local NowChapter = ReplicatedStorage.Values.Game.Level.Value
-                            if WorldData[NowChapter] and WorldData[NowChapter].NextChapter == Chapter then
-                                ReplicatedStorage.Remote.Server.OnGame.Voting.VoteNext:FireServer()
-                            else
-                                TeleportService:Teleport(game.PlaceId, LocalPlayer)
+                        if Requirement[ItemData.Name] then
+                            if Requirement[ItemData.Name] > Player_Data_Local.Items[ItemData.Name].Amount.Value then
+                                if not Player_Data_Local.RangerStage:FindFirstChild(Chapter) then
+                                    Window:SetTextBottomLeft("Select " .. Chapter)
+                                    local NowChapter = ReplicatedStorage.Values.Game.Level.Value
+                                    if WorldData[NowChapter] and WorldData[NowChapter].NextChapter == Chapter then
+                                        ReplicatedStorage.Remote.Server.OnGame.Voting.VoteNext:FireServer()
+                                    else
+                                        TeleportService:Teleport(game.PlaceId, LocalPlayer)
+                                    end
+                                    
+                                    SelectingMapEnded = false
+                                    return true
+                                end
                             end
-                            
-                            SelectingMapEnded = false
-                            return true
                         end
                     end
                 end
 
                 local index_n = 1
-                while WorldData[World.."_Chapter"..index_n] do
+                while WorldData[World.."_RangerStage"..index_n] do
                     task.wait()
-                    local Chapter = World.."_Chapter"..index_n
+                    local Chapter = World.."_RangerStage"..index_n
                     Window:SetTextBottomLeft("Check " .. Chapter)
                     local ChapterData = WorldData[Chapter]
                     if temp(Chapter, ChapterData) then
@@ -189,9 +203,9 @@ function SelectMapEnded()
                     index_n = index_n + 1
                 end
                 index_n = 1
-                while WorldData[World.."_RangerStage"..index_n] do
+                while WorldData[World.."_Chapter"..index_n] do
                     task.wait()
-                    local Chapter = World.."_RangerStage"..index_n
+                    local Chapter = World.."_Chapter"..index_n
                     Window:SetTextBottomLeft("Check " .. Chapter)
                     local ChapterData = WorldData[Chapter]
                     if temp(Chapter, ChapterData) then
