@@ -420,8 +420,9 @@ end)
 
 if not IsLobby then
     LocalPlayer.PlayerGui.Visual.ChildAdded:Connect(function(ui)
-        if ui.Name == "Showcase_Units" then
-            ui:Destroy()
+        while LocalPlayer.PlayerGui.Visual:FindFirstChild("Showcase_Units") do
+            wait()
+            LocalPlayer.PlayerGui.Visual.Showcase_Units:Destroy()
         end
     end)
 
