@@ -419,10 +419,15 @@ end)
 -- ==============================
 
 if not IsLobby then
-    LocalPlayer.PlayerGui.Visual.ChildAdded:Connect(function(ui)
-        while LocalPlayer.PlayerGui.Visual:FindFirstChild("Showcase_Units") do
-            wait()
-            LocalPlayer.PlayerGui.Visual.Showcase_Units:Destroy()
+    spawn(function()
+        while true do
+            local x = LocalPlayer.PlayerGui.Visual:FindFirstChild("Showcase_Units")
+            if x then
+                x:Destroy()
+                wait()
+            else
+                wait(1)
+            end
         end
     end)
 
