@@ -33,7 +33,7 @@ local Ui_mobile = Instance.new("Frame")
 Ui_mobile.Name = "Ui_mobile"
 Ui_mobile.Size = UDim2.new(0, 50, 0, 50)
 Ui_mobile.AnchorPoint = Vector2.new(0, 1)
-Ui_mobile.Position = UDim2.new(0, 0, 1, 0)
+Ui_mobile.Position = UDim2.new(0, 0, .9, 0)
 Ui_mobile.BackgroundTransparency = 1.000
 Ui_mobile.Parent = Plasma_mobile
 
