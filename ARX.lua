@@ -503,7 +503,8 @@ if not IsLobby then
         end
     end)
 
-    LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("RewardsUI"):GetPropertyChangedSignal("Enabled"):Connect(function()
+    local rewardsUI = LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("RewardsUI")
+    rewardsUI:GetPropertyChangedSignal("Enabled"):Connect(function()
         if rewardsUI.Enabled then
             repeat wait() until CheckReward
             CheckReward = false
