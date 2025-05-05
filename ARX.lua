@@ -351,6 +351,7 @@ AutoFarm_2:Toggle("Auto Vote Start", getgenv().RFManager["VoteStart"], true, fun
     end
 
     if not IsLobby then
+        repeat wait() until LocalPlayer.PlayerGui:FindFirstChild("LoadingDataUI")
         repeat wait() until not LocalPlayer.PlayerGui.LoadingDataUI.Enabled
         local voteStart = function(x)
             if x and getgenv().RFManager["VoteStart"] then
