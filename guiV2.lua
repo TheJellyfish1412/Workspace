@@ -243,6 +243,9 @@ function create:Win(text, logo)
 
     local NameOfGame = Instance.new("TextLabel")
 	local GameName = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name
+	function func_RFM:GameName()
+		return GameName
+	end
 
     NameOfGame.Name = "NameOfGame"
     NameOfGame.Parent = MainFrame
