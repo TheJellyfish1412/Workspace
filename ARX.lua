@@ -531,6 +531,7 @@ if not IsLobby then
                     embeds = {
                         {
                             title = func_RFM:GameName(),
+                            description = description,
                             color = 65280,
                             author = {
                                 name = LocalPlayer.Name,
