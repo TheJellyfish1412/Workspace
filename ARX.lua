@@ -492,7 +492,11 @@ if not IsLobby then
     ReplicatedStorage.Remote.Client.UI.GameEndedUI.OnClientEvent:Connect(function(...)
         local x = {...}
         if x[1] == "GameEnded_TextAnimation" then
-            GameResult["State"] = x[2]
+            if x[2] == "Won" then
+                GameResult["State"] = "`🏆`: Victory"
+            else
+                GameResult["State"] = "`❌`: Lose"
+            end
             GameResult["Items"] = {}
         elseif x[1] == "Rewards - Items" then
             for _,item in pairs(LocalPlayer.RewardsShow:GetChildren()) do
@@ -505,29 +509,11 @@ if not IsLobby then
                 local date = os.date("!*t") -- UTC
                 local timestamp = string.format("%04d-%02d-%02dT%02d:%02d:%02dZ", date.year, date.month, date.day, date.hour, date.min, date.sec)
                 
-                local fields = {
-                    {
-                        name = "Status",
-                        value = GameResult["State"],
-                        inline = true
-                    },
-                    {
-                        name = "Mode",
-                        value = GameMode,
-                        inline = true
-                    },
-                    {
-                        name = "Time",
-                        value = GameResult["Time"] .. "s",
-                        inline = true
-                    }
-                }
+                local itemText = "```\n"
                 for name, amount in pairs(GameResult["Items"]) do
-                    table.insert(fields, {
-                        name = name,
-                        value = "x"..amount
-                    })
+                    itemText = itemText .. string.format("`%s` : x%d\n", name, amount)
                 end
+                itemText = itemText .. "```"
 
                 if not PlayerImage then
                     local res = requestt({Url = "https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=" .. userId .. "&size=48x48&format=Png&isCircular=false"})
@@ -535,17 +521,26 @@ if not IsLobby then
                     PlayerImage = decoded.data[1].imageUrl
                 end
                 
+                local description = ""
+                description = description .. GameResult["State"] .. "\n"
+                description = description .. "`🕹️`Mode: " .. GameMode .. "\n"
+                description = description .. "`🏜️`Stage: " .. ReplicatedStorage.Values.Game.Level.Value .. "\n"
+                description = description .. "`🕒`Time: " .. GameResult["Time"] .. "s\n"
+                description = description .. itemText .. "\n"
                 local body = {
                     embeds = {
                         {
-                            title = "Game Result",
+                            title = func_RFM:GameName(),
                             color = 65280,
                             author = {
                                 name = LocalPlayer.Name,
                                 url = "https://www.roblox.com/users/" .. userId .. "/profile",
                                 icon_url = PlayerImage
                             },
-                            fields = fields,
+                            thumbnail = {
+                                url = "https://tr.rbxcdn.com/180DAY-a3cb04972cc273b5299ed96fafee5f0c/256/256/Image/Webp/noFilter"
+                            },
+                            fields = {},
                             timestamp = timestamp
                         }
                     }
