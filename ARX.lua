@@ -13,6 +13,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local PlayerImage
 local TimeStart = os.time()
+local HUD = LocalPlayer.PlayerGui.HUD
 local LocalPlayer = game.Players.LocalPlayer
 local IsLobby = game.Workspace:FindFirstChild("Lobby")
 local GameMode = ReplicatedStorage.Values.Game.Gamemode.Value
@@ -293,9 +294,15 @@ AutoFarm_2:Toggle("Auto Upgrade", getgenv().RFManager["Auto Upgrade"], true, fun
     func_RFM:Store()
 
     if not IsLobby then
+        local List_Unit = HUD.InGame.UnitsManager.Main.Main.ScrollingFrame
         while getgenv().RFManager["Auto Upgrade"] do
             local pass, err = pcall(function()
-                for _,FolderUnit in pairs(LocalPlayer.UnitsFolder:GetChildren()) do
+                local Unit_Table = LocalPlayer.UnitsFolder:GetChildren()
+                table.sort(Unit_Table, function(a, b)
+                    return (List_Unit[a.Name].LayoutOrder or 0) < (List_Unit[b.Name].LayoutOrder or 0)
+                end)
+                
+                for _,FolderUnit in pairs(Unit_Table) do
                     local UnitData = Units[FolderUnit.Name]
                     local MaxLevel = #UnitData.Upgrade
 
@@ -317,11 +324,13 @@ AutoFarm_2:Toggle("Auto Upgrade", getgenv().RFManager["Auto Upgrade"], true, fun
     end
 end)
 
+
 AutoFarm_2:Toggle("Auto Vote Start", getgenv().RFManager["VoteStart"], true, function(t)
     getgenv().RFManager["VoteStart"] = t
     func_RFM:Store()
 
     if not IsLobby then
+        repeat wait() until not LocalPlayer.PlayerGui.LoadingDataUI.Enabled
         local voteStart = function(x)
             if x and getgenv().RFManager["VoteStart"] then
                 ReplicatedStorage.Remote.Server.OnGame.Voting.VotePlaying:FireServer()
@@ -448,8 +457,8 @@ if not IsLobby then
         local x = {...}
         if x[1] == "GameEnded_TextAnimation" then
             GameResult["State"] = x[2]
-        elseif x[1] == "Rewards - Items" then
             GameResult["Items"] = {}
+        elseif x[1] == "Rewards - Items" then
             for _,item in pairs(LocalPlayer.RewardsShow:GetChildren()) do
                 GameResult["Items"][item.Name] = item.Amount.Value
             end
