@@ -51,11 +51,11 @@ function SelectMap()
         if CraftFound then
             for World, WorldData in pairs(GameWorld) do
                 task.wait()
-                local function temp(Chapter, ChapterData)
+                local function temp(Chapter, ChapterData, IsRanger)
                     for _, ItemData in pairs(ChapterData.Items) do
                         if Requirement[ItemData.Name] then
-                            if GameMode == "Ranger Stage" or Requirement[ItemData.Name] > Player_Data_Local.Items[ItemData.Name].Amount.Value then
-                                if GameMode ~= "Ranger Stage" or not Player_Data_Local.RangerStage:FindFirstChild(Chapter) then
+                            if IsRanger or Requirement[ItemData.Name] > Player_Data_Local.Items[ItemData.Name].Amount.Value then
+                                if not IsRanger or not Player_Data_Local.RangerStage:FindFirstChild(Chapter) then
                                     Window:SetTextBottomLeft("Select " .. Chapter)
                                     EventRemote:FireServer("Create")
                                     wait(1)
@@ -110,7 +110,7 @@ function SelectMap()
                     local Chapter = World.."_RangerStage"..index_n
                     Window:SetTextBottomLeft("Check " .. Chapter)
                     local ChapterData = WorldData[Chapter]
-                    if temp(Chapter, ChapterData) then
+                    if temp(Chapter, ChapterData, true) then
                         return
                     end
                     index_n = index_n + 1
@@ -174,11 +174,11 @@ function SelectMapEnded()
         if CraftFound then
             for World, WorldData in pairs(GameWorld) do
                 task.wait()
-                local function temp(Chapter, ChapterData)
+                local function temp(Chapter, ChapterData, IsRanger)
                     for _, ItemData in pairs(ChapterData.Items) do
                         if Requirement[ItemData.Name] then
-                            if GameMode == "Ranger Stage" or Requirement[ItemData.Name] > Player_Data_Local.Items[ItemData.Name].Amount.Value then
-                                if GameMode ~= "Ranger Stage" or not Player_Data_Local.RangerStage:FindFirstChild(Chapter) then
+                            if IsRanger or Requirement[ItemData.Name] > Player_Data_Local.Items[ItemData.Name].Amount.Value then
+                                if not IsRanger or not Player_Data_Local.RangerStage:FindFirstChild(Chapter) then
                                     Window:SetTextBottomLeft("Select " .. Chapter)
                                     local NowChapter = ReplicatedStorage.Values.Game.Level.Value
                                     if WorldData[NowChapter] and WorldData[NowChapter].NextChapter == Chapter then
@@ -201,7 +201,7 @@ function SelectMapEnded()
                     local Chapter = World.."_RangerStage"..index_n
                     Window:SetTextBottomLeft("Check " .. Chapter)
                     local ChapterData = WorldData[Chapter]
-                    if temp(Chapter, ChapterData) then
+                    if temp(Chapter, ChapterData, true) then
                         return
                     end
                     index_n = index_n + 1
