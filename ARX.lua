@@ -15,6 +15,7 @@ local PlayerImage
 local TimeStart = os.time()
 local LocalPlayer = game.Players.LocalPlayer
 local IsLobby = game.Workspace:FindFirstChild("Lobby")
+local GameMode = ReplicatedStorage.Values.Game.Gamemode.Value
 
 local Player_Data_Local = ReplicatedStorage.Player_Data:FindFirstChild(LocalPlayer.Name)
 while not Player_Data_Local do
@@ -53,8 +54,8 @@ function SelectMap()
                 local function temp(Chapter, ChapterData)
                     for _, ItemData in pairs(ChapterData.Items) do
                         if Requirement[ItemData.Name] then
-                            if Requirement[ItemData.Name] > Player_Data_Local.Items[ItemData.Name].Amount.Value then
-                                if not Player_Data_Local.RangerStage:FindFirstChild(Chapter) then
+                            if GameMode == "Ranger Stage" or Requirement[ItemData.Name] > Player_Data_Local.Items[ItemData.Name].Amount.Value then
+                                if GameMode ~= "Ranger Stage" or not Player_Data_Local.RangerStage:FindFirstChild(Chapter) then
                                     Window:SetTextBottomLeft("Select " .. Chapter)
                                     EventRemote:FireServer("Create")
                                     wait(1)
@@ -176,8 +177,8 @@ function SelectMapEnded()
                 local function temp(Chapter, ChapterData)
                     for _, ItemData in pairs(ChapterData.Items) do
                         if Requirement[ItemData.Name] then
-                            if Requirement[ItemData.Name] > Player_Data_Local.Items[ItemData.Name].Amount.Value then
-                                if not Player_Data_Local.RangerStage:FindFirstChild(Chapter) then
+                            if GameMode == "Ranger Stage" or Requirement[ItemData.Name] > Player_Data_Local.Items[ItemData.Name].Amount.Value then
+                                if GameMode ~= "Ranger Stage" or not Player_Data_Local.RangerStage:FindFirstChild(Chapter) then
                                     Window:SetTextBottomLeft("Select " .. Chapter)
                                     local NowChapter = ReplicatedStorage.Values.Game.Level.Value
                                     if WorldData[NowChapter] and WorldData[NowChapter].NextChapter == Chapter then
@@ -221,7 +222,7 @@ function SelectMapEnded()
     end
 
     if getgenv().RFManager["Auto Easter"] then
-        if ReplicatedStorage.Values.Game.Gamemode.Value == "Event" then
+        if GameMode == "Event" then
             if ReplicatedStorage.Values.Game.VoteRetry.VoteEnabled then
                 ReplicatedStorage.Remote.Server.OnGame.Voting.VoteRetry:FireServer()
                 TimeStart = os.time()
@@ -232,7 +233,7 @@ function SelectMapEnded()
         SelectingMapEnded = false
         return 
     elseif getgenv().RFManager["Auto Challenge"] then
-        if ReplicatedStorage.Values.Game.Gamemode.Value == "Challenge" then
+        if GameMode == "Challenge" then
             if ReplicatedStorage.Values.Game.VoteRetry.VoteEnabled then
                 ReplicatedStorage.Remote.Server.OnGame.Voting.VoteRetry:FireServer()
                 TimeStart = os.time()
@@ -459,7 +460,7 @@ if not IsLobby then
                     },
                     {
                         name = "Mode",
-                        value = ReplicatedStorage.Values.Game.Gamemode.Value,
+                        value = GameMode,
                         inline = true
                     },
                     {
@@ -553,7 +554,7 @@ end
 -- 	print("Closed")
 -- end)
 
-if (getgenv().RFManager["Delay Easter"]) and (not IsLobby) and (ReplicatedStorage.Values.Game.Gamemode.Value == "Event") then
+if (getgenv().RFManager["Delay Easter"]) and (not IsLobby) and (GameMode == "Event") then
     local meta = getrawmetatable(game)
     local old = meta.__namecall
 
