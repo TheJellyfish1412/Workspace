@@ -13,7 +13,6 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local PlayerImage
 local TimeStart = os.time()
-local HUD = LocalPlayer.PlayerGui.HUD
 local LocalPlayer = game.Players.LocalPlayer
 local IsLobby = game.Workspace:FindFirstChild("Lobby")
 local GameMode = ReplicatedStorage.Values.Game.Gamemode.Value
@@ -294,6 +293,7 @@ AutoFarm_2:Toggle("Auto Upgrade", getgenv().RFManager["Auto Upgrade"], true, fun
     func_RFM:Store()
 
     if not IsLobby then
+        local HUD = LocalPlayer.PlayerGui:WaitForChild("HUD")
         local List_Unit = HUD.InGame.UnitsManager.Main.Main.ScrollingFrame
         while getgenv().RFManager["Auto Upgrade"] do
             local pass, err = pcall(function()
