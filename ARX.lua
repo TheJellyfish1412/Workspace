@@ -424,10 +424,12 @@ if not IsLobby then
             local x = LocalPlayer.PlayerGui.Visual:FindFirstChild("Showcase_Units")
             if x then
                 x:Destroy()
-                wait()
-            else
-                wait(1)
             end
+            local y = LocalPlayer.PlayerGui:FindFirstChild("GameEndedAnimationUI")
+            if y then
+                y:Destroy()
+            end
+            wait(1)
         end
     end)
 
