@@ -423,6 +423,12 @@ end)
 
 if not IsLobby then
     spawn(function()
+        game.Workspace.Visual.ChildAdded:Connect(function(child)
+            if child:IsA("Model") and child:FindFirstChildOfClass("Highlight") then
+                child:Destroy()
+            end
+        end)
+
         while true do
             local x = LocalPlayer.PlayerGui.Visual:FindFirstChild("Showcase_Units")
             if x then
