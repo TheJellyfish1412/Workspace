@@ -37,6 +37,13 @@ function SelectMap()
     if SelectingMap then return end
     SelectingMap = true
 
+    if getgenv().RFManager["Claim Hourly Egg"] then
+        local Egg = workspace.Lobby.HourlyEgg.Egg
+        LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(Egg.Position + Vector3.new(8,0,8))
+        wait(1)
+        fireproximityprompt(Egg.ProximityPrompt)
+    end
+
     if getgenv().RFManager["Auto Craft"] then
         local CraftFound = false
         local Requirement = {}
@@ -254,33 +261,43 @@ end
 local AutoFarm = Window:Taps("Auto Farm")
 
 local AutoFarm_1 = AutoFarm:newpage()
-AutoFarm_1:Toggle("Auto Craft", getgenv().RFManager["Auto Craft"], false, function(t)
-    getgenv().RFManager["Auto Craft"] = t
-    func_RFM:Store()
-    if t and IsLobby then
+AutoFarm_1:Toggle("Auto Craft", getgenv().RFManager["Auto Craft"], false, function(toggle)
+    if getgenv().RFManager["Auto Craft"] ~= toggle then
+        getgenv().RFManager["Auto Craft"] = toggle
+        func_RFM:Store()
+    end
+
+    if toggle and IsLobby then
         print("Start Select Map")
         SelectMap()
     end
 end)
 
-AutoFarm_1:Toggle("Auto Easter", getgenv().RFManager["Auto Easter"], false, function(t)
-    getgenv().RFManager["Auto Easter"] = t
-    func_RFM:Store()
-    if t and IsLobby then
+AutoFarm_1:Toggle("Auto Easter", getgenv().RFManager["Auto Easter"], false, function(toggle)
+    if getgenv().RFManager["Auto Easter"] ~= toggle then
+        getgenv().RFManager["Auto Easter"] = toggle
+        func_RFM:Store()
+    end
+
+    if toggle and IsLobby then
         print("Start Select Map")
         SelectMap()
     end
 end)
 
-AutoFarm_1:Toggle("Delay Easter", getgenv().RFManager["Delay Easter"], false, function(t)
-    getgenv().RFManager["Delay Easter"] = t
-    func_RFM:Store()
+AutoFarm_1:Toggle("Delay Easter", getgenv().RFManager["Delay Easter"], false, function(toggle)
+    if getgenv().RFManager["Delay Easter"] ~= toggle then
+        getgenv().RFManager["Delay Easter"] = toggle
+        func_RFM:Store()
+    end
 end)
 
-AutoFarm_1:Toggle("Auto Challenge", getgenv().RFManager["Auto Challenge"], false, function(t)
-    getgenv().RFManager["Auto Challenge"] = t
-    func_RFM:Store()
-    if t and IsLobby then
+AutoFarm_1:Toggle("Auto Challenge", getgenv().RFManager["Auto Challenge"], false, function(toggle)
+    if getgenv().RFManager["Auto Challenge"] ~= toggle then
+        getgenv().RFManager["Auto Challenge"] = toggle
+        func_RFM:Store()
+    end
+    if toggle and IsLobby then
         print("Start Select Map")
         SelectMap()
     end
@@ -288,9 +305,11 @@ end)
 
 local AutoFarm_2 = AutoFarm:newpage()
 
-AutoFarm_2:Toggle("Auto Upgrade", getgenv().RFManager["Auto Upgrade"], true, function(t)
-    getgenv().RFManager["Auto Upgrade"] = t
-    func_RFM:Store()
+AutoFarm_2:Toggle("Auto Upgrade", getgenv().RFManager["Auto Upgrade"], true, function(toggle)
+    if getgenv().RFManager["Auto Upgrade"] ~= toggle then
+        getgenv().RFManager["Auto Upgrade"] = toggle
+        func_RFM:Store()
+    end
 
     if not IsLobby then
         local HUD = LocalPlayer.PlayerGui:WaitForChild("HUD")
@@ -325,9 +344,11 @@ AutoFarm_2:Toggle("Auto Upgrade", getgenv().RFManager["Auto Upgrade"], true, fun
 end)
 
 
-AutoFarm_2:Toggle("Auto Vote Start", getgenv().RFManager["VoteStart"], true, function(t)
-    getgenv().RFManager["VoteStart"] = t
-    func_RFM:Store()
+AutoFarm_2:Toggle("Auto Vote Start", getgenv().RFManager["VoteStart"], true, function(toggle)
+    if getgenv().RFManager["VoteStart"] ~= toggle then
+        getgenv().RFManager["VoteStart"] = toggle
+        func_RFM:Store()
+    end
 
     if not IsLobby then
         repeat wait() until not LocalPlayer.PlayerGui.LoadingDataUI.Enabled
@@ -338,18 +359,22 @@ AutoFarm_2:Toggle("Auto Vote Start", getgenv().RFManager["VoteStart"], true, fun
             end
         end
         ReplicatedStorage.Values.Game.VotePlaying.VoteEnabled.Changed:Connect(voteStart)
-        voteStart(t)
+        voteStart(toggle)
     end
 end)
 
-AutoFarm_2:Toggle("Auto Vote Retry", getgenv().RFManager["VoteRetry"], false, function(t)
-    getgenv().RFManager["VoteRetry"] = t
-    func_RFM:Store()
+AutoFarm_2:Toggle("Auto Vote Retry", getgenv().RFManager["VoteRetry"], false, function(toggle)
+    if getgenv().RFManager["VoteRetry"] ~= toggle then
+        getgenv().RFManager["VoteRetry"] = toggle
+        func_RFM:Store()
+    end
 end)
 
-AutoFarm_2:Toggle("Auto Vote Next", getgenv().RFManager["VoteNext"], false, function(t)
-    getgenv().RFManager["VoteNext"] = t
-    func_RFM:Store()
+AutoFarm_2:Toggle("Auto Vote Next", getgenv().RFManager["VoteNext"], false, function(toggle)
+    if getgenv().RFManager["VoteNext"] ~= toggle then
+        getgenv().RFManager["VoteNext"] = toggle
+        func_RFM:Store()
+    end
 end)
 
 
@@ -367,9 +392,11 @@ for name, data in pairs(CraftingRecipes) do
         n = 1
         TempCraft = Craft:newpage()
     end
-    TempCraft:Toggle(name, getgenv().RFManager["Craft"][name], false, function(t)
-        getgenv().RFManager["Craft"][name] = t
-        func_RFM:Store()
+    TempCraft:Toggle(name, getgenv().RFManager["Craft"][name], false, function(toggle)
+        if getgenv().RFManager["Craft"][name] ~= toggle then
+            getgenv().RFManager["Craft"][name] = toggle
+            func_RFM:Store()
+        end
     end)
 end
 n = nil
@@ -381,20 +408,24 @@ TempCraft = nil
 local Setting = Window:Taps("Setting")
 local Setting_1 = Setting:newpage()
 
-Setting_1:Toggle("Claim All Quest", getgenv().RFManager["Claim All Quest"], true, function(mode)
-    getgenv().RFManager["Claim All Quest"] = mode
-    func_RFM:Store()
+Setting_1:Toggle("Claim All Quest", getgenv().RFManager["Claim All Quest"], true, function(toggle)
+    if getgenv().RFManager["Claim All Quest"] ~= toggle then
+        getgenv().RFManager["Claim All Quest"] = toggle
+        func_RFM:Store()
+    end
 
-    if mode and IsLobby then
+    if toggle and IsLobby then
         ReplicatedStorage.Remote.Server.Gameplay.QuestEvent:FireServer("ClaimAll")
     end
 end)
 
-Setting_1:Toggle("Discord Notify", getgenv().RFManager["Discord Notify"], false, function(mode)
-    if mode then
+Setting_1:Toggle("Discord Notify", getgenv().RFManager["Discord Notify"], false, function(toggle)
+    if toggle then
         if getgenv().RFManager["webhook"] then
-            getgenv().RFManager["Discord Notify"] = mode
-            func_RFM:Store()
+            if getgenv().RFManager["Discord Notify"] ~= toggle then
+                getgenv().RFManager["Discord Notify"] = toggle
+                func_RFM:Store()
+            end
         else
             create:Notify("Discord Notify Error", "Webhook Not Found", 2)
         end
@@ -410,22 +441,26 @@ Setting_1:TextBox("Webhook", "place webhook", function(url)
     end
 end)
 
--- Setting_1:Toggle("Claim Hourly Egg", getgenv().RFManager["Claim Hourly Egg"], true, function(mode)
---     getgenv().RFManager["Claim Hourly Egg"] = mode
---     func_RFM:Store()
+Setting_1:Toggle("Claim Hourly Egg", getgenv().RFManager["Claim Hourly Egg"], true, function(toggle)
+    if getgenv().RFManager["Claim Hourly Egg"] ~= toggle then
+        getgenv().RFManager["Claim Hourly Egg"] = toggle
+        func_RFM:Store()
+    end
 
---     if mode and IsLobby then
---         ReplicatedStorage.Remote.Server.Gameplay.QuestEvent:FireServer("ClaimAll")
---     end
--- end)
+    if toggle and IsLobby then
+        SelectMap()
+    end
+end)
 
 Setting_1:Line()
 
-Setting_1:Toggle("No Render3D", getgenv().RFManager["Render"], false, function(mode)
-    getgenv().RFManager["Render"] = mode
-    func_RFM:Store()
+Setting_1:Toggle("No Render3D", getgenv().RFManager["Render"], false, function(toggle)
+    if getgenv().RFManager["Render"] ~= toggle then
+        getgenv().RFManager["Render"] = toggle
+        func_RFM:Store()
+    end
 
-    RunService:Set3dRenderingEnabled(not mode)
+    RunService:Set3dRenderingEnabled(not toggle)
 end)
 
 -- ==============================
