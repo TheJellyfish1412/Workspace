@@ -532,7 +532,7 @@ if not IsLobby then
                         {
                             title = func_RFM:GameName(),
                             description = description,
-                            color = 65280,
+                            color = 16711680,
                             author = {
                                 name = LocalPlayer.Name,
                                 url = "https://www.roblox.com/users/" .. userId .. "/profile",
