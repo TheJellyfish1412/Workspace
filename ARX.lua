@@ -301,9 +301,11 @@ AutoFarm_2:Toggle("Auto Upgrade", getgenv().RFManager["Auto Upgrade"], true, fun
 
                     while getgenv().RFManager["Auto Upgrade"] and FolderUnit.Upgrade_Folder.Level.Value <= MaxLevel do
                         task.wait(0.2)
-                        if (LocalPlayer.Yen.Value >= UnitData.Upgrade[FolderUnit.Upgrade_Folder.Level.Value+1].Cost) then
-                            ReplicatedStorage.Remote.Server.Units.Upgrade:FireServer(FolderUnit)
-                        end
+                        pcall(function()
+                            if (LocalPlayer.Yen.Value >= FolderUnit.Upgrade_Folder.Upgrade_Cost.Value) then
+                                ReplicatedStorage.Remote.Server.Units.Upgrade:FireServer(FolderUnit)
+                            end
+                        end)
                     end
                 end
             end)
