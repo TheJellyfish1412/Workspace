@@ -390,12 +390,25 @@ AutoFarm_2:Toggle("Auto Vote Retry", getgenv().RFManager["VoteRetry"], false, fu
         getgenv().RFManager["VoteRetry"] = toggle
         func_RFM:Store()
     end
+
+    if not IsLobby and toggle then
+        if ReplicatedStorage.Values.Game.VoteRetry.VoteEnabled then
+            ReplicatedStorage.Remote.Server.OnGame.Voting.VoteRetry:FireServer()
+            TimeStart = os.time()
+        end
+    end
 end)
 
 AutoFarm_2:Toggle("Auto Vote Next", getgenv().RFManager["VoteNext"], false, function(toggle)
     if getgenv().RFManager["VoteNext"] ~= toggle then
         getgenv().RFManager["VoteNext"] = toggle
         func_RFM:Store()
+    end
+
+    if not IsLobby and toggle then
+        if ReplicatedStorage.Values.Game.VoteNext.VoteEnabled then
+            ReplicatedStorage.Remote.Server.OnGame.Voting.VoteNext:FireServer()
+        end
     end
 end)
 
@@ -488,25 +501,22 @@ end)
 -- ==============================
 
 if not IsLobby then
-    -- spawn(function()
-    --     game.Workspace.Visual.ChildAdded:Connect(function(child)
-    --         if child:IsA("Model") and child:FindFirstChildOfClass("Highlight") then
-    --             child:Destroy()
-    --         end
-    --     end)
-
-    --     while true do
-    --         local x = LocalPlayer.PlayerGui.Visual:FindFirstChild("Showcase_Units")
-    --         if x then
-    --             x:Destroy()
-    --         end
-    --         local y = LocalPlayer.PlayerGui:FindFirstChild("GameEndedAnimationUI")
-    --         if y then
-    --             y:Destroy()
-    --         end
-    --         wait(1)
-    --     end
-    -- end)
+    game.Workspace.Visual.ChildAdded:Connect(function(child)
+        if child:IsA("Model") and child:FindFirstChildOfClass("Highlight") then
+            if LocalPlayer.RewardsShow:FindFirstChild(child.Name) then
+                repeat wait() until LocalPlayer:FindFirstChild("Inspect_Finished")
+                child:Destroy()
+                LocalPlayer.PlayerGui.Visual.Showcase_Units:Destroy()
+                LocalPlayer.Summon_Amount:Destroy()
+                LocalPlayer.Summon_Maximum:Destroy()
+                LocalPlayer.Inspect_Queue:Destroy()
+                LocalPlayer.PlayerGui.GameEndedAnimationUI:Destroy()
+                LocalPlayer.Inspect_Finished:Destroy()
+    
+                LocalPlayer.PlayerGui.RewardsUI.Enabled = true
+            end
+        end
+    end)
 
     local CheckReward = false
     local GameResult = {}
@@ -612,9 +622,14 @@ if not IsLobby then
             end
             GameResult = {}
             CheckReward = true
+        end
+    end)
+    
 
-            -- =============================================
-
+    local rewardsUI = LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("RewardsUI")
+    rewardsUI:GetPropertyChangedSignal("Enabled"):Connect(function()
+        if rewardsUI.Enabled then
+            repeat wait() until CheckReward
             CheckReward = false
             print("Game End. Start Select Map")
             if SelectMapEnded() then
@@ -627,23 +642,6 @@ if not IsLobby then
             end
         end
     end)
-
-    -- local rewardsUI = LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("RewardsUI")
-    -- rewardsUI:GetPropertyChangedSignal("Enabled"):Connect(function()
-    --     if rewardsUI.Enabled then
-    --         repeat wait() until CheckReward
-    --         CheckReward = false
-    --         print("Game End. Start Select Map")
-    --         if SelectMapEnded() then
-    --             if getgenv().RFManager["VoteRetry"] and ReplicatedStorage.Values.Game.VoteRetry.VoteEnabled then
-    --                 ReplicatedStorage.Remote.Server.OnGame.Voting.VoteRetry:FireServer()
-    --                 TimeStart = os.time()
-    --             elseif getgenv().RFManager["VoteNext"] and ReplicatedStorage.Values.Game.VoteNext.VoteEnabled then
-    --                 ReplicatedStorage.Remote.Server.OnGame.Voting.VoteNext:FireServer()
-    --             end
-    --         end
-    --     end
-    -- end)
 end
 
 
