@@ -39,12 +39,11 @@ function SelectMap()
 
     if getgenv().RFManager["Claim Hourly Egg"] then
         if Player_Data_Local.Data.HourlyEgg.Value + (60 * 60) < os.time() then
-            return
+            local Egg = workspace.Lobby.HourlyEgg.Egg
+            LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(Egg.Position + Vector3.new(8,0,8))
+            wait(1)
+            fireproximityprompt(Egg.ProximityPrompt)
         end
-        local Egg = workspace.Lobby.HourlyEgg.Egg
-        LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(Egg.Position + Vector3.new(8,0,8))
-        wait(1)
-        fireproximityprompt(Egg.ProximityPrompt)
     end
 
     if getgenv().RFManager["Auto Craft"] then
