@@ -146,6 +146,23 @@ function SelectMap()
         return
     elseif getgenv().RFManager["Auto Challenge"] then
         Window:SetTextBottomLeft("Select Challenge")
+        local ItemCheckSell = {
+            [1] = "Onigiri",
+            [2] = "French Fries",
+            [3] = "Ramen",
+            [4] = "Green Bean",
+            [5] = "Rubber Fruit",
+        }
+
+        for _, item in pairs(ItemCheckSell) do
+            local ItemData = Player_Data_Local.Items[item]
+            if ItemData and ItemData.Amount.Value > 230 then
+                ReplicatedStorage.Remote.Server.Items.Sell:FireServer(ItemData, {
+                    ["Amount"] = ItemData.Amount.Value - 230
+                })
+            end
+        end
+        
         EventRemote:FireServer(
             "Create",
             {
@@ -351,8 +368,9 @@ AutoFarm_2:Toggle("Auto Vote Start", getgenv().RFManager["VoteStart"], true, fun
     end
 
     if not IsLobby then
-        repeat wait() until LocalPlayer.PlayerGui:FindFirstChild("LoadingDataUI")
-        repeat wait() until not LocalPlayer.PlayerGui.LoadingDataUI.Enabled
+        local timeout = os.time()
+        repeat wait() until LocalPlayer.PlayerGui:FindFirstChild("LoadingDataUI") or os.time() - timeout > 10
+        repeat wait() until not LocalPlayer.PlayerGui.LoadingDataUI.Enabled or os.time() - timeout > 10
         local voteStart = function(x)
             if x and getgenv().RFManager["VoteStart"] then
                 ReplicatedStorage.Remote.Server.OnGame.Voting.VotePlaying:FireServer()
@@ -527,6 +545,36 @@ if not IsLobby then
                 description = description .. "`🏜️`Stage: " .. ReplicatedStorage.Values.Game.Level.Value .. "\n"
                 description = description .. "`🕒`Time: " .. GameResult["Time"] .. "s\n"
                 description = description .. itemText .. "\n"
+                local ItemDisplay = {
+                    ["Dr. Megga Punk"] = {
+                        Emoji = "<:Megga_Punk:1369193089121390673>",
+                    },
+                    ["Ranger Crystal"] = {
+                        Emoji = "<:Ranger_Crystal:1369193089121390673>",
+                    },
+                    ["Egg Capsule"] = {
+                        Emoji = "<:Egg_Capsule:1369193089121390673>",
+                    },
+                    ["Stats Key"] = {
+                        Emoji = "<:Stats_Key:1369191049670557860>",
+                    },
+                    ["Perfect Stats Key"] = {
+                        Emoji = "<:Perfect_Stats_Key:1369193089121390673>",
+                    },
+                    ["Cursed Finger"] = {
+                        Emoji = "<:Cursed_Finger:1369193089121390673>",
+                    },
+                }
+                local fields = {}
+                for name, data in pairs(ItemDisplay) do
+                    local amount = Player_Data_Local.Items[name].Amount.Value
+                    local field = {
+                        name = data.Emoji .. " " .. name,
+                        value = amount,
+                        inline = true
+                    }
+                    table.insert(fields, field)
+                end
                 local body = {
                     embeds = {
                         {
@@ -541,7 +589,7 @@ if not IsLobby then
                             thumbnail = {
                                 url = "https://tr.rbxcdn.com/180DAY-a3cb04972cc273b5299ed96fafee5f0c/256/256/Image/Webp/noFilter"
                             },
-                            fields = {},
+                            fields = fields,
                             timestamp = timestamp
                         }
                     }
