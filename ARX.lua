@@ -158,9 +158,9 @@ function SelectMap()
 
         for _, item in pairs(ItemCheckSell) do
             local ItemData = Player_Data_Local.Items[item]
-            if ItemData and ItemData.Amount.Value > 150 then
+            if ItemData and ItemData.Amount.Value > 230 then
                 ReplicatedStorage.Remote.Server.Items.Sell:FireServer(ItemData, {
-                    ["Amount"] = ItemData.Amount.Value - 150
+                    ["Amount"] = ItemData.Amount.Value - 230
                 })
             end
         end
@@ -371,8 +371,9 @@ AutoFarm_2:Toggle("Auto Vote Start", getgenv().RFManager["VoteStart"], true, fun
 
     if not IsLobby then
         local timeout = os.time()
-        repeat wait() until LocalPlayer.PlayerGui:FindFirstChild("LoadingDataUI") or os.time() - timeout > 10
-        repeat wait() until not LocalPlayer.PlayerGui.LoadingDataUI.Enabled or os.time() - timeout > 10
+        repeat wait() until os.time() - timeout > 10 or LocalPlayer.PlayerGui:FindFirstChild("LoadingDataUI")
+        repeat wait() until os.time() - timeout > 10 or not LocalPlayer.PlayerGui.LoadingDataUI.Enabled
+        
         local voteStart = function(x)
             if x and getgenv().RFManager["VoteStart"] then
                 ReplicatedStorage.Remote.Server.OnGame.Voting.VotePlaying:FireServer()
