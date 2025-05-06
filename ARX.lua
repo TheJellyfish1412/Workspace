@@ -546,28 +546,32 @@ if not IsLobby then
                 description = description .. "`🕒`Time: " .. GameResult["Time"] .. "s\n"
                 description = description .. itemText .. "\n"
                 local ItemDisplay = {
-                    ["Dr. Megga Punk"] = {
-                        Emoji = "<:Megga_Punk:1369193089121390673>",
+                    ["Egg Token"] = {
+                        Emoji = "<:Egg_Capsule:1369190920116899922>",
+                        Amount = Player_Data_Local.Data.Egg.Value,
                     },
-                    ["Ranger Crystal"] = {
-                        Emoji = "<:Ranger_Crystal:1369193089121390673>",
-                    },
-                    ["Egg Capsule"] = {
-                        Emoji = "<:Egg_Capsule:1369193089121390673>",
-                    },
+                    -- ["Egg Capsule"] = {
+                    --     Emoji = "<:Egg_Capsule:1369190920116899922>",
+                    -- },
                     ["Stats Key"] = {
-                        Emoji = "<:Stats_Key:1369191049670557860>",
+                        Emoji = "<:Stats_Key:1369190926957678612>",
                     },
                     ["Perfect Stats Key"] = {
-                        Emoji = "<:Perfect_Stats_Key:1369193089121390673>",
+                        Emoji = "<:Perfect_Stats_Key:1369190922469769286>",
+                    },
+                    ["Dr. Megga Punk"] = {
+                        Emoji = "<:Megga_Punk:1369190929533239306>",
+                    },
+                    ["Ranger Crystal"] = {
+                        Emoji = "<:Ranger_Crystal:1369190924726566912>",
                     },
                     ["Cursed Finger"] = {
-                        Emoji = "<:Cursed_Finger:1369193089121390673>",
+                        Emoji = "<:Cursed_Finger:1369190917600317460>",
                     },
                 }
                 local fields = {}
                 for name, data in pairs(ItemDisplay) do
-                    local amount = Player_Data_Local.Items[name].Amount.Value
+                    local amount = data.Amount or Player_Data_Local.Items[name].Amount.Value
                     local field = {
                         name = data.Emoji .. " " .. name,
                         value = amount,
