@@ -158,9 +158,9 @@ function SelectMap()
 
         for _, item in pairs(ItemCheckSell) do
             local ItemData = Player_Data_Local.Items[item]
-            if ItemData and ItemData.Amount.Value > 230 then
+            if ItemData and ItemData.Amount.Value > 150 then
                 ReplicatedStorage.Remote.Server.Items.Sell:FireServer(ItemData, {
-                    ["Amount"] = ItemData.Amount.Value - 230
+                    ["Amount"] = ItemData.Amount.Value - 150
                 })
             end
         end
