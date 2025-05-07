@@ -251,7 +251,6 @@ function SelectMapEnded()
         if GameMode == "Event" then
             if ReplicatedStorage.Values.Game.VoteRetry.VoteEnabled then
                 ReplicatedStorage.Remote.Server.OnGame.Voting.VoteRetry:FireServer()
-                TimeStart = os.time()
             end
         else
             TeleportService:Teleport(game.PlaceId, LocalPlayer)
@@ -262,7 +261,6 @@ function SelectMapEnded()
         if GameMode == "Challenge" then
             if ReplicatedStorage.Values.Game.VoteRetry.VoteEnabled then
                 ReplicatedStorage.Remote.Server.OnGame.Voting.VoteRetry:FireServer()
-                TimeStart = os.time()
             end
         else
             TeleportService:Teleport(game.PlaceId, LocalPlayer)
@@ -383,7 +381,6 @@ AutoFarm_2:Toggle("Auto Vote Start", getgenv().RFManager["VoteStart"], true, fun
                 end
                 
                 -- ReplicatedStorage.Remote.Server.OnGame.Voting.VotePlaying:FireServer()
-                TimeStart = os.time()
             end
         end
         ReplicatedStorage.Values.Game.VotePlaying.VoteEnabled.Changed:Connect(voteStart)
@@ -400,7 +397,6 @@ AutoFarm_2:Toggle("Auto Vote Retry", getgenv().RFManager["VoteRetry"], false, fu
     if not IsLobby and toggle then
         if ReplicatedStorage.Values.Game.VoteRetry.VoteEnabled then
             ReplicatedStorage.Remote.Server.OnGame.Voting.VoteRetry:FireServer()
-            TimeStart = os.time()
         end
     end
 end)
@@ -641,7 +637,6 @@ if not IsLobby then
             if SelectMapEnded() then
                 if getgenv().RFManager["VoteRetry"] and ReplicatedStorage.Values.Game.VoteRetry.VoteEnabled then
                     ReplicatedStorage.Remote.Server.OnGame.Voting.VoteRetry:FireServer()
-                    TimeStart = os.time()
                 elseif getgenv().RFManager["VoteNext"] and ReplicatedStorage.Values.Game.VoteNext.VoteEnabled then
                     ReplicatedStorage.Remote.Server.OnGame.Voting.VoteNext:FireServer()
                 end
@@ -681,8 +676,13 @@ if (getgenv().RFManager["Delay Easter"]) and (not IsLobby) and (GameMode == "Eve
         local cmethod = callMethod()
         local fmethod = (tostring(cmethod) == "FireServer") or nil
         local arguments = {...}
-        if fmethod and tostring(Event) == "Deployment" and os.time() - TimeStart <= 39 then
-            return
+        if fmethod then
+            local Name = tostring(Event)
+            if Name == "VoteRetry" or Name == "VotePlaying" then
+                TimeStart = os.time()
+            elseif Name == "Deployment" and os.time() - TimeStart <= 39 then
+                return
+            end
         end
         return old(Event, ...)
     end)
