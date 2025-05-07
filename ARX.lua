@@ -663,41 +663,48 @@ end
 -- 	print("Closed")
 -- end)
 
-if (getgenv().RFManager["Delay Easter"]) and (not IsLobby) and (GameMode == "Event") then
-    local meta = getrawmetatable(game)
-    local old = meta.__namecall
 
-    if setreadonly then
-        setreadonly(meta, false)
-    else
-        make_writeable(meta, true)
-    end
+local meta = getrawmetatable(game)
+local old = meta.__namecall
 
-    local callMethod = getnamecallmethod or get_namecall_method
-    local newClosure = newcclosure or function(f)
-        return f
-    end
+if setreadonly then
+    setreadonly(meta, false)
+else
+    make_writeable(meta, true)
+end
 
-    meta.__namecall = newClosure(function(Event, ...)
-        local cmethod = callMethod()
-        local fmethod = (tostring(cmethod) == "FireServer") or nil
-        local arguments = {...}
-        if fmethod then
-            local Name = tostring(Event)
-            if Name == "VoteRetry" or Name == "VotePlaying" then
-                TimeStart = os.time()
-            elseif Name == "Deployment" and os.time() - TimeStart <= 39 then
-                return
-            end
+local callMethod = getnamecallmethod or get_namecall_method
+local newClosure = newcclosure or function(f)
+    return f
+end
+
+meta.__namecall = newClosure(function(Event, ...)
+    local cmethod = callMethod()
+    local fmethod = (tostring(cmethod) == "FireServer") or nil
+    local arguments = {...}
+    if fmethod then
+        local Name = tostring(Event)
+        if Name == "VoteRetry" or Name == "VotePlaying" then
+            TimeStart = os.time()
+        elseif Name == "Deployment" then
+            if (getgenv().RFManager["Delay Easter"]) and (not IsLobby) and (GameMode == "Event") then
+                if os.time() - TimeStart <= 39 then
+                    return
+                end
+            elseif (GameMode ~= "Event") then
+                if os.time() - TimeStart <= 3 then
+                    return
+                end
+            end 
         end
-        return old(Event, ...)
-    end)
-
-    if setreadonly then
-        setreadonly(meta, true)
-    else
-        make_writeable(meta, false)
     end
+    return old(Event, ...)
+end)
+
+if setreadonly then
+    setreadonly(meta, true)
+else
+    make_writeable(meta, false)
 end
 
 getgenv().Loaded = true
