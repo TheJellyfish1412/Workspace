@@ -374,18 +374,19 @@ AutoFarm_2:Toggle("Auto Vote Start", getgenv().RFManager["VoteStart"], true, fun
         
         local voteStart = function(x)
             if x and getgenv().RFManager["VoteStart"] then
-                for _,connection in pairs(getconnections(LocalPlayer.PlayerGui.HUD.InGame.VotePlaying.Frame.Vote.Activated)) do
-                    if connection and connection.Fire then
-                        connection:Fire()
-                    end
-                end
+                -- for _,connection in pairs(getconnections(LocalPlayer.PlayerGui.HUD.InGame.VotePlaying.Frame.Vote.Activated)) do
+                --     if connection and connection.Fire then
+                --         connection:Fire()
+                --     end
+                -- end
+                ReplicatedStorage.Remote.Server.OnGame.Voting.VotePlaying:FireServer()
                 
                 wait(5)
                 if LocalPlayer.PlayerGui.HUD.InGame.VotePlaying.Visible then
                     LocalPlayer.PlayerGui.HUD.InGame.VotePlaying.Visible = false
                     LocalPlayer.PlayerGui.HUD.InGame.Main.Visible = true
                 end
-                -- ReplicatedStorage.Remote.Server.OnGame.Voting.VotePlaying:FireServer()
+                ReplicatedStorage.Remote.Server.OnGame.Voting.VotePlaying:FireServer()
             end
         end
         ReplicatedStorage.Values.Game.VotePlaying.VoteEnabled.Changed:Connect(voteStart)
