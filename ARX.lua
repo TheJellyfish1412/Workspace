@@ -380,6 +380,11 @@ AutoFarm_2:Toggle("Auto Vote Start", getgenv().RFManager["VoteStart"], true, fun
                     end
                 end
                 
+                wait(5)
+                if LocalPlayer.PlayerGui.HUD.InGame.VotePlaying.Visible then
+                    LocalPlayer.PlayerGui.HUD.InGame.VotePlaying.Visible = false
+                    LocalPlayer.PlayerGui.HUD.InGame.Main.Visible = true
+                end
                 -- ReplicatedStorage.Remote.Server.OnGame.Voting.VotePlaying:FireServer()
             end
         end
