@@ -293,18 +293,26 @@ function SelectMapEnded()
     ]]
 
     if getgenv().RFManager["Auto Ranger"] then
-        for World, WorldData in pairs(getgenv().RFManager["Ranger Stage"]) do
-            for i, ChapterData in pairs(WorldData) do
-                if ChapterData["Selected"] and not Player_Data_Local.RangerStage:FindFirstChild(ChapterData["Name"]) then
-                    if WorldData[i-1] and WorldData[i-1]["Name"] == ReplicatedStorage.Values.Game.Level.Value then
-                        Window:SetTextBottomLeft("Next")
-                        ReplicatedStorage.Remote.Server.OnGame.Voting.VoteNext:FireServer()
-                    else
+        local Gamemode = ReplicatedStorage.Values.Game.Gamemode.Value
+        local World = ReplicatedStorage.Values.Game.World.Value
+        local Chapter = ReplicatedStorage.Values.Game.Level.Value
+        if Gamemode == "Ranger Stage" then
+            local NextChapter = LevelsData[World][Chapter]["NextChapter"]
+            local NumChapter = string.sub(NextChapter, -1)
+            if getgenv().RFManager["Ranger Stage"][World][NumChapter]["Selected"] and not Player_Data_Local.RangerStage:FindFirstChild(NextChapter) then
+                ReplicatedStorage.Remote.Server.OnGame.Voting.VoteNext:FireServer()
+                SelectingMap = false
+                return true
+            end
+        else
+            for World, WorldData in pairs(getgenv().RFManager["Ranger Stage"]) do
+                for i, ChapterData in pairs(WorldData) do
+                    if ChapterData["Selected"] and not Player_Data_Local.RangerStage:FindFirstChild(ChapterData["Name"]) then
                         Window:SetTextBottomLeft("Return Lobby")
                         TeleportService:Teleport(game.PlaceId, LocalPlayer)
+                        SelectingMap = false
+                        return true
                     end
-                    SelectingMap = false
-                    return true
                 end
             end
         end
