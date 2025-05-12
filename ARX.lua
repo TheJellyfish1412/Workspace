@@ -525,7 +525,7 @@ for _, WorldData in pairs(WorldDataSort) do
         if shortcut[ChapterNum] == nil then
             shortcut[ChapterNum] = {
                 ["Name"] = Chapter,
-                ["DisplayName"] = SelectChapter["Name"]
+                ["DisplayName"] = SelectChapter["Name"],
                 ["Selected"] = false
             }
         end
