@@ -299,7 +299,7 @@ function SelectMapEnded()
         if Gamemode == "Ranger Stage" then
             local NextChapter = LevelsData[World][Chapter]["NextChapter"]
             local NumChapter = string.sub(NextChapter, -1)
-            if getgenv().RFManager["Ranger Stage"][World][NumChapter]["Selected"] and not Player_Data_Local.RangerStage:FindFirstChild(NextChapter) then
+            if getgenv().RFManager["Ranger Stage"][World][NumChapter] and getgenv().RFManager["Ranger Stage"][World][NumChapter]["Selected"] and not Player_Data_Local.RangerStage:FindFirstChild(NextChapter) then
                 ReplicatedStorage.Remote.Server.OnGame.Voting.VoteNext:FireServer()
                 SelectingMap = false
                 return true
