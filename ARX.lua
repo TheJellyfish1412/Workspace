@@ -527,10 +527,9 @@ for _, WorldData in pairs(WorldDataSort) do
                 ["Selected"] = false
             }
         end
-        local shortcut = getgenv().RFManager["Ranger Stage"][WorldData["World"]]
-        TempRanger:Toggle(SelectChapter["Name"], shortcut[ChapterNum]["Selected"], false, function(toggle)
-            if shortcut[ChapterNum]["Selected"] ~= toggle then
-                shortcut[ChapterNum]["Selected"] = toggle
+        TempRanger:Toggle(SelectChapter["Name"], getgenv().RFManager["Ranger Stage"][WorldData["World"]][ChapterNum]["Selected"], false, function(toggle)
+            if getgenv().RFManager["Ranger Stage"][WorldData["World"]][ChapterNum]["Selected"] ~= toggle then
+                getgenv().RFManager["Ranger Stage"][WorldData["World"]][ChapterNum]["Selected"] = toggle
                 func_RFM:Store()
             end
         end)
