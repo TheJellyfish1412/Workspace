@@ -176,7 +176,7 @@ function SelectMap()
                     wait(1)
                     EventRemote:FireServer("Start")
                     SelectingMap = false
-                    return true
+                    return
                 end
             end
         end
@@ -303,8 +303,8 @@ function SelectMapEnded()
             if getgenv().RFManager["Ranger Stage"][World][NumChapter] and getgenv().RFManager["Ranger Stage"][World][NumChapter]["Selected"] and not Player_Data_Local.RangerStage:FindFirstChild(NextChapter) then
                 Window:SetTextBottomLeft("Retry")
                 ReplicatedStorage.Remote.Server.OnGame.Voting.VoteNext:FireServer()
-                SelectingMap = false
-                return true
+                SelectingMapEnded = false
+                return
             end
         else
             for World, WorldData in pairs(getgenv().RFManager["Ranger Stage"]) do
@@ -312,8 +312,8 @@ function SelectMapEnded()
                     if ChapterData["Selected"] and not Player_Data_Local.RangerStage:FindFirstChild(ChapterData["Name"]) then
                         Window:SetTextBottomLeft("Return Lobby")
                         TeleportService:Teleport(game.PlaceId, LocalPlayer)
-                        SelectingMap = false
-                        return true
+                        SelectingMapEnded = false
+                        return
                     end
                 end
             end
