@@ -339,17 +339,17 @@ end
 local AutoFarm = Window:Taps("Auto Farm")
 
 local AutoFarm_1 = AutoFarm:newpage()
-AutoFarm_1:Toggle("Auto Craft", getgenv().RFManager["Auto Craft"], false, function(toggle)
-    if getgenv().RFManager["Auto Craft"] ~= toggle then
-        getgenv().RFManager["Auto Craft"] = toggle
-        func_RFM:Store()
-    end
+-- AutoFarm_1:Toggle("Auto Craft", getgenv().RFManager["Auto Craft"], false, function(toggle)
+--     if getgenv().RFManager["Auto Craft"] ~= toggle then
+--         getgenv().RFManager["Auto Craft"] = toggle
+--         func_RFM:Store()
+--     end
 
-    -- if toggle and IsLobby then
-    --     print("Start Select Map")
-    --     SelectMap()
-    -- end
-end)
+--     -- if toggle and IsLobby then
+--     --     print("Start Select Map")
+--     --     SelectMap()
+--     -- end
+-- end)
 
 AutoFarm_1:Toggle("Auto Ranger", getgenv().RFManager["Auto Ranger"], false, function(toggle)
     if getgenv().RFManager["Auto Ranger"] ~= toggle then
