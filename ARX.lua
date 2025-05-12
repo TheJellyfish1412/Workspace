@@ -301,7 +301,7 @@ function SelectMapEnded()
             local NumChapter = tonumber(string.sub(NextChapter, -1))
             print("NumChapter", NumChapter)
             if getgenv().RFManager["Ranger Stage"][World][NumChapter] and getgenv().RFManager["Ranger Stage"][World][NumChapter]["Selected"] and not Player_Data_Local.RangerStage:FindFirstChild(NextChapter) then
-                Window:SetTextBottomLeft("Return Lobby")
+                Window:SetTextBottomLeft("Retry")
                 ReplicatedStorage.Remote.Server.OnGame.Voting.VoteNext:FireServer()
                 SelectingMap = false
                 return true
