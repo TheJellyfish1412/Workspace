@@ -39,7 +39,6 @@ for world, data in pairs(WorldData) do
         }
     end
 end
-table.sort(WorldDataSort)
 WorldData = nil
 
 -- ===========================================================
