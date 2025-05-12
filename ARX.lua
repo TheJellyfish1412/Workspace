@@ -25,9 +25,22 @@ end
 
 local EventRemote = ReplicatedStorage:WaitForChild("Remote"):WaitForChild("Server"):WaitForChild("PlayRoom"):WaitForChild("Event")
 
-local GameWorld = require(ReplicatedStorage.Shared.Info.GameWorld.Levels)
-local CraftingRecipes = require(ReplicatedStorage.Shared.Info.CraftingRecipes)
 local Units = require(ReplicatedStorage.Shared.Info.Units)
+local WorldData = require(ReplicatedStorage.Shared.Info.GameWorld.World)
+local LevelsData = require(ReplicatedStorage.Shared.Info.GameWorld.Levels)
+local CraftingRecipes = require(ReplicatedStorage.Shared.Info.CraftingRecipes)
+
+local WorldDataSort = {}
+for world, data in pairs(WorldData) do
+    if data["StoryAble"] then
+        WorldDataSort[data["LayoutOrder"]] = {
+            ["World"] = world,
+            ["DisplayName"] = data["Name"]
+        }
+    end
+end
+table.sort(WorldDataSort)
+WorldData = nil
 
 -- ===========================================================
 
@@ -46,6 +59,7 @@ function SelectMap()
         end
     end
 
+    --[[
     if getgenv().RFManager["Auto Craft"] then
         local CraftFound = false
         local Requirement = {}
@@ -58,7 +72,7 @@ function SelectMap()
             end
         end
         if CraftFound then
-            for World, WorldData in pairs(GameWorld) do
+            for World, WorldData in pairs(LevelsData) do
                 task.wait()
                 local function temp(Chapter, ChapterData, IsRanger)
                     for _, ItemData in pairs(ChapterData.Items) do
@@ -138,6 +152,36 @@ function SelectMap()
             end
         end
     end
+    ]]
+
+    if getgenv().RFManager["Auto Ranger"] then
+        for World, WorldData in pairs(getgenv().RFManager["Ranger Stage"]) do
+            for _, ChapterData in pairs(WorldData) do
+                if ChapterData["Selected"] and not Player_Data_Local.RangerStage:FindFirstChild(ChapterData["Name"]) then
+                    Window:SetTextBottomLeft("Select " .. ChapterData["DisplayName"])
+                    EventRemote:FireServer("Create")
+                    wait(1)
+                    EventRemote:FireServer("Change-Mode",{
+                        Mode = "Ranger Stage"
+                    })
+                    wait(1)
+                    EventRemote:FireServer("Change-World",{
+                        World = World
+                    })
+                    wait(1)
+                    EventRemote:FireServer("Change-Chapter",{
+                        Chapter = ChapterData["Name"]
+                    })
+                    wait(1)
+                    EventRemote:FireServer("Submit")
+                    wait(1)
+                    EventRemote:FireServer("Start")
+                    SelectingMap = false
+                    return true
+                end
+            end
+        end
+    end
 
     if getgenv().RFManager["Auto Easter"] then
         Window:SetTextBottomLeft("Select Easter Event")
@@ -186,6 +230,7 @@ function SelectMapEnded()
     if SelectingMapEnded then return end
     SelectingMapEnded = true
 
+    --[[
     if getgenv().RFManager["Auto Craft"] then
         local CraftFound = false
         local Requirement = {}
@@ -198,7 +243,7 @@ function SelectMapEnded()
             end
         end
         if CraftFound then
-            for World, WorldData in pairs(GameWorld) do
+            for World, WorldData in pairs(LevelsData) do
                 task.wait()
                 local function temp(Chapter, ChapterData, IsRanger)
                     for _, ItemData in pairs(ChapterData.Items) do
@@ -246,6 +291,23 @@ function SelectMapEnded()
             end
         end
     end
+    ]]
+
+    if getgenv().RFManager["Auto Ranger"] then
+        for World, WorldData in pairs(getgenv().RFManager["Ranger Stage"]) do
+            for i, ChapterData in pairs(WorldData) do
+                if ChapterData["Selected"] and not Player_Data_Local.RangerStage:FindFirstChild(ChapterData["Name"]) then
+                    if WorldData[i-1] and WorldData[i-1]["Name"] == ReplicatedStorage.Values.Game.Level.Value then
+                        ReplicatedStorage.Remote.Server.OnGame.Voting.VoteNext:FireServer()
+                    else
+                        TeleportService:Teleport(game.PlaceId, LocalPlayer)
+                    end
+                    SelectingMap = false
+                    return true
+                end
+            end
+        end
+    end
 
     if getgenv().RFManager["Auto Easter"] then
         if GameMode == "Event" then
@@ -281,6 +343,18 @@ local AutoFarm_1 = AutoFarm:newpage()
 AutoFarm_1:Toggle("Auto Craft", getgenv().RFManager["Auto Craft"], false, function(toggle)
     if getgenv().RFManager["Auto Craft"] ~= toggle then
         getgenv().RFManager["Auto Craft"] = toggle
+        func_RFM:Store()
+    end
+
+    -- if toggle and IsLobby then
+    --     print("Start Select Map")
+    --     SelectMap()
+    -- end
+end)
+
+AutoFarm_1:Toggle("Auto Ranger", getgenv().RFManager["Auto Ranger"], false, function(toggle)
+    if getgenv().RFManager["Auto Ranger"] ~= toggle then
+        getgenv().RFManager["Auto Ranger"] = toggle
         func_RFM:Store()
     end
 
@@ -423,6 +497,52 @@ end)
 
 -- ===============================
 
+local RangerTap = Window:Taps("Auto Ranger")
+if getgenv().RFManager["Ranger Stage"] == nil then
+    getgenv().RFManager["Ranger Stage"] = {}
+end
+local n = 0
+local TempRanger = RangerTap:newpage()
+for _, WorldData in pairs(WorldDataSort) do
+    n = n + 1
+    if n > 2 then
+        n = 1
+        TempRanger = RangerTap:newpage()
+    end
+    local SelectLevel = LevelsData[WorldData["World"]]
+    TempRanger:Label(WorldData["DisplayName"])
+    if getgenv().RFManager["Ranger Stage"][WorldData["World"]] == nil then
+        getgenv().RFManager["Ranger Stage"][WorldData["World"]] = {}
+    end
+    local ChapterNum = 1
+    while true do
+        local Chapter = WorldData["World"] .. "_RangerStage" .. ChapterNum
+        local SelectChapter = SelectLevel[Chapter]
+        if not SelectChapter then
+            break
+        end
+        local shortcut = getgenv().RFManager["Ranger Stage"][WorldData["World"]]
+        if shortcut[ChapterNum] == nil then
+            shortcut[ChapterNum] = {
+                ["Name"] = Chapter,
+                ["DisplayName"] = SelectChapter["Name"]
+                ["Selected"] = false
+            }
+        end
+        TempRanger:Toggle(SelectChapter["Name"], shortcut[ChapterNum]["Selected"], false, function(toggle)
+            if shortcut[ChapterNum]["Selected"] ~= toggle then
+                shortcut[ChapterNum]["Selected"] = toggle
+                func_RFM:Store()
+            end
+        end)
+        ChapterNum = ChapterNum + 1
+    end
+end
+n = nil
+TempRanger = nil
+
+-- ==============================
+
 local Craft = Window:Taps("Auto Craft")
 if getgenv().RFManager["Craft"] == nil then
     getgenv().RFManager["Craft"] = {}
@@ -446,7 +566,6 @@ n = nil
 TempCraft = nil
 
 -- ==============================
-
 
 local Setting = Window:Taps("Setting")
 local Setting_1 = Setting:newpage()
