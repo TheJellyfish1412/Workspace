@@ -297,8 +297,10 @@ function SelectMapEnded()
             for i, ChapterData in pairs(WorldData) do
                 if ChapterData["Selected"] and not Player_Data_Local.RangerStage:FindFirstChild(ChapterData["Name"]) then
                     if WorldData[i-1] and WorldData[i-1]["Name"] == ReplicatedStorage.Values.Game.Level.Value then
+                        Window:SetTextBottomLeft("Next")
                         ReplicatedStorage.Remote.Server.OnGame.Voting.VoteNext:FireServer()
                     else
+                        Window:SetTextBottomLeft("Return Lobby")
                         TeleportService:Teleport(game.PlaceId, LocalPlayer)
                     end
                     SelectingMap = false
@@ -310,20 +312,24 @@ function SelectMapEnded()
 
     if getgenv().RFManager["Auto Easter"] then
         if GameMode == "Event" then
+            Window:SetTextBottomLeft("Retry")
             if ReplicatedStorage.Values.Game.VoteRetry.VoteEnabled then
                 ReplicatedStorage.Remote.Server.OnGame.Voting.VoteRetry:FireServer()
             end
         else
+            Window:SetTextBottomLeft("Return Lobby")
             TeleportService:Teleport(game.PlaceId, LocalPlayer)
         end
         SelectingMapEnded = false
         return 
     elseif getgenv().RFManager["Auto Challenge"] then
         if GameMode == "Challenge" then
+            Window:SetTextBottomLeft("Retry")
             if ReplicatedStorage.Values.Game.VoteRetry.VoteEnabled then
                 ReplicatedStorage.Remote.Server.OnGame.Voting.VoteRetry:FireServer()
             end
         else
+            Window:SetTextBottomLeft("Return Lobby")
             TeleportService:Teleport(game.PlaceId, LocalPlayer)
         end
         SelectingMapEnded = false
