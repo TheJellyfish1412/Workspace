@@ -520,14 +520,14 @@ for _, WorldData in pairs(WorldDataSort) do
         if not SelectChapter then
             break
         end
-        local shortcut = getgenv().RFManager["Ranger Stage"][WorldData["World"]]
-        if shortcut[ChapterNum] == nil then
-            shortcut[ChapterNum] = {
+        if getgenv().RFManager["Ranger Stage"][WorldData["World"]][ChapterNum] == nil then
+            getgenv().RFManager["Ranger Stage"][WorldData["World"]][ChapterNum] = {
                 ["Name"] = Chapter,
                 ["DisplayName"] = SelectChapter["Name"],
                 ["Selected"] = false
             }
         end
+        local shortcut = getgenv().RFManager["Ranger Stage"][WorldData["World"]]
         TempRanger:Toggle(SelectChapter["Name"], shortcut[ChapterNum]["Selected"], false, function(toggle)
             if shortcut[ChapterNum]["Selected"] ~= toggle then
                 shortcut[ChapterNum]["Selected"] = toggle
