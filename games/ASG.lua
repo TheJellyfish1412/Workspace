@@ -27,13 +27,13 @@ end
 
 local function isSafe(posXZ)
 	for _, hitbox in workspace.PartEffect:GetChildren() do
-    pcall(function()
+    -- pcall(function()
       if hitbox.Name == "Hitbox1" and hitbox.Parent and hitbox.Transparency ~= 1 then
         if not isOutsideHitbox(posXZ, hitbox) then
           return false
         end
       end
-    end)
+    -- end)
 	end
 	return true
 end
@@ -105,10 +105,10 @@ AutoFarm_1:Toggle("Auto Mob", getgenv().RFManager["Auto Mob"], false, function(t
           task.wait()
           local posTP 
           if workspace.PartEffect:FindFirstChild("Hitbox1") then
-            local temp = spiralSearch(mob.HumanoidRootPart.Position, 500, 1)
+            local temp = spiralSearch(mob.HumanoidRootPart.Position, 500, 5)
             posTP = CFrame.new(temp.X, temp.Y-1, temp.Z)
           else
-            posTP = mob.HumanoidRootPart.CFrame * CFrame.new(0, -1, -15)
+            posTP = mob.HumanoidRootPart.CFrame * CFrame.new(0, -1, 10)
           end
           LocalPlayer.Character.HumanoidRootPart.CFrame = posTP
         end
