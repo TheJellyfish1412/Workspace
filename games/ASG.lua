@@ -28,7 +28,7 @@ end
 local function isSafe(posXZ)
 	for _, hitbox in workspace.PartEffect:GetChildren() do
     -- pcall(function()
-      if hitbox.Name == "Hitbox1" and hitbox.Parent and hitbox.Transparency ~= 1 then
+      if hitbox.Name == "Hitbox1" and hitbox.Parent then
         if not isOutsideHitbox(posXZ, hitbox) then
           return false
         end
