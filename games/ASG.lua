@@ -86,7 +86,7 @@ end
 
 local moveTo = function(cframe)
   local HRP = LocalPlayer.Character.HumanoidRootPart
-  local distance = (HRP.Position - Vector3.new(cframe.X, cframe.Y, cframe.Z)).Magitude
+  local distance = (HRP.Position - Vector3.new(cframe.X, cframe.Y, cframe.Z)).Magnitude
   if distance < 20 then
     HRP.CFrame = cframe
   else
