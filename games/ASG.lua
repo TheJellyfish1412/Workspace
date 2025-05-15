@@ -10,6 +10,7 @@ local Window = create:Win("Plasma", 11390492777)
 
 local IsLobby = game.PlaceId == 17850641257
 local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
 local TeleportService = game:GetService("TeleportService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
@@ -83,6 +84,24 @@ local function spiralSearch(targetPosition, maxRadius, step)
 	return nil
 end
 
+local moveTo = function(cframe)
+  local HRP = LocalPlayer.Character.HumanoidRootPart
+  local distance = (HRP.Position - Vector3.new(cframe.X, cframe.Y, cframe.Z)).Magitude
+  if distance < 20 then
+    HRP.CFrame = cframe
+  else
+    local tween = TweenService:Create(
+      HRP,
+      TweenInfo.new(distance/15),
+      {
+        CFrame = goalCFrame
+      }
+    )
+    tween:Play()
+    tween.Completed:Wait()
+  end
+end
+
 
 -- ===========================================================
 
@@ -110,7 +129,7 @@ AutoFarm_1:Toggle("Auto Mob", getgenv().RFManager["Auto Mob"], false, function(t
           else
             posTP = mob.HumanoidRootPart.CFrame * CFrame.new(0, -1, 10)
           end
-          LocalPlayer.Character.HumanoidRootPart.CFrame = posTP
+          moveTo(posTP)
         end
       end
     end
