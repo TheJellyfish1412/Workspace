@@ -105,10 +105,10 @@ AutoFarm_1:Toggle("Auto Mob", getgenv().RFManager["Auto Mob"], false, function(t
           task.wait()
           local posTP 
           if workspace.PartEffect:FindFirstChild("Hitbox1") then
-            local temp = spiralSearch(mob.HumanoidRootPart.Position, 50, 1)
+            local temp = spiralSearch(mob.HumanoidRootPart.Position, 500, 1)
             posTP = CFrame.new(temp.X, temp.Y-1, temp.Z)
           else
-            posTP = mob.HumanoidRootPart.CFrame * CFrame.new(0, -1, -5)
+            posTP = mob.HumanoidRootPart.CFrame * CFrame.new(0, -1, -15)
           end
           LocalPlayer.Character.HumanoidRootPart.CFrame = posTP
         end
