@@ -325,7 +325,7 @@ end)
 
 if not IsLobby then
   spawn(function()
-    repeat wait(1) until LocalPlayer.PlayerGui.Win:FindFirstChild("Win")
+    repeat wait(1) until LocalPlayer.PlayerGui:FindFirstChild("Win")
     local UI = LocalPlayer.PlayerGui:FindFirstChild("Win")
     if getgenv().RFManager["Auto Replay"] then
       ReplicatedStorage.Events.WinEvent.Buttom:FireServer("RPlay")
