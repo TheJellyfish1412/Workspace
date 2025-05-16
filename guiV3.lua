@@ -2843,11 +2843,11 @@ function create:Win(text, logo)
                     ButtonDrop2.MouseButton1Click:Connect(function()
                       local index_item = table.find(select_list, val)
                       if index_item then
-                        ListFrame.BackgroundTransparency = 0.7
                         table.remove(select_list, index_item)
-                      else
                         ListFrame.BackgroundTransparency = 1
+                      else
                         table.insert(select_list, val)
+                        ListFrame.BackgroundTransparency = 0.7
                       end
                       local result = table.concat(select_list, ",")
                       if #result > 10 then
@@ -3014,11 +3014,11 @@ function create:Win(text, logo)
                     ButtonDrop2.MouseButton1Click:Connect(function()
                       local index_item = table.find(select_list, val)
                       if index_item then
-                        ListFrame.BackgroundTransparency = 0.7
                         table.remove(select_list, index_item)
-                      else
                         ListFrame.BackgroundTransparency = 1
+                      else
                         table.insert(select_list, val)
+                        ListFrame.BackgroundTransparency = 0.7
                       end
                       local result = table.concat(select_list, ",")
                       if #result > 10 then
