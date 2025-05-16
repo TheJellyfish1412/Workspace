@@ -90,7 +90,7 @@ local function spiralSearch(targetPosition, maxRadius, step)
 
 		local dir = directions[dirIndex]
 		x = x + dir.X
-		z = z + dir.Y
+		z = z + dir.Z
 		stepsTaken = stepsTaken + 1
 		segmentPassed = segmentPassed + 1
 
@@ -186,10 +186,12 @@ AutoFarm_1:Toggle("Auto Mob", getgenv().RFManager["Auto Mob"], false, function(t
       local Mob = workspace.Enemy.Mob
       for _,mob in pairs(Mob:GetChildren()) do
         if getgenv().RFManager["Auto Mob"] and mob.Parent == Mob and mob:FindFirstChild("RealPos") then
-          Camera.CameraSubject = mob.Head
+          -- Camera.CameraSubject = mob.Head
           local tempVec = mob.HumanoidRootPart.Position
           local tween = moveTo(CFrame.new(tempVec.X, tempVec.Y, tempVec.Z))
-          tween.Completed:Wait()
+          if tween then
+            tween.Completed:Wait()
+          end
           spawn(function()
             while getgenv().RFManager["Auto Mob"] and mob.Parent == Mob do
               task.wait()
@@ -251,8 +253,8 @@ AutoFarm_1:Toggle("Auto Mob", getgenv().RFManager["Auto Mob"], false, function(t
               local posTP
               local monCF = mob.HumanoidRootPart.CFrame
               local Y = monCF.Y - (mob.HumanoidRootPart.Size.Y)
-              Camera.CameraSubject = mob.Head
-              if false and workspace.PartEffect:FindFirstChild("Hitbox1") then
+              -- Camera.CameraSubject = mob.Head
+              if workspace.PartEffect:FindFirstChild("Hitbox1") then
                 local temp = spiralSearch(Vector3.new(monCF.X, monCF.Y, monCF.Z), 500, 10)
                 if temp then
                   posTP = temp
@@ -270,7 +272,7 @@ AutoFarm_1:Toggle("Auto Mob", getgenv().RFManager["Auto Mob"], false, function(t
       wait(1)
     end
   else
-    Camera.CameraSubject = LocalPlayer.Character.Head
+    -- Camera.CameraSubject = LocalPlayer.Character.Head
     local bdnp = LocalPlayer.Character.HumanoidRootPart:FindFirstChild("Body Noclip")
     if bdnp then
       wait(1)
@@ -283,17 +285,69 @@ AutoFarm_1:MutiDrop("Auto Skill", getgenv().RFManager["Skills"], {"Skill1", "Ski
   getgenv().RFManager["Skills"] = arry
 end)
 
-RunService.RenderStepped:Connect(function()
-  if getgenv().RFManager["Auto Mob"] then
-    local character = game.Players.LocalPlayer.Character
-    local leftFoot = character:WaitForChild("Left Leg")
-    local pos = leftFoot.Position
-    followPart.CanCollide = true
-    followPart.Position = Vector3.new(pos.X, pos.Y-(leftFoot.Size.Y/2), pos.Z)
-  else
-    followPart.CanCollide = false
+local AutoFarm_2 = AutoFarm:newpage()
+
+AutoFarm_2:Toggle("Auto Start", getgenv().RFManager["Auto Start"], true, function(toggle)
+  if getgenv().RFManager["Auto Start"] ~= toggle then
+    getgenv().RFManager["Auto Start"] = toggle
+    func_RFM:Store()
+  end
+
+  if not IsLobby and toggle then
+    if LocalPlayer.PlayerGui.RoomUi:FindFirstChild("Ready") then
+      LocalPlayer.PlayerGui.RoomUi.Ready.Frame.StartButton.Butom.LocalScript.RemoteEvent:FireServer()
+    end
   end
 end)
 
 
+AutoFarm_2:Toggle("Auto Replay", getgenv().RFManager["Auto Replay"], false, function(toggle)
+  if getgenv().RFManager["Auto Replay"] ~= toggle then
+    getgenv().RFManager["Auto Replay"] = toggle
+    func_RFM:Store()
+  end
+  
+  -- if not IsLobby and toggle then
+  --   ReplicatedStorage.Events.WinEvent.Buttom:FireServer("RPlay")
+  -- end
+end)
+
+AutoFarm_2:Toggle("Auto Next", getgenv().RFManager["Auto Next"], false, function(toggle)
+  if getgenv().RFManager["Auto Next"] ~= toggle then
+    getgenv().RFManager["Auto Next"] = toggle
+    func_RFM:Store()
+  end
+
+  -- if not IsLobby and toggle then
+  --   ReplicatedStorage.Events.WinEvent.Buttom:FireServer("NextLv")
+  -- end
+end)
+
+if not IsLobby then
+  spawn(function()
+    repeat wait(1) until LocalPlayer.PlayerGui.Win:FindFirstChild("Win")
+    local UI = LocalPlayer.PlayerGui:FindFirstChild("Win")
+    if getgenv().RFManager["Auto Replay"] then
+      ReplicatedStorage.Events.WinEvent.Buttom:FireServer("RPlay")
+    elseif getgenv().RFManager["Auto Next"] then
+      ReplicatedStorage.Events.WinEvent.Buttom:FireServer("NextLv")
+    end
+  end)
+
+  RunService.RenderStepped:Connect(function()
+    if getgenv().RFManager["Auto Mob"] then
+      local character = LocalPlayer.Character
+      local leftFoot = character:WaitForChild("Left Leg")
+      local pos = leftFoot.Position
+      followPart.CanCollide = true
+      followPart.Position = Vector3.new(pos.X, pos.Y-(leftFoot.Size.Y/2), pos.Z)
+    else
+      followPart.CanCollide = false
+    end
+  end)
 end
+
+
+getgenv().Loaded = true
+end
+
