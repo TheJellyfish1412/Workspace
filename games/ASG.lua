@@ -254,7 +254,7 @@ AutoFarm_1:Toggle("Auto Mob", getgenv().RFManager["Auto Mob"], false, function(t
               local monCF = mob.HumanoidRootPart.CFrame
               local Y = monCF.Y - (mob.HumanoidRootPart.Size.Y)
               -- Camera.CameraSubject = mob.Head
-              if workspace.PartEffect:FindFirstChild("Hitbox1") then
+              if false and workspace.PartEffect:FindFirstChild("Hitbox1") then
                 local temp = spiralSearch(Vector3.new(monCF.X, monCF.Y, monCF.Z), 500, 10)
                 if temp then
                   posTP = temp
