@@ -264,7 +264,7 @@ AutoFarm_1:Toggle("Auto Mob", getgenv().RFManager["Auto Mob"], false, function(t
                   return
                 end
               else
-                posTP = monCF * CFrame.new(0,0,10)
+                posTP = monCF * CFrame.new(0, 0, getgenv().RFManager["Distance"] or 10)
               end
               moveTo(posTP, mob.HumanoidRootPart.Position)
             end)
@@ -282,6 +282,12 @@ AutoFarm_1:Toggle("Auto Mob", getgenv().RFManager["Auto Mob"], false, function(t
     end
   end
 end)
+
+AutoFarm_1:Slider("Distance", false, false, 1, 100, getgenv().RFManager["Distance"] or 10, 5, false, function(val)
+  getgenv().RFManager["Distance"] = val
+  func_RFM:Store()
+end)
+
 
 AutoFarm_1:MutiDrop("Auto Skill", getgenv().RFManager["Skills"], {"Skill1", "Skill2", "Skill3", "Skill4"}, function(arry)
   getgenv().RFManager["Skills"] = arry
