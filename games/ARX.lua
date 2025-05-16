@@ -1,3 +1,5 @@
+if game.PlaceId == 72829404259339 then
+
 local create, func_RFM = loadstring(game:HttpGet("https://raw.githubusercontent.com/TheJellyfish1412/Workspace/refs/heads/main/guiV2.lua"))()
 local requestt = http_request or request or syn.request or HttpGet or HttpPost
 
@@ -119,7 +121,7 @@ function SelectMap()
                                     EventRemote:FireServer("Start")
 
                                     SelectingMap = false
-                                    return true
+                                    return
                                 end
                             end
                         end
@@ -844,3 +846,4 @@ if (not IsLobby) then
 end
 
 getgenv().Loaded = true
+end
