@@ -159,7 +159,10 @@ local function Tween(instance, properties,style,wa)
     TweenService:Create(instance,TweenInfo.new(wa,Enum.EasingStyle[style]),{properties}):Play()
 end
 
-local FolderGamePath = "RFManager/"..game.PlaceId
+local requestt = http_request or request or syn.request or HttpGet or HttpPost
+local res = requestt({Url = "https://apis.roblox.com/universes/v1/places/" .. game.PlaceId .. "/universe"})
+local Universe = HttpService:JSONDecode(res.Body)["universeId"]
+local FolderGamePath = "RFManager/"..Universe
 local PlayerFilePath = FolderGamePath .. "/" .. LocalPlayer.UserId .. ".json"
 
 local create = {}
