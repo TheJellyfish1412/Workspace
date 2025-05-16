@@ -121,7 +121,7 @@ end
 
 local function moveTo(cframe, lookat)
   Body_Noclip()
-  local speed = 50
+  local speed = 75
   local HRP = LocalPlayer.Character.HumanoidRootPart
   local targetPos = Vector3.new(cframe.X, cframe.Y, cframe.Z)
   local distance = (HRP.Position - targetPos).Magnitude
@@ -132,6 +132,8 @@ local function moveTo(cframe, lookat)
     return
   elseif distance > 500 then
     speed = 20
+  elseif distance > 250 then
+    speed = 50
   end
   local tween = TweenService:Create(
     HRP,
