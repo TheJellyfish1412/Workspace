@@ -283,6 +283,7 @@ end)
 
 AutoFarm_1:MutiDrop("Auto Skill", getgenv().RFManager["Skills"], {"Skill1", "Skill2", "Skill3", "Skill4"}, function(arry)
   getgenv().RFManager["Skills"] = arry
+  func_RFM:Store()
 end)
 
 local AutoFarm_2 = AutoFarm:newpage()
@@ -350,4 +351,3 @@ end
 
 getgenv().Loaded = true
 end
-
