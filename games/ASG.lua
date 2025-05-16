@@ -1,6 +1,5 @@
 if game.PlaceId == 17850641257 or game.PlaceId == 17850769550 then
 
-
 local create, func_RFM = loadstring(game:HttpGet("https://raw.githubusercontent.com/TheJellyfish1412/Workspace/refs/heads/main/guiV3.lua"))()
 local requestt = http_request or request or syn.request or HttpGet or HttpPost
 
@@ -14,7 +13,31 @@ local TweenService = game:GetService("TweenService")
 local TeleportService = game:GetService("TeleportService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+local Camera = workspace.CurrentCamera
 local LocalPlayer = game.Players.LocalPlayer
+
+local UnitDataLocal = {}
+if not IsLobby then
+  local UnitsData = require(ReplicatedStorage.Modules.UnitsData)
+  for i=1,3 do
+    local slot = LocalPlayer.CharValue["Slot"..i]
+    local unitName = slot.Units.Value
+    if unitName ~= "" then
+      local data = UnitsData[unitName]
+      local SkillStore = {}
+      for n = 1,4 do
+        local skill = "Skill" .. n
+        local skillData = data[skill] 
+        if skillData then
+          SkillStore[skill] = skillData
+        else
+          break
+        end
+      end
+      UnitDataLocal[unitName] = SkillStore
+    end
+  end
+end
 
 -- ===========================================================
 
@@ -55,7 +78,7 @@ local function spiralSearch(targetPosition, maxRadius, step)
 
 	while math.max(math.abs(x), math.abs(z)) * step <= maxRadius do
     task.wait()
-		local checkPos = Vector3.new(
+		local checkPos = CFrame.new(
 			targetPosition.X + x * step,
 			targetPosition.Y,
 			targetPosition.Z + z * step
@@ -84,25 +107,66 @@ local function spiralSearch(targetPosition, maxRadius, step)
 	return nil
 end
 
-local moveTo = function(cframe)
-  local HRP = LocalPlayer.Character.HumanoidRootPart
-  local distance = (HRP.Position - Vector3.new(cframe.X, cframe.Y, cframe.Z)).Magnitude
-  if distance < 20 then
-    HRP.CFrame = cframe
-  else
-    local tween = TweenService:Create(
-      HRP,
-      TweenInfo.new(distance/15),
-      {
-        CFrame = goalCFrame
-      }
-    )
-    tween:Play()
-    tween.Completed:Wait()
+function Body_Noclip()
+  local HumanoidRootPart = LocalPlayer.Character.HumanoidRootPart
+  if not HumanoidRootPart:FindFirstChild("Body Noclip") then
+    local Body_Noclip = Instance.new("BodyVelocity")
+    Body_Noclip.Name = "Body Noclip"
+    Body_Noclip.Velocity = Vector3.new()
+    Body_Noclip.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+    Body_Noclip.Parent = HumanoidRootPart
+    return Body_Noclip
   end
 end
 
+local function moveTo(cframe, lookat)
+  Body_Noclip()
+  local speed = 50
+  local HRP = LocalPlayer.Character.HumanoidRootPart
+  local targetPos = Vector3.new(cframe.X, cframe.Y, cframe.Z)
+  local distance = (HRP.Position - targetPos).Magnitude
+  if lookat then
+    cframe = CFrame.new(targetPos, lookat)
+  end
+  if distance > 2000 then
+    return
+  elseif distance > 500 then
+    speed = 20
+  end
+  local tween = TweenService:Create(
+    HRP,
+    TweenInfo.new(distance/speed, Enum.EasingStyle.Linear),
+    {
+      CFrame = cframe * CFrame.new(3.16,-3,0)
+    }
+  )
+  tween:Play()
+  return tween
+  -- if distance < 80 then
+  --   HRP.CFrame = cframe
+  -- end
+    
+  --   tween.Completed:Wait()
+  -- end
+end
 
+if not IsLobby then
+  for i, v in pairs(getgc(true)) do
+    if typeof(v) == "function" and islclosure(v) then
+      local info = debug.getinfo(v)
+      if info.name == "Combat" then
+        _G.combat = v
+        break
+      end
+    end
+  end
+end
+
+local followPart = Instance.new("Part")
+followPart.Size = Vector3.new(3,2,3)
+followPart.Anchored = true
+followPart.Transparency = 1
+followPart.Parent = workspace
 -- ===========================================================
 
 local AutoFarm = Window:Taps("Auto Farm")
@@ -114,31 +178,122 @@ AutoFarm_1:Toggle("Auto Mob", getgenv().RFManager["Auto Mob"], false, function(t
     getgenv().RFManager["Auto Mob"] = toggle
     func_RFM:Store()
   end
+  if IsLobby then return end
 
-  if toggle and not IsLobby then
+  if toggle then
     while getgenv().RFManager["Auto Mob"] do
       task.wait()
       local Mob = workspace.Enemy.Mob
       for _,mob in pairs(Mob:GetChildren()) do
-        while getgenv().RFManager["Auto Mob"] and mob.Parent == Mob do
-          task.wait()
-          local posTP 
-          if workspace.PartEffect:FindFirstChild("Hitbox1") then
-            local temp = spiralSearch(mob.HumanoidRootPart.Position, 500, 5)
-            posTP = CFrame.new(temp.X, temp.Y-1, temp.Z)
-          else
-            posTP = mob.HumanoidRootPart.CFrame * CFrame.new(0, -1, 10)
+        if getgenv().RFManager["Auto Mob"] and mob.Parent == Mob and mob:FindFirstChild("RealPos") then
+          Camera.CameraSubject = mob.Head
+          local tempVec = mob.HumanoidRootPart.Position
+          local tween = moveTo(CFrame.new(tempVec.X, tempVec.Y, tempVec.Z))
+          tween.Completed:Wait()
+          spawn(function()
+            while getgenv().RFManager["Auto Mob"] and mob.Parent == Mob do
+              task.wait()
+              pcall(function()
+                -- for unit, UnitData in pairs(UnitDataLocal) do
+                local slot = LocalPlayer.CharValue["Slot" .. LocalPlayer.Character.Onslot.Value]
+                local unit = slot.Units.Value
+                local UnitData = UnitDataLocal[unit]
+                  local selectSkill
+                  for _,skill in pairs(getgenv().RFManager["Skills"]) do
+                    local SkillData = UnitData[skill]
+                    if not LocalPlayer.Character.Cooldow:FindFirstChild(unit.."/"..skill) then
+                      if LocalPlayer.Character.Mana.Value >= SkillData.Mana then
+                        selectSkill = {
+                          skill,
+                          SkillData.HonIdTime
+                        }
+                        break
+                      end
+                    end
+                  end
+                  if selectSkill then
+                    local mobPos = mob.HumanoidRootPart.Position
+                    if mobPos.Y < -50 then
+                      return
+                    end
+                    if selectSkill[2] == 0 then
+                      ReplicatedStorage.Events.Skill:FireServer(
+                        selectSkill[1],
+                        LocalPlayer.Character.HumanoidRootPart.CFrame,
+                        mobPos,
+                        "OnSkill"
+                      )
+                    else
+                      ReplicatedStorage.Events.Skill:FireServer(
+                        selectSkill[1],
+                        LocalPlayer.Character.HumanoidRootPart.CFrame,
+                        mob.HumanoidRootPart.Position,
+                        "OnHold"
+                      )
+                      task.wait(selectSkill[2])
+                      ReplicatedStorage.Events.Skill:FireServer(
+                        selectSkill[1],
+                        LocalPlayer.Character.HumanoidRootPart.CFrame,
+                        mob.HumanoidRootPart.Position,
+                        "EndHold"
+                      )
+                    end
+                  else
+                    _G.combat()
+                  end
+                -- end
+              end)
+            end
+          end)
+          while getgenv().RFManager["Auto Mob"] and mob.Parent == Mob do
+            task.wait()
+            pcall(function()
+              local posTP
+              local monCF = mob.HumanoidRootPart.CFrame
+              local Y = monCF.Y - (mob.HumanoidRootPart.Size.Y)
+              Camera.CameraSubject = mob.Head
+              if false and workspace.PartEffect:FindFirstChild("Hitbox1") then
+                local temp = spiralSearch(Vector3.new(monCF.X, monCF.Y, monCF.Z), 500, 10)
+                if temp then
+                  posTP = temp
+                else
+                  return
+                end
+              else
+                posTP = monCF * CFrame.new(0,0,10)
+              end
+              moveTo(posTP, mob.HumanoidRootPart.Position)
+            end)
           end
-          moveTo(posTP)
         end
       end
+      wait(1)
+    end
+  else
+    Camera.CameraSubject = LocalPlayer.Character.Head
+    local bdnp = LocalPlayer.Character.HumanoidRootPart:FindFirstChild("Body Noclip")
+    if bdnp then
+      wait(1)
+      bdnp:Destroy()
     end
   end
 end)
 
+AutoFarm_1:MutiDrop("Auto Skill", getgenv().RFManager["Skills"], {"Skill1", "Skill2", "Skill3", "Skill4"}, function(arry)
+  getgenv().RFManager["Skills"] = arry
+end)
 
-
-
+RunService.RenderStepped:Connect(function()
+  if getgenv().RFManager["Auto Mob"] then
+    local character = game.Players.LocalPlayer.Character
+    local leftFoot = character:WaitForChild("Left Leg")
+    local pos = leftFoot.Position
+    followPart.CanCollide = true
+    followPart.Position = Vector3.new(pos.X, pos.Y-(leftFoot.Size.Y/2), pos.Z)
+  else
+    followPart.CanCollide = false
+  end
+end)
 
 
 end
