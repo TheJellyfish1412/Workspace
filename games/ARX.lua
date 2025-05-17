@@ -51,15 +51,6 @@ function SelectMap()
     if SelectingMap then return end
     SelectingMap = true
 
-    if getgenv().RFManager["Claim Hourly Egg"] then
-        if Player_Data_Local.Data.HourlyEgg.Value + (60 * 60) < os.time() then
-            local Egg = workspace.Lobby.HourlyEgg.Egg
-            LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(Egg.Position + Vector3.new(8,0,8))
-            wait(1)
-            fireproximityprompt(Egg.ProximityPrompt)
-        end
-    end
-
     --[[
     if getgenv().RFManager["Auto Craft"] then
         local CraftFound = false
@@ -184,14 +175,7 @@ function SelectMap()
         end
     end
 
-    if getgenv().RFManager["Auto Easter"] then
-        Window:SetTextBottomLeft("Select Easter Event")
-        EventRemote:FireServer("Easter-Event")
-        wait(1)
-        EventRemote:FireServer("Start")
-        SelectingMap = false
-        return
-    elseif getgenv().RFManager["Auto Challenge"] then
+    if getgenv().RFManager["Auto Challenge"] then
         Window:SetTextBottomLeft("Select Challenge")
         local ItemCheckSell = {
             [1] = "Onigiri",
@@ -322,19 +306,7 @@ function SelectMapEnded()
         end
     end
 
-    if getgenv().RFManager["Auto Easter"] then
-        if GameMode == "Event" then
-            Window:SetTextBottomLeft("Retry")
-            if ReplicatedStorage.Values.Game.VoteRetry.VoteEnabled then
-                ReplicatedStorage.Remote.Server.OnGame.Voting.VoteRetry:FireServer()
-            end
-        else
-            Window:SetTextBottomLeft("Return Lobby")
-            TeleportService:Teleport(game.PlaceId, LocalPlayer)
-        end
-        SelectingMapEnded = false
-        return 
-    elseif getgenv().RFManager["Auto Challenge"] then
+    if getgenv().RFManager["Auto Challenge"] then
         if GameMode == "Challenge" then
             Window:SetTextBottomLeft("Retry")
             if ReplicatedStorage.Values.Game.VoteRetry.VoteEnabled then
@@ -432,25 +404,6 @@ ChapterAll = nil
 ChapterAreadySelect = nil
 
 -- ===============================
-
-AutoFarm_1:Toggle("Auto Easter", getgenv().RFManager["Auto Easter"], false, function(toggle)
-    if getgenv().RFManager["Auto Easter"] ~= toggle then
-        getgenv().RFManager["Auto Easter"] = toggle
-        func_RFM:Store()
-    end
-
-    if toggle and IsLobby then
-        print("Start Select Map")
-        SelectMap()
-    end
-end)
-
-AutoFarm_1:Toggle("Delay Easter", getgenv().RFManager["Delay Easter"], false, function(toggle)
-    if getgenv().RFManager["Delay Easter"] ~= toggle then
-        getgenv().RFManager["Delay Easter"] = toggle
-        func_RFM:Store()
-    end
-end)
 
 AutoFarm_1:Toggle("Auto Challenge", getgenv().RFManager["Auto Challenge"], false, function(toggle)
     if getgenv().RFManager["Auto Challenge"] ~= toggle then
@@ -624,17 +577,6 @@ Setting_1:TextBox("Webhook", "place webhook", function(url)
         func_RFM:Store()
     else
         create:Notify("Webhook Error", "Link Invalid", 2)
-    end
-end)
-
-Setting_1:Toggle("Claim Hourly Egg", getgenv().RFManager["Claim Hourly Egg"], true, function(toggle)
-    if getgenv().RFManager["Claim Hourly Egg"] ~= toggle then
-        getgenv().RFManager["Claim Hourly Egg"] = toggle
-        func_RFM:Store()
-    end
-
-    if toggle and IsLobby then
-        SelectMap()
     end
 end)
 
