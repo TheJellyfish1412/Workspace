@@ -381,6 +381,58 @@ AutoFarm_1:Toggle("Auto Ranger", getgenv().RFManager["Auto Ranger"], false, func
     end
 end)
 
+-- ===============================
+
+local ChapterAll = {}
+local ChapterAreadySelect = {}
+local ChapterMapShortCut = {}
+
+if getgenv().RFManager["Ranger Stage"] == nil then
+    getgenv().RFManager["Ranger Stage"] = {}
+end
+for _, WorldData in pairs(WorldDataSort) do
+    local SelectLevel = LevelsData[WorldData["World"]]
+    if getgenv().RFManager["Ranger Stage"][WorldData["World"]] == nil then
+        getgenv().RFManager["Ranger Stage"][WorldData["World"]] = {}
+    end
+    local ChapterNum = 1
+    while true do
+        local Chapter = WorldData["World"] .. "_RangerStage" .. ChapterNum
+        local SelectChapter = SelectLevel[Chapter]
+        if not SelectChapter then
+            break
+        end
+        if getgenv().RFManager["Ranger Stage"][WorldData["World"]][ChapterNum] == nil then
+            getgenv().RFManager["Ranger Stage"][WorldData["World"]][ChapterNum] = {
+                ["Name"] = Chapter,
+                ["DisplayName"] = SelectChapter["Name"],
+                ["Selected"] = false
+            }
+        end
+        local shortcut = getgenv().RFManager["Ranger Stage"][WorldData["World"]][ChapterNum]
+        
+        table.insert(ChapterAll, shortcut["DisplayName"])
+        if shortcut["Selected"] then
+            table.insert(ChapterAreadySelect, shortcut["DisplayName"])
+        end
+        ChapterMapShortCut[shortcut["DisplayName"]] = shortcut
+        ChapterNum = ChapterNum + 1
+    end
+end
+TempRanger = nil
+
+AutoFarm_1:MutiDrop("Select Ranger Stage", ChapterAreadySelect, ChapterAll, function(arry)
+  for _, displayName in pairs(arry) do
+		ChapterMapShortCut[displayName]["Selected"] = true
+  end
+  func_RFM:Store()
+end)
+
+ChapterAll = nil
+ChapterAreadySelect = nil
+
+-- ===============================
+
 AutoFarm_1:Toggle("Auto Easter", getgenv().RFManager["Auto Easter"], false, function(toggle)
     if getgenv().RFManager["Auto Easter"] ~= toggle then
         getgenv().RFManager["Auto Easter"] = toggle
@@ -512,51 +564,6 @@ AutoFarm_2:Toggle("Auto Vote Next", getgenv().RFManager["VoteNext"], false, func
 end)
 
 
--- ===============================
-
-local RangerTap = Window:Taps("Auto Ranger")
-if getgenv().RFManager["Ranger Stage"] == nil then
-    getgenv().RFManager["Ranger Stage"] = {}
-end
-local n = 0
-local TempRanger = RangerTap:newpage()
-for _, WorldData in pairs(WorldDataSort) do
-    n = n + 1
-    if n > 2 then
-        n = 1
-        TempRanger = RangerTap:newpage()
-    end
-    local SelectLevel = LevelsData[WorldData["World"]]
-    TempRanger:Label(WorldData["DisplayName"])
-    if getgenv().RFManager["Ranger Stage"][WorldData["World"]] == nil then
-        getgenv().RFManager["Ranger Stage"][WorldData["World"]] = {}
-    end
-    local ChapterNum = 1
-    while true do
-        local Chapter = WorldData["World"] .. "_RangerStage" .. ChapterNum
-        local SelectChapter = SelectLevel[Chapter]
-        if not SelectChapter then
-            break
-        end
-        if getgenv().RFManager["Ranger Stage"][WorldData["World"]][ChapterNum] == nil then
-            getgenv().RFManager["Ranger Stage"][WorldData["World"]][ChapterNum] = {
-                ["Name"] = Chapter,
-                ["DisplayName"] = SelectChapter["Name"],
-                ["Selected"] = false
-            }
-        end
-        local shortcut = getgenv().RFManager["Ranger Stage"][WorldData["World"]][ChapterNum]
-        TempRanger:Toggle(SelectChapter["Name"], shortcut["Selected"], false, function(toggle)
-            if shortcut["Selected"] ~= toggle then
-                shortcut["Selected"] = toggle
-                func_RFM:Store()
-            end
-        end)
-        ChapterNum = ChapterNum + 1
-    end
-end
-n = nil
-TempRanger = nil
 
 -- ==============================
 
