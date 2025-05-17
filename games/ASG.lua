@@ -354,6 +354,11 @@ if not IsLobby then
       followPart.CanCollide = false
     end
   end)
+else
+  for i=1,10 do
+    game:GetService("ReplicatedStorage").Event.Quest:FireServer("Daily", i)
+    game:GetService("ReplicatedStorage").Event.Quest:FireServer("Weekly", i)
+  end
 end
 
 
