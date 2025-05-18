@@ -396,10 +396,14 @@ end
 TempRanger = nil
 
 AutoFarm_1:MutiDrop("Ranger Stage", ChapterAreadySelect, ChapterAll, function(arry)
-  for _, displayName in pairs(arry) do
-		ChapterMapShortCut[displayName]["Selected"] = true
-  end
-  func_RFM:Store()
+    for displayName, shortcut in pairs(ChapterMapShortCut) do
+        if table.find(arry, displayName) then
+            shortcut["Selected"] = true
+        else
+            shortcut["Selected"] = false
+        end
+    end
+    func_RFM:Store()
 end)
 
 ChapterAll = nil
