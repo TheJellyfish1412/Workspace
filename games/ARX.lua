@@ -393,7 +393,7 @@ for _, WorldData in pairs(WorldDataSort) do
 end
 TempRanger = nil
 
-AutoFarm_1:MutiDrop("Select Ranger Stage", ChapterAreadySelect, ChapterAll, function(arry)
+AutoFarm_1:MutiDrop("Ranger Stage", ChapterAreadySelect, ChapterAll, function(arry)
   for _, displayName in pairs(arry) do
 		ChapterMapShortCut[displayName]["Selected"] = true
   end
