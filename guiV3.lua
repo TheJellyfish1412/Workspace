@@ -16,14 +16,14 @@ end)
 do local ui = game:GetService("CoreGui"):FindFirstChild("PlasmaHub")  if ui then ui:Destroy() end end
 do local ui = game:GetService("CoreGui"):FindFirstChild("PlasmaNotify")  if ui then ui:Destroy() end end
 do local ui = game:GetService("CoreGui"):FindFirstChild("PlasmaHub_mobile")  if ui then ui:Destroy() end end
-do local ui = game:GetService("CoreGui"):FindFirstChild("PlasmaHubRightFrame")  if ui then ui:Destroy() end end
+-- do local ui = game:GetService("CoreGui"):FindFirstChild("PlasmaHubRightFrame")  if ui then ui:Destroy() end end
 
 _G.Color = Color3.fromRGB(51, 101, 255)
 _G.Color1 = Color3.fromRGB(0,0,255)
 
 local PlasmaCourseScreen = Instance.new("ScreenGui")
 local PlasmaNotify = Instance.new("ScreenGui")
-local PlasmaHubRightFrame = Instance.new("ScreenGui")
+-- local PlasmaHubRightFrame = Instance.new("ScreenGui")
 local Plasma_mobile = Instance.new("ScreenGui")
 
 local ScaleMyUI = PlasmaCourseScreen.AbsoluteSize.Y * 0.97 / 560
@@ -58,97 +58,97 @@ PlasmaNotify.Parent = game:GetService("CoreGui")
 PlasmaNotify.Name = "PlasmaNotify"
 PlasmaNotify.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
-PlasmaHubRightFrame.Parent = game:GetService("CoreGui")
-PlasmaHubRightFrame.Name = "PlasmaHubRightFrame"
-PlasmaHubRightFrame.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-PlasmaHubRightFrame.Enabled = false
+-- PlasmaHubRightFrame.Parent = game:GetService("CoreGui")
+-- PlasmaHubRightFrame.Name = "PlasmaHubRightFrame"
+-- PlasmaHubRightFrame.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+-- PlasmaHubRightFrame.Enabled = false
 
-local UiToggle = Instance.new("Frame")
+-- local UiToggle = Instance.new("Frame")
 
-UiToggle.Name = "UI_TOGGLE"
-UiToggle.Parent = PlasmaHubRightFrame
-UiToggle.AnchorPoint = Vector2.new(0.5, 0)
-UiToggle.BackgroundColor3 = Color3.fromRGB(32,32,32)
-UiToggle.BackgroundTransparency = 0
-UiToggle.BorderColor3 = _G.Color
-UiToggle.BorderSizePixel = 0
-UiToggle.ClipsDescendants = true
-UiToggle.Position = UDim2.new(0.75, 0, 0, 0)
-UiToggle.Size = UDim2.new(0, 170, 0, 50)
+-- UiToggle.Name = "UI_TOGGLE"
+-- UiToggle.Parent = PlasmaHubRightFrame
+-- UiToggle.AnchorPoint = Vector2.new(0.5, 0)
+-- UiToggle.BackgroundColor3 = Color3.fromRGB(32,32,32)
+-- UiToggle.BackgroundTransparency = 0
+-- UiToggle.BorderColor3 = _G.Color
+-- UiToggle.BorderSizePixel = 0
+-- UiToggle.ClipsDescendants = true
+-- UiToggle.Position = UDim2.new(0.75, 0, 0, 0)
+-- UiToggle.Size = UDim2.new(0, 170, 0, 50)
 
-local UiToggle_UiConner1 = Instance.new("UICorner")
+-- local UiToggle_UiConner1 = Instance.new("UICorner")
 
-UiToggle_UiConner1.CornerRadius = UDim.new(0, 3)
-UiToggle_UiConner1.Name = "UiToggle_UiConner1"
-UiToggle_UiConner1.Parent = UiToggle
+-- UiToggle_UiConner1.CornerRadius = UDim.new(0, 3)
+-- UiToggle_UiConner1.Name = "UiToggle_UiConner1"
+-- UiToggle_UiConner1.Parent = UiToggle
 
-local UiToggle_UiStroke1 = Instance.new("UIStroke")
+-- local UiToggle_UiStroke1 = Instance.new("UIStroke")
 
-UiToggle_UiStroke1.Color = Color3.fromRGB(153, 204, 255)
-UiToggle_UiStroke1.Thickness = 2
-UiToggle_UiStroke1.Name = "UiToggle_UiStroke1"
-UiToggle_UiStroke1.Parent = UiToggle
+-- UiToggle_UiStroke1.Color = Color3.fromRGB(153, 204, 255)
+-- UiToggle_UiStroke1.Thickness = 2
+-- UiToggle_UiStroke1.Name = "UiToggle_UiStroke1"
+-- UiToggle_UiStroke1.Parent = UiToggle
 
-local UiToggleminiFrame = Instance.new("Frame")
+-- local UiToggleminiFrame = Instance.new("Frame")
 
-UiToggleminiFrame.Name = "UiToggleminiFrame"
-UiToggleminiFrame.Parent = UiToggle
-UiToggleminiFrame.AnchorPoint = Vector2.new(0.5, 0.5)
-UiToggleminiFrame.BackgroundColor3 = _G.Color
-UiToggleminiFrame.BackgroundTransparency = 0
-UiToggleminiFrame.BorderColor3 = _G.Color
-UiToggleminiFrame.BorderSizePixel = 0
-UiToggleminiFrame.ClipsDescendants = true
-UiToggleminiFrame.Position = UDim2.new(0.01, 0, 0.5, 0)
-UiToggleminiFrame.Size = UDim2.new(0, 4, 0, 60)
+-- UiToggleminiFrame.Name = "UiToggleminiFrame"
+-- UiToggleminiFrame.Parent = UiToggle
+-- UiToggleminiFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+-- UiToggleminiFrame.BackgroundColor3 = _G.Color
+-- UiToggleminiFrame.BackgroundTransparency = 0
+-- UiToggleminiFrame.BorderColor3 = _G.Color
+-- UiToggleminiFrame.BorderSizePixel = 0
+-- UiToggleminiFrame.ClipsDescendants = true
+-- UiToggleminiFrame.Position = UDim2.new(0.01, 0, 0.5, 0)
+-- UiToggleminiFrame.Size = UDim2.new(0, 4, 0, 60)
 
-local UiToggleminiFrame_UiConner1 = Instance.new("UICorner")
+-- local UiToggleminiFrame_UiConner1 = Instance.new("UICorner")
 
-UiToggleminiFrame_UiConner1.CornerRadius = UDim.new(0, 9)
-UiToggleminiFrame_UiConner1.Name = "UiToggleminiFrame_UiConner1"
-UiToggleminiFrame_UiConner1.Parent = UiToggleminiFrame
+-- UiToggleminiFrame_UiConner1.CornerRadius = UDim.new(0, 9)
+-- UiToggleminiFrame_UiConner1.Name = "UiToggleminiFrame_UiConner1"
+-- UiToggleminiFrame_UiConner1.Parent = UiToggleminiFrame
 
-local TitleUiToggle = Instance.new("TextLabel")
+-- local TitleUiToggle = Instance.new("TextLabel")
 
-TitleUiToggle.Parent = UiToggle
-TitleUiToggle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-TitleUiToggle.BackgroundTransparency = 1
-TitleUiToggle.BorderSizePixel = 0
-TitleUiToggle.Position = UDim2.new(0.6, 0, 0.5, 0)
-TitleUiToggle.AnchorPoint = Vector2.new(0.5, 0.5)
-TitleUiToggle.Size = UDim2.new(0, 30,0, 23)
-TitleUiToggle.Font = Enum.Font.GothamBold
-TitleUiToggle.Text = "Ui Toggle :\nRight Control"
-TitleUiToggle.TextColor3 = _G.Color1
-TitleUiToggle.TextSize = 11.000
-TitleUiToggle.TextXAlignment = Enum.TextXAlignment.Center
+-- TitleUiToggle.Parent = UiToggle
+-- TitleUiToggle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+-- TitleUiToggle.BackgroundTransparency = 1
+-- TitleUiToggle.BorderSizePixel = 0
+-- TitleUiToggle.Position = UDim2.new(0.6, 0, 0.5, 0)
+-- TitleUiToggle.AnchorPoint = Vector2.new(0.5, 0.5)
+-- TitleUiToggle.Size = UDim2.new(0, 30,0, 23)
+-- TitleUiToggle.Font = Enum.Font.GothamBold
+-- TitleUiToggle.Text = "Ui Toggle :\nRight Control"
+-- TitleUiToggle.TextColor3 = _G.Color1
+-- TitleUiToggle.TextSize = 11.000
+-- TitleUiToggle.TextXAlignment = Enum.TextXAlignment.Center
 
-local UiToggleImage = Instance.new("ImageLabel")
-UiToggleImage.Parent = UiToggle
-UiToggleImage.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-UiToggleImage.BackgroundTransparency = 1
-UiToggleImage.Position = UDim2.new(0.101, 0, 0.15, 0)
-UiToggleImage.Size = UDim2.new(0, 35, 0, 35)
-UiToggleImage.Image = "https://www.roblox.com/asset/?id=11390492777"
+-- local UiToggleImage = Instance.new("ImageLabel")
+-- UiToggleImage.Parent = UiToggle
+-- UiToggleImage.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+-- UiToggleImage.BackgroundTransparency = 1
+-- UiToggleImage.Position = UDim2.new(0.101, 0, 0.15, 0)
+-- UiToggleImage.Size = UDim2.new(0, 35, 0, 35)
+-- UiToggleImage.Image = "https://www.roblox.com/asset/?id=11390492777"
 
-local lib = {toggledui = false;}
-game:GetService("UserInputService").InputBegan:Connect(function(input)
-    pcall(function()
-        if input.KeyCode == Enum.KeyCode.RightControl then
-            if lib.toggledui == false then
-                lib.toggledui = true
-                wait(.5)
-                TweenService:Create(UiToggle,TweenInfo.new(0.5,Enum.EasingStyle.Back),{Size = UDim2.new(0, 170, 0, 50)}):Play()
-                PlasmaHubRightFrame.Enabled = true
-            else
-                lib.toggledui = false
-                TweenService:Create(UiToggle,TweenInfo.new(0.5,Enum.EasingStyle.Back,Enum.EasingDirection.In),{Size = UDim2.new(0, 0, 0, 0)}):Play()
-                wait(.5)
-                PlasmaHubRightFrame.Enabled = false
-            end
-        end
-    end)
-end)
+-- local lib = {toggledui = false;}
+-- game:GetService("UserInputService").InputBegan:Connect(function(input)
+--     pcall(function()
+--         if input.KeyCode == Enum.KeyCode.RightControl then
+--             if lib.toggledui == false then
+--                 lib.toggledui = true
+--                 wait(.5)
+--                 TweenService:Create(UiToggle,TweenInfo.new(0.5,Enum.EasingStyle.Back),{Size = UDim2.new(0, 170, 0, 50)}):Play()
+--                 PlasmaHubRightFrame.Enabled = true
+--             else
+--                 lib.toggledui = false
+--                 TweenService:Create(UiToggle,TweenInfo.new(0.5,Enum.EasingStyle.Back,Enum.EasingDirection.In),{Size = UDim2.new(0, 0, 0, 0)}):Play()
+--                 wait(.5)
+--                 PlasmaHubRightFrame.Enabled = false
+--             end
+--         end
+--     end)
+-- end)
 
 local function MakeDraggable(topbarobject, object)
     local UIDragDetector = Instance.new("UIDragDetector")
@@ -332,19 +332,19 @@ function create:Win(text, logo)
 	            PlasmaCourseScreen.Enabled = true
 	        end
 	    end)
-		pcall(function()
-		    if lib.toggledui == false then
-				lib.toggledui = true
-				wait(.5)
-				TweenService:Create(UiToggle,TweenInfo.new(0.5,Enum.EasingStyle.Back),{Size = UDim2.new(0, 170, 0, 50)}):Play()
-				PlasmaHubRightFrame.Enabled = true
-		    else
-				lib.toggledui = false
-				TweenService:Create(UiToggle,TweenInfo.new(0.5,Enum.EasingStyle.Back,Enum.EasingDirection.In),{Size = UDim2.new(0, 0, 0, 0)}):Play()
-				wait(.5)
-				PlasmaHubRightFrame.Enabled = false
-		    end
-	    end)
+		-- pcall(function()
+		--     if lib.toggledui == false then
+		-- 		lib.toggledui = true
+		-- 		wait(.5)
+		-- 		TweenService:Create(UiToggle,TweenInfo.new(0.5,Enum.EasingStyle.Back),{Size = UDim2.new(0, 170, 0, 50)}):Play()
+		-- 		PlasmaHubRightFrame.Enabled = true
+		--     else
+		-- 		lib.toggledui = false
+		-- 		TweenService:Create(UiToggle,TweenInfo.new(0.5,Enum.EasingStyle.Back,Enum.EasingDirection.In),{Size = UDim2.new(0, 0, 0, 0)}):Play()
+		-- 		wait(.5)
+		-- 		PlasmaHubRightFrame.Enabled = false
+		--     end
+	    -- end)
     end)
 
     local imageclickframe = Instance.new("ImageLabel")
@@ -2453,7 +2453,7 @@ function create:Win(text, logo)
                         end
                     )
 
-                    ScolDown.CanvasSize = UDim2.new(0, 0, 0, (UIListLayoutlist.AbsoluteContentSize.Y + 10) * ScaleMyUI)
+                    ScolDown.CanvasSize = UDim2.new(0, 0, 0, (cout * 35) + 10)
                 end
 
                 DropFrame.MouseEnter:Connect(
@@ -2509,7 +2509,7 @@ function create:Win(text, logo)
                                 TweenInfo.new(0.3, Enum.EasingStyle.Linear, Enum.EasingDirection.Out),
                                 {Rotation = -180}
                             ):Play()
-                            ScolDown.CanvasSize = UDim2.new(0, 0, 0, (UIListLayoutlist.AbsoluteContentSize.Y + 10) * ScaleMyUI)
+                            ScolDown.CanvasSize = UDim2.new(0, 0, 0, (cout * 35) + 10)
                         else
                             TweenService:Create(
                                 DropFrame,
@@ -2521,12 +2521,12 @@ function create:Win(text, logo)
                                 TweenInfo.new(0.3, Enum.EasingStyle.Linear, Enum.EasingDirection.Out),
                                 {Rotation = 0}
                             ):Play()
-                            ScolDown.CanvasSize = UDim2.new(0, 0, 0, (UIListLayoutlist.AbsoluteContentSize.Y + 10) * ScaleMyUI)
+                            ScolDown.CanvasSize = UDim2.new(0, 0, 0, (cout * 35) + 10)
                         end
                         dog = not dog
                     end
                 )
-                ScolDown.CanvasSize = UDim2.new(0, 0, 0, (UIListLayoutlist.AbsoluteContentSize.Y + 10) * ScaleMyUI)
+                ScolDown.CanvasSize = UDim2.new(0, 0, 0, (cout * 35) + 10)
 
                 local dropfunc = {}
 
@@ -2537,10 +2537,11 @@ function create:Win(text, logo)
                             v:Destroy()
                         end
                     end
-                    ScolDown.CanvasSize = UDim2.new(0, 0, 0, (UIListLayoutlist.AbsoluteContentSize.Y + 10) * ScaleMyUI)
+                    ScolDown.CanvasSize = UDim2.new(0, 0, 0, (cout * 35) + 10)
                 end
 
                 function dropfunc:Add(t)
+                    cout = cout + 1
                     local ListFrame = Instance.new("Frame")
 
                     ListFrame.Name = "ListFrame"
@@ -2625,7 +2626,7 @@ function create:Win(text, logo)
                         end
                     )
 
-                    ScolDown.CanvasSize = UDim2.new(0, 0, 0, (UIListLayoutlist.AbsoluteContentSize.Y + 10) * ScaleMyUI)
+                    ScolDown.CanvasSize = UDim2.new(0, 0, 0, (cout * 35) + 10)
                 end
                 return dropfunc
             end
@@ -2863,7 +2864,7 @@ function create:Win(text, logo)
                       callback(select_list)
                     end)
 
-                    ScolDown.CanvasSize = UDim2.new(0, 0, 0, (UIListLayoutlist.AbsoluteContentSize.Y + 10) * ScaleMyUI)
+                    ScolDown.CanvasSize = UDim2.new(0, 0, 0, (cout * 35) + 10)
                 end
 
                 DropFrame.MouseEnter:Connect(
@@ -2918,7 +2919,7 @@ function create:Win(text, logo)
                         TweenInfo.new(0.3, Enum.EasingStyle.Linear, Enum.EasingDirection.Out),
                         {Rotation = -180}
                     ):Play()
-                    ScolDown.CanvasSize = UDim2.new(0, 0, 0, (UIListLayoutlist.AbsoluteContentSize.Y + 10) * ScaleMyUI)
+                    ScolDown.CanvasSize = UDim2.new(0, 0, 0, (cout * 35) + 10)
                   else
                     TweenService:Create(
                         DropFrame,
@@ -2930,18 +2931,18 @@ function create:Win(text, logo)
                         TweenInfo.new(0.3, Enum.EasingStyle.Linear, Enum.EasingDirection.Out),
                         {Rotation = 0}
                     ):Play()
-                    ScolDown.CanvasSize = UDim2.new(0, 0, 0, (UIListLayoutlist.AbsoluteContentSize.Y + 10) * ScaleMyUI)
+                    ScolDown.CanvasSize = UDim2.new(0, 0, 0, (cout * 35) + 10)
                   end
                   dog = not dog
                 end)
-                ScolDown.CanvasSize = UDim2.new(0, 0, 0, (UIListLayoutlist.AbsoluteContentSize.Y + 10) * ScaleMyUI)
+                ScolDown.CanvasSize = UDim2.new(0, 0, 0, (cout * 35) + 10)
 
                 local dropfunc = {}
 
                 function dropfunc:Clear()
                     TextLabel_TapDrop.Text = tostring(text) .. " :"
                     select_list = {}
-                    ScolDown.CanvasSize = UDim2.new(0, 0, 0, (UIListLayoutlist.AbsoluteContentSize.Y + 10) * ScaleMyUI)
+                    ScolDown.CanvasSize = UDim2.new(0, 0, 0, (cout * 35) + 10)
                 end
 
                 function dropfunc:Add(t)
@@ -3034,7 +3035,7 @@ function create:Win(text, logo)
                       callback(select_list)
                     end)
 
-                    ScolDown.CanvasSize = UDim2.new(0, 0, 0, (UIListLayoutlist.AbsoluteContentSize.Y + 10) * ScaleMyUI)
+                    ScolDown.CanvasSize = UDim2.new(0, 0, 0, (cout * 35) + 10)
                 end
                 return dropfunc
             end
