@@ -12,6 +12,7 @@ LocalPlayer.Idled:connect(function()
     VirtualUser:Button2Up(Vector2.new(0,0), game.Workspace.CurrentCamera.CFrame)
 end)
 
+
 do local ui = game:GetService("CoreGui"):FindFirstChild("PlasmaHub")  if ui then ui:Destroy() end end
 do local ui = game:GetService("CoreGui"):FindFirstChild("PlasmaNotify")  if ui then ui:Destroy() end end
 do local ui = game:GetService("CoreGui"):FindFirstChild("PlasmaHub_mobile")  if ui then ui:Destroy() end end
@@ -24,6 +25,8 @@ local PlasmaCourseScreen = Instance.new("ScreenGui")
 local PlasmaNotify = Instance.new("ScreenGui")
 local PlasmaHubRightFrame = Instance.new("ScreenGui")
 local Plasma_mobile = Instance.new("ScreenGui")
+
+local ScaleMyUI = PlasmaCourseScreen.AbsoluteSize.Y * 0.97 / 560
 
 Plasma_mobile.Parent = game:GetService("CoreGui")
 Plasma_mobile.Name = "PlasmaHub_mobile"
@@ -2450,7 +2453,7 @@ function create:Win(text, logo)
                         end
                     )
 
-                    ScolDown.CanvasSize = UDim2.new(0, 0, 0, UIListLayoutlist.AbsoluteContentSize.Y + 10)
+                    ScolDown.CanvasSize = UDim2.new(0, 0, 0, (UIListLayoutlist.AbsoluteContentSize.Y + 10) * ScaleMyUI)
                 end
 
                 DropFrame.MouseEnter:Connect(
@@ -2506,7 +2509,7 @@ function create:Win(text, logo)
                                 TweenInfo.new(0.3, Enum.EasingStyle.Linear, Enum.EasingDirection.Out),
                                 {Rotation = -180}
                             ):Play()
-                            ScolDown.CanvasSize = UDim2.new(0, 0, 0, UIListLayoutlist.AbsoluteContentSize.Y + 10)
+                            ScolDown.CanvasSize = UDim2.new(0, 0, 0, (UIListLayoutlist.AbsoluteContentSize.Y + 10) * ScaleMyUI)
                         else
                             TweenService:Create(
                                 DropFrame,
@@ -2518,12 +2521,12 @@ function create:Win(text, logo)
                                 TweenInfo.new(0.3, Enum.EasingStyle.Linear, Enum.EasingDirection.Out),
                                 {Rotation = 0}
                             ):Play()
-                            ScolDown.CanvasSize = UDim2.new(0, 0, 0, UIListLayoutlist.AbsoluteContentSize.Y + 10)
+                            ScolDown.CanvasSize = UDim2.new(0, 0, 0, (UIListLayoutlist.AbsoluteContentSize.Y + 10) * ScaleMyUI)
                         end
                         dog = not dog
                     end
                 )
-                ScolDown.CanvasSize = UDim2.new(0, 0, 0, UIListLayoutlist.AbsoluteContentSize.Y + 10)
+                ScolDown.CanvasSize = UDim2.new(0, 0, 0, (UIListLayoutlist.AbsoluteContentSize.Y + 10) * ScaleMyUI)
 
                 local dropfunc = {}
 
@@ -2534,7 +2537,7 @@ function create:Win(text, logo)
                             v:Destroy()
                         end
                     end
-                    ScolDown.CanvasSize = UDim2.new(0, 0, 0, UIListLayoutlist.AbsoluteContentSize.Y + 10)
+                    ScolDown.CanvasSize = UDim2.new(0, 0, 0, (UIListLayoutlist.AbsoluteContentSize.Y + 10) * ScaleMyUI)
                 end
 
                 function dropfunc:Add(t)
@@ -2622,7 +2625,7 @@ function create:Win(text, logo)
                         end
                     )
 
-                    ScolDown.CanvasSize = UDim2.new(0, 0, 0, UIListLayoutlist.AbsoluteContentSize.Y + 10)
+                    ScolDown.CanvasSize = UDim2.new(0, 0, 0, (UIListLayoutlist.AbsoluteContentSize.Y + 10) * ScaleMyUI)
                 end
                 return dropfunc
             end
@@ -2860,7 +2863,7 @@ function create:Win(text, logo)
                       callback(select_list)
                     end)
 
-                    ScolDown.CanvasSize = UDim2.new(0, 0, 0, UIListLayoutlist.AbsoluteContentSize.Y + 10)
+                    ScolDown.CanvasSize = UDim2.new(0, 0, 0, (UIListLayoutlist.AbsoluteContentSize.Y + 10) * ScaleMyUI)
                 end
 
                 DropFrame.MouseEnter:Connect(
@@ -2915,7 +2918,7 @@ function create:Win(text, logo)
                         TweenInfo.new(0.3, Enum.EasingStyle.Linear, Enum.EasingDirection.Out),
                         {Rotation = -180}
                     ):Play()
-                    ScolDown.CanvasSize = UDim2.new(0, 0, 0, UIListLayoutlist.AbsoluteContentSize.Y + 10)
+                    ScolDown.CanvasSize = UDim2.new(0, 0, 0, (UIListLayoutlist.AbsoluteContentSize.Y + 10) * ScaleMyUI)
                   else
                     TweenService:Create(
                         DropFrame,
@@ -2927,18 +2930,18 @@ function create:Win(text, logo)
                         TweenInfo.new(0.3, Enum.EasingStyle.Linear, Enum.EasingDirection.Out),
                         {Rotation = 0}
                     ):Play()
-                    ScolDown.CanvasSize = UDim2.new(0, 0, 0, UIListLayoutlist.AbsoluteContentSize.Y + 10)
+                    ScolDown.CanvasSize = UDim2.new(0, 0, 0, (UIListLayoutlist.AbsoluteContentSize.Y + 10) * ScaleMyUI)
                   end
                   dog = not dog
                 end)
-                ScolDown.CanvasSize = UDim2.new(0, 0, 0, UIListLayoutlist.AbsoluteContentSize.Y + 10)
+                ScolDown.CanvasSize = UDim2.new(0, 0, 0, (UIListLayoutlist.AbsoluteContentSize.Y + 10) * ScaleMyUI)
 
                 local dropfunc = {}
 
                 function dropfunc:Clear()
                     TextLabel_TapDrop.Text = tostring(text) .. " :"
                     select_list = {}
-                    ScolDown.CanvasSize = UDim2.new(0, 0, 0, UIListLayoutlist.AbsoluteContentSize.Y + 10)
+                    ScolDown.CanvasSize = UDim2.new(0, 0, 0, (UIListLayoutlist.AbsoluteContentSize.Y + 10) * ScaleMyUI)
                 end
 
                 function dropfunc:Add(t)
@@ -3031,7 +3034,7 @@ function create:Win(text, logo)
                       callback(select_list)
                     end)
 
-                    ScolDown.CanvasSize = UDim2.new(0, 0, 0, UIListLayoutlist.AbsoluteContentSize.Y + 10)
+                    ScolDown.CanvasSize = UDim2.new(0, 0, 0, (UIListLayoutlist.AbsoluteContentSize.Y + 10) * ScaleMyUI)
                 end
                 return dropfunc
             end
@@ -4089,7 +4092,7 @@ function create:Win(text, logo)
     end
     
     local UIScale = Instance.new("UIScale")
-    UIScale.Scale = PlasmaCourseScreen.AbsoluteSize.Y * 0.97 / 560
+    UIScale.Scale = ScaleMyUI
     UIScale.Parent = PlasmaCourseScreen
 
     return top
