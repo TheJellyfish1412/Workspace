@@ -284,13 +284,15 @@ function SelectMapEnded()
         local Chapter = ReplicatedStorage.Values.Game.Level.Value
         if Gamemode == "Ranger Stage" then
             local NextChapter = LevelsData[World][Chapter]["NextChapter"]
-            local NumChapter = tonumber(string.sub(NextChapter, -1))
-            print("NumChapter", NumChapter)
-            if getgenv().RFManager["Ranger Stage"][World][NumChapter] and getgenv().RFManager["Ranger Stage"][World][NumChapter]["Selected"] and not Player_Data_Local.RangerStage:FindFirstChild(NextChapter) then
-                Window:SetTextBottomLeft("Retry")
-                ReplicatedStorage.Remote.Server.OnGame.Voting.VoteNext:FireServer()
-                SelectingMapEnded = false
-                return
+            if NextChapter then
+                local NumChapter = tonumber(string.sub(NextChapter, -1))
+                print("NumChapter", NumChapter)
+                if getgenv().RFManager["Ranger Stage"][World][NumChapter] and getgenv().RFManager["Ranger Stage"][World][NumChapter]["Selected"] and not Player_Data_Local.RangerStage:FindFirstChild(NextChapter) then
+                    Window:SetTextBottomLeft("Retry")
+                    ReplicatedStorage.Remote.Server.OnGame.Voting.VoteNext:FireServer()
+                    SelectingMapEnded = false
+                    return
+                end
             end
         else
             for World, WorldData in pairs(getgenv().RFManager["Ranger Stage"]) do
