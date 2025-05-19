@@ -288,7 +288,7 @@ AutoFarm_1:Slider("Distance", false, false, 1, 100, getgenv().RFManager["Distanc
   func_RFM:Store()
 end)
 
-AutoFarm_1:Slider("Tween Speed", false, false, 75, 500, getgenv().RFManager["Tween Speed"] or 75, 10, false, function(val)
+AutoFarm_1:Slider("Tween Speed", false, false, 1, 500, getgenv().RFManager["Tween Speed"] or 75, 10, false, function(val)
   getgenv().RFManager["Tween Speed"] = val
   func_RFM:Store()
 end)
