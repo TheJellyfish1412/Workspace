@@ -121,7 +121,7 @@ end
 
 local function moveTo(cframe, lookat)
   Body_Noclip()
-  local speed = 75
+  local speed = getgenv().RFManager["Tween Speed"] or 75
   local HRP = LocalPlayer.Character.HumanoidRootPart
   local targetPos = Vector3.new(cframe.X, cframe.Y, cframe.Z)
   local distance = (HRP.Position - targetPos).Magnitude
@@ -131,9 +131,9 @@ local function moveTo(cframe, lookat)
   if distance > 2000 then
     return
   elseif distance > 500 then
-    speed = 20
+    speed = speed / 3
   elseif distance > 250 then
-    speed = 50
+    speed = speed * 2 / 3
   end
   local tween = TweenService:Create(
     HRP,
@@ -288,6 +288,10 @@ AutoFarm_1:Slider("Distance", false, false, 1, 100, getgenv().RFManager["Distanc
   func_RFM:Store()
 end)
 
+AutoFarm_1:Slider("Tween Speed", false, false, 75, 500, getgenv().RFManager["Tween Speed"] or 75, 10, false, function(val)
+  getgenv().RFManager["Tween Speed"] = val
+  func_RFM:Store()
+end)
 
 AutoFarm_1:MutiDrop("Auto Skill", getgenv().RFManager["Skills"], {"Skill1", "Skill2", "Skill3", "Skill4"}, function(arry)
   getgenv().RFManager["Skills"] = arry
