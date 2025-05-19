@@ -130,10 +130,6 @@ local function moveTo(cframe, lookat)
   end
   if distance > 2000 then
     return
-  elseif distance > 100 then
-    speed = speed / 5
-  elseif distance > 50 then
-    speed = speed / 3
   end
   local tween = TweenService:Create(
     HRP,
@@ -242,7 +238,8 @@ local AutoMobAtk = function(Mob, mob, realpos)
           moveTo(posTP, mob.HumanoidRootPart.Position)
         else
           local posTP = RealPos.Value
-          moveTo(posTP, Vector3.new(posTP.X, posTP.Y, posTP.Z))
+          local target = posTP * CFrame.new(0, 0, getgenv().RFManager["Distance"] or 10)
+          moveTo(target, mob.HumanoidRootPart.Position)
         end
       end)
     end
