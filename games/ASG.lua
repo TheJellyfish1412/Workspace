@@ -180,7 +180,7 @@ local AutoFarm = Window:Taps("Auto Farm")
 
 local AutoFarm_1 = AutoFarm:newpage()
 
-local AutoMobAtk = function(Mob, mob, realpos)
+local AutoMobAtk = function(Mob, mob)
   local RealPos = mob:FindFirstChild("RealPos")
   if getgenv().RFManager["Auto Mob"] and mob.Parent == Mob and RealPos then
     -- Camera.CameraSubject = mob.Head
@@ -220,27 +220,21 @@ local AutoMobAtk = function(Mob, mob, realpos)
     while getgenv().RFManager["Auto Mob"] and mob.Parent == Mob do
       task.wait()
       pcall(function()
-        if not realpos then
-          local posTP
-          local monCF = mob.HumanoidRootPart.CFrame
-          local Y = monCF.Y - (mob.HumanoidRootPart.Size.Y)
-          -- Camera.CameraSubject = mob.Head
-          if false and workspace.PartEffect:FindFirstChild("Hitbox1") then
-            local temp = spiralSearch(Vector3.new(monCF.X, monCF.Y, monCF.Z), 500, 10)
-            if temp then
-              posTP = temp
-            else
-              return
-            end
+        local posTP
+        local monCF = mob.HumanoidRootPart.CFrame
+        local Y = monCF.Y - (mob.HumanoidRootPart.Size.Y)
+        -- Camera.CameraSubject = mob.Head
+        if false and workspace.PartEffect:FindFirstChild("Hitbox1") then
+          local temp = spiralSearch(Vector3.new(monCF.X, monCF.Y, monCF.Z), 500, 10)
+          if temp then
+            posTP = temp
           else
-            posTP = monCF * CFrame.new(0, 0, getgenv().RFManager["Distance"] or 10)
+            return
           end
-          moveTo(posTP, mob.HumanoidRootPart.Position)
         else
-          local posTP = RealPos.Value
-          local target = posTP * CFrame.new(0, 0, getgenv().RFManager["Distance"] or 10)
-          moveTo(target, mob.HumanoidRootPart.Position)
+          posTP = monCF * CFrame.new(0, 0, getgenv().RFManager["Distance"] or 10)
         end
+        moveTo(posTP, mob.HumanoidRootPart.Position)
       end)
     end
   end
@@ -259,7 +253,7 @@ AutoFarm_1:Toggle("Auto Mob", getgenv().RFManager["Auto Mob"], false, function(t
       local Mob = workspace.Enemy.Mob
       for _,mob in pairs(Mob:GetChildren()) do
         if mob:FindFirstChild("Boss") then
-          AutoMobAtk(Mob, mob, true)
+          AutoMobAtk(Mob, mob)
         end
       end
       for _,mob in pairs(Mob:GetChildren()) do
