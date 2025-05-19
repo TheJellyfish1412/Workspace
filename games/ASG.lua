@@ -130,10 +130,10 @@ local function moveTo(cframe, lookat)
   end
   if distance > 2000 then
     return
-  elseif distance > 500 then
+  elseif distance > 100 then
+    speed = speed / 5
+  elseif distance > 50 then
     speed = speed / 3
-  elseif distance > 250 then
-    speed = speed * 2 / 3
   end
   local tween = TweenService:Create(
     HRP,
