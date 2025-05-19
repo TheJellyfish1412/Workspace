@@ -216,17 +216,14 @@ AutoFarm_1:Toggle("Auto Mob", getgenv().RFManager["Auto Mob"], false, function(t
                     local SkillData = UnitData[skill]
                     if not LocalPlayer.Character.Cooldow:FindFirstChild(unit.."/"..skill) then
                       if LocalPlayer.Character.Mana.Value >= SkillData.Mana then
-                        selectSkill = {
-                          skill,
-                          SkillData.HonIdTime
-                        }
+                        selectSkill = skill
                         break
                       end
                     end
                   end
                   if selectSkill then
-                    _G.skillOnPlay(selectSkill[1])
-                    _G.skillOnHold(selectSkill[1])
+                    _G.skillOnPlay(selectSkill)
+                    _G.skillOnHold(selectSkill)
                   else
                     _G.combat()
                   end
