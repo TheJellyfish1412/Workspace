@@ -225,17 +225,8 @@ AutoFarm_1:Toggle("Auto Mob", getgenv().RFManager["Auto Mob"], false, function(t
                     end
                   end
                   if selectSkill then
-                    local mobPos = mob.HumanoidRootPart.Position
-                    if mobPos.Y < -50 then
-                      return
-                    end
-                    if selectSkill[2] == 0 then
-                      _G.skillOnPlay(selectSkill[1])
-                    else
-                      _G.skillOnHold(selectSkill[1])
-                      task.wait(selectSkill[2])
-                      _G.skillEndHold(selectSkill[1])
-                    end
+                    _G.skillOnPlay(selectSkill[1])
+                    _G.skillOnHold(selectSkill[1])
                   else
                     _G.combat()
                   end
