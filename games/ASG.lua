@@ -184,6 +184,71 @@ local AutoFarm = Window:Taps("Auto Farm")
 
 local AutoFarm_1 = AutoFarm:newpage()
 
+local AutoMobAtk = function(Mob, mob, realpos)
+  local RealPos = mob:FindFirstChild("RealPos")
+  if getgenv().RFManager["Auto Mob"] and mob.Parent == Mob and RealPos then
+    -- Camera.CameraSubject = mob.Head
+    local tempVec = mob.HumanoidRootPart.Position
+    local tween = moveTo(CFrame.new(tempVec.X, tempVec.Y, tempVec.Z))
+    if tween then
+      tween.Completed:Wait()
+    end
+    spawn(function()
+      while getgenv().RFManager["Auto Mob"] and mob.Parent == Mob do
+        task.wait()
+        pcall(function()
+          -- for unit, UnitData in pairs(UnitDataLocal) do
+          local slot = LocalPlayer.CharValue["Slot" .. LocalPlayer.Character.Onslot.Value]
+          local unit = slot.Units.Value
+          local UnitData = UnitDataLocal[unit]
+            local selectSkill
+            for _,skill in pairs(getgenv().RFManager["Skills"]) do
+              local SkillData = UnitData[skill]
+              if not LocalPlayer.Character.Cooldow:FindFirstChild(unit.."/"..skill) then
+                if LocalPlayer.Character.Mana.Value >= SkillData.Mana then
+                  selectSkill = skill
+                  break
+                end
+              end
+            end
+            if selectSkill then
+              _G.skillOnPlay(selectSkill)
+              _G.skillOnHold(selectSkill)
+            else
+              _G.combat()
+            end
+          -- end
+        end)
+      end
+    end)
+    while getgenv().RFManager["Auto Mob"] and mob.Parent == Mob do
+      task.wait()
+      pcall(function()
+        if not realpos then
+          local posTP
+          local monCF = mob.HumanoidRootPart.CFrame
+          local Y = monCF.Y - (mob.HumanoidRootPart.Size.Y)
+          -- Camera.CameraSubject = mob.Head
+          if false and workspace.PartEffect:FindFirstChild("Hitbox1") then
+            local temp = spiralSearch(Vector3.new(monCF.X, monCF.Y, monCF.Z), 500, 10)
+            if temp then
+              posTP = temp
+            else
+              return
+            end
+          else
+            posTP = monCF * CFrame.new(0, 0, getgenv().RFManager["Distance"] or 10)
+          end
+          moveTo(posTP, mob.HumanoidRootPart.Position)
+        else
+          local posTP = RealPos.Value
+          moveTo(posTP, Vector3.new(posTP.X, posTP.Y, posTP.Z))
+        end
+      end)
+    end
+  end
+end
+
 AutoFarm_1:Toggle("Auto Mob", getgenv().RFManager["Auto Mob"], false, function(toggle)
   if getgenv().RFManager["Auto Mob"] ~= toggle then
     getgenv().RFManager["Auto Mob"] = toggle
@@ -196,62 +261,12 @@ AutoFarm_1:Toggle("Auto Mob", getgenv().RFManager["Auto Mob"], false, function(t
       task.wait()
       local Mob = workspace.Enemy.Mob
       for _,mob in pairs(Mob:GetChildren()) do
-        if getgenv().RFManager["Auto Mob"] and mob.Parent == Mob and mob:FindFirstChild("RealPos") then
-          -- Camera.CameraSubject = mob.Head
-          local tempVec = mob.HumanoidRootPart.Position
-          local tween = moveTo(CFrame.new(tempVec.X, tempVec.Y, tempVec.Z))
-          if tween then
-            tween.Completed:Wait()
-          end
-          spawn(function()
-            while getgenv().RFManager["Auto Mob"] and mob.Parent == Mob do
-              task.wait()
-              pcall(function()
-                -- for unit, UnitData in pairs(UnitDataLocal) do
-                local slot = LocalPlayer.CharValue["Slot" .. LocalPlayer.Character.Onslot.Value]
-                local unit = slot.Units.Value
-                local UnitData = UnitDataLocal[unit]
-                  local selectSkill
-                  for _,skill in pairs(getgenv().RFManager["Skills"]) do
-                    local SkillData = UnitData[skill]
-                    if not LocalPlayer.Character.Cooldow:FindFirstChild(unit.."/"..skill) then
-                      if LocalPlayer.Character.Mana.Value >= SkillData.Mana then
-                        selectSkill = skill
-                        break
-                      end
-                    end
-                  end
-                  if selectSkill then
-                    _G.skillOnPlay(selectSkill)
-                    _G.skillOnHold(selectSkill)
-                  else
-                    _G.combat()
-                  end
-                -- end
-              end)
-            end
-          end)
-          while getgenv().RFManager["Auto Mob"] and mob.Parent == Mob do
-            task.wait()
-            pcall(function()
-              local posTP
-              local monCF = mob.HumanoidRootPart.CFrame
-              local Y = monCF.Y - (mob.HumanoidRootPart.Size.Y)
-              -- Camera.CameraSubject = mob.Head
-              if false and workspace.PartEffect:FindFirstChild("Hitbox1") then
-                local temp = spiralSearch(Vector3.new(monCF.X, monCF.Y, monCF.Z), 500, 10)
-                if temp then
-                  posTP = temp
-                else
-                  return
-                end
-              else
-                posTP = monCF * CFrame.new(0, 0, getgenv().RFManager["Distance"] or 10)
-              end
-              moveTo(posTP, mob.HumanoidRootPart.Position)
-            end)
-          end
+        if mob:FindFirstChild("Boss") then
+          AutoMobAtk(Mob, mob, true)
         end
+      end
+      for _,mob in pairs(Mob:GetChildren()) do
+        AutoMobAtk(Mob, mob)
       end
       wait(1)
     end
