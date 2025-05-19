@@ -152,12 +152,20 @@ local function moveTo(cframe, lookat)
   -- end
 end
 
+
 if not IsLobby then
   for i, v in pairs(getgc(true)) do
     if typeof(v) == "function" and islclosure(v) then
       local info = debug.getinfo(v)
       if info.name == "Combat" then
         _G.combat = v
+        break
+      elseif info.name == "FireEventOnHold" then
+        _G.skillOnHold = v
+      elseif info.name == "FireEventOnPlay" then
+        _G.skillOnPlay = v
+      end
+      if _G.combat and _G.skillOnHold and _G.skillOnPlay then
         break
       end
     end
@@ -221,26 +229,10 @@ AutoFarm_1:Toggle("Auto Mob", getgenv().RFManager["Auto Mob"], false, function(t
                       return
                     end
                     if selectSkill[2] == 0 then
-                      ReplicatedStorage.Events.Skill:FireServer(
-                        selectSkill[1],
-                        LocalPlayer.Character.HumanoidRootPart.CFrame,
-                        mobPos,
-                        "OnSkill"
-                      )
+                      _G.skillOnPlay(selectSkill[1])
                     else
-                      ReplicatedStorage.Events.Skill:FireServer(
-                        selectSkill[1],
-                        LocalPlayer.Character.HumanoidRootPart.CFrame,
-                        mob.HumanoidRootPart.Position,
-                        "OnHold"
-                      )
+                      _G.skillOnHold(selectSkill[1])
                       task.wait(selectSkill[2])
-                      ReplicatedStorage.Events.Skill:FireServer(
-                        selectSkill[1],
-                        LocalPlayer.Character.HumanoidRootPart.CFrame,
-                        mob.HumanoidRootPart.Position,
-                        "EndHold"
-                      )
                     end
                   else
                     _G.combat()
