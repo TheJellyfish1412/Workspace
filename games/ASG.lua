@@ -161,10 +161,12 @@ if not IsLobby then
         _G.combat = v
       elseif info.name == "FireEventOnHold" then
         _G.skillOnHold = v
+      elseif info.name == "FireEventEndHold" then
+        _G.skillEndHold = v
       elseif info.name == "FireEventOnPlay" then
         _G.skillOnPlay = v
       end
-      if _G.combat and _G.skillOnHold and _G.skillOnPlay then
+      if _G.combat and _G.skillOnHold and _G.skillEndHold and _G.skillOnPlay then
         break
       end
     end
@@ -232,6 +234,7 @@ AutoFarm_1:Toggle("Auto Mob", getgenv().RFManager["Auto Mob"], false, function(t
                     else
                       _G.skillOnHold(selectSkill[1])
                       task.wait(selectSkill[2])
+                      _G.skillEndHold(selectSkill[1])
                     end
                   else
                     _G.combat()
