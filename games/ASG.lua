@@ -159,7 +159,6 @@ if not IsLobby then
       local info = debug.getinfo(v)
       if info.name == "Combat" then
         _G.combat = v
-        break
       elseif info.name == "FireEventOnHold" then
         _G.skillOnHold = v
       elseif info.name == "FireEventOnPlay" then
