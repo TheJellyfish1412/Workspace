@@ -263,6 +263,7 @@
       spawn(function()
         while getgenv().RFManager["Auto Mob"] do
           local found = false
+          local Mob = workspace.Enemy.Mob
           for _,mob in pairs(Mob:GetChildren()) do
             wait()
             if mob:FindFirstChild("Boss") then
