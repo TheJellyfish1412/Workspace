@@ -289,7 +289,6 @@
           end
           AutoMobAtk(Mob, mob)
         end
-        wait(1)
       end
     else
       -- Camera.CameraSubject = LocalPlayer.Character.Head
