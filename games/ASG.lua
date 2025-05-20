@@ -184,6 +184,9 @@
     local RealPos = mob:FindFirstChild("RealPos")
     if getgenv().RFManager["Auto Mob"] and mob.Parent == Mob and RealPos then
       -- Camera.CameraSubject = mob.Head
+      if _G.DetectBoss and not mob:FindFirstChild("Boss") then
+        return
+      end
       local tempVec = mob.HumanoidRootPart.Position
       local tween = moveTo(CFrame.new(tempVec.X, tempVec.Y, tempVec.Z))
       if tween then
@@ -193,6 +196,9 @@
         while getgenv().RFManager["Auto Mob"] and mob.Parent == Mob do
           task.wait()
           pcall(function()
+            if _G.DetectBoss and not mob:FindFirstChild("Boss") then
+              return
+            end
             -- for unit, UnitData in pairs(UnitDataLocal) do
             local slot = LocalPlayer.CharValue["Slot" .. LocalPlayer.Character.Onslot.Value]
             local unit = slot.Units.Value
@@ -215,11 +221,17 @@
               end
             -- end
           end)
+          if _G.DetectBoss and not mob:FindFirstChild("Boss") then
+            break
+          end
         end
       end)
       while getgenv().RFManager["Auto Mob"] and mob.Parent == Mob do
         task.wait()
         pcall(function()
+          if _G.DetectBoss and not mob:FindFirstChild("Boss") then
+            return
+          end
           local posTP
           local monCF = mob.HumanoidRootPart.CFrame
           local Y = monCF.Y - (mob.HumanoidRootPart.Size.Y)
@@ -236,6 +248,9 @@
           end
           moveTo(posTP, mob.HumanoidRootPart.Position)
         end)
+        if _G.DetectBoss and not mob:FindFirstChild("Boss") then
+          break
+        end
       end
     end
   end
@@ -248,17 +263,33 @@
     if IsLobby then return end
 
     if toggle then
+      spawn(function()
+        while getgenv().RFManager["Auto Mob"] do
+          local found = false
+          for _,mob in pairs(Mob:GetChildren()) do
+            wait()
+            if mob:FindFirstChild("Boss") then
+              found = true
+            end
+          end
+          _G.DetectBoss = found
+          wait(1)
+        end
+      end)
       while getgenv().RFManager["Auto Mob"] do
         task.wait()
         local Mob = workspace.Enemy.Mob
-        for _,mob in pairs(Mob:GetChildren()) do
-          if mob:FindFirstChild("Boss") then
-            AutoMobAtk(Mob, mob)
+        if _G.DetectBoss then
+          for _,mob in pairs(Mob:GetChildren()) do
+            if mob:FindFirstChild("Boss") then
+              AutoMobAtk(Mob, mob)
+            end
           end
         end
         for _,mob in pairs(Mob:GetChildren()) do
           AutoMobAtk(Mob, mob)
         end
+        _G.DetectBoss
         wait(1)
       end
     else
