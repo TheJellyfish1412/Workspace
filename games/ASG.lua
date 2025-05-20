@@ -259,7 +259,7 @@ AutoFarm_1:Toggle("Auto Mob", getgenv().RFManager["Auto Mob"], false, function(t
       for _,mob in pairs(Mob:GetChildren()) do
         AutoMobAtk(Mob, mob)
       end
-      wait(1)
+      wait()
     end
   else
     -- Camera.CameraSubject = LocalPlayer.Character.Head
@@ -329,9 +329,15 @@ if not IsLobby then
     repeat wait(1) until LocalPlayer.PlayerGui:FindFirstChild("Win")
     local UI = LocalPlayer.PlayerGui:FindFirstChild("Win")
     if getgenv().RFManager["Auto Replay"] then
-      ReplicatedStorage.Events.WinEvent.Buttom:FireServer("RPlay")
+      for i = 1,4 do
+        ReplicatedStorage.Events.WinEvent.Buttom:FireServer("RPlay")
+        wait(1)
+      end
     elseif getgenv().RFManager["Auto Next"] then
-      ReplicatedStorage.Events.WinEvent.Buttom:FireServer("NextLv")
+      for i = 1,4 do
+        ReplicatedStorage.Events.WinEvent.Buttom:FireServer("NextLv")
+        wait(1)
+      end
     end
   end)
 
