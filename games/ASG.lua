@@ -184,9 +184,6 @@
     local RealPos = mob:FindFirstChild("RealPos")
     if getgenv().RFManager["Auto Mob"] and mob.Parent == Mob and RealPos then
       -- Camera.CameraSubject = mob.Head
-      if _G.DetectBoss and not mob:FindFirstChild("Boss") then
-        return
-      end
       local tempVec = mob.HumanoidRootPart.Position
       local tween = moveTo(CFrame.new(tempVec.X, tempVec.Y, tempVec.Z))
       if tween then
@@ -287,9 +284,11 @@
           end
         end
         for _,mob in pairs(Mob:GetChildren()) do
+          if _G.DetectBoss and not mob:FindFirstChild("Boss") then
+            break
+          end
           AutoMobAtk(Mob, mob)
         end
-        _G.DetectBoss
         wait(1)
       end
     else
