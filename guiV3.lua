@@ -1260,7 +1260,7 @@ function create:Win(text, logo)
                     LabelNameSliderxd.Font = Enum.Font.GothamBold
                     LabelNameSliderxd.Text = tostring(text)
                     LabelNameSliderxd.TextColor3 = Color3.fromRGB(255, 255, 255)
-                    LabelNameSliderxd.TextSize = 26.000
+                    LabelNameSliderxd.TextScaled = true
                     LabelNameSliderxd.TextXAlignment = Enum.TextXAlignment.Left
 
                     local ShowValueFarm = Instance.new("Frame")
