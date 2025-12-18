@@ -9,12 +9,34 @@ local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
 local TeleportService = game:GetService("TeleportService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local PathfindingService = game:GetService("PathfindingService")
 
 -- setup
 
 local ForScript = workspace:WaitForChild("ForScript")
 local CurRemotes = ReplicatedStorage:WaitForChild("CurRemotes")
 local MonsterEvent = CurRemotes:WaitForChild("MonsterEvent")
+
+function canWalkToPart(targetPart)
+  local humanoid = LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+  local root = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+
+  if not humanoid or not root then
+      return false
+  end
+
+  local path = PathfindingService:CreatePath({
+      AgentRadius = 2,
+      AgentHeight = 5,
+      AgentCanJump = true,
+      AgentJumpHeight = 7,
+      AgentMaxSlope = 45
+  })
+
+  path:ComputeAsync(root.Position, targetPart.Position)
+
+  return path.Status == Enum.PathStatus.Success
+end
 
 function AtkMonster(MonsterFolder)
   local tablemon = MonsterFolder:GetChildren()
@@ -139,6 +161,22 @@ end)
 
 
 local AutoFarm_2 = AutoFarm:newpage()
+
+AutoFarm_2:Toggle("Auto Walk", getgenv().RFManager["AutoWalk"], false, function(toggle)
+  if getgenv().RFManager["AutoWalk"] ~= toggle then
+    getgenv().RFManager["AutoWalk"] = toggle
+    func_RFM:Store()
+  end
+
+  while getgenv().RFManager["AutoWalk"] do
+    wait(1)
+    local MovePoint = workspace.ForScript.MovePoint:FindFirstChild("MovePoint"..tostring(LocalPlayer.InMap.Value))
+    if MovePoint and canWalkToPart(MovePoint) then
+      LocalPlayer.Character.HumanoidRootPart.CFrame = MovePoint.CFrame
+      wait(2)
+    end
+  end
+end)
 
 AutoFarm_2:Toggle("Auto Rebirth", getgenv().RFManager["AutoRebirth"], false, function(toggle)
   if getgenv().RFManager["AutoRebirth"] ~= toggle then
