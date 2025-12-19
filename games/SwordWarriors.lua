@@ -217,7 +217,7 @@ AutoFarm_2:Toggle("Auto Upgrade", getgenv().RFManager["AutoUpgrade"], false, fun
         repeat wait()
           critText = LocalPlayer.PlayerGui.MainGui.UpgradeFrame.main.GCriticalHit.Plus.Rnum.Text:gsub("Lv.%s*", "")
           newCritLv = tonumber(critText)
-        until newCritLv == critLv + pointAdd
+        until newCritLv >= critLv + pointAdd
         wait(1)
       else
         CurRemotes:WaitForChild("DataChange_Points"):FireServer(
