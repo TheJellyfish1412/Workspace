@@ -204,14 +204,20 @@ AutoFarm_2:Toggle("Auto Upgrade", getgenv().RFManager["AutoUpgrade"], false, fun
     if point > 0 then
       local critText = LocalPlayer.PlayerGui.MainGui.UpgradeFrame.main.GCriticalHit.Plus.Rnum.Text:gsub("Lv.%s*", "")
       local critLv = tonumber(critText)
-      if 250 - critLv > 0 then
+      local pointAdd = 250 - critLv
+      if pointAdd > 0 then
         CurRemotes:WaitForChild("DataChange_Points"):FireServer(
           "ClickPoints",
           {
             Obj = "GCriticalHit",
-            Points = 250 - critLv
+            Points = pointAdd
           }
         )
+        repeat wait()
+          critText = LocalPlayer.PlayerGui.MainGui.UpgradeFrame.main.GCriticalHit.Plus.Rnum.Text:gsub("Lv.%s*", "")
+          newCritLv = tonumber(critText)
+        until newCritLv == critLv + pointAdd
+        wait(1)
       else
         CurRemotes:WaitForChild("DataChange_Points"):FireServer(
           "ClickPoints",
