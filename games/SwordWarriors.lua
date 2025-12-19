@@ -213,6 +213,7 @@ AutoFarm_2:Toggle("Auto Upgrade", getgenv().RFManager["AutoUpgrade"], false, fun
             Points = pointAdd
           }
         )
+        local newCritLv = 0
         repeat wait()
           critText = LocalPlayer.PlayerGui.MainGui.UpgradeFrame.main.GCriticalHit.Plus.Rnum.Text:gsub("Lv.%s*", "")
           newCritLv = tonumber(critText)
