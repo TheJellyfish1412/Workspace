@@ -42,6 +42,9 @@ end
 function AtkMonster(MonsterFolder)
   local tablemon = MonsterFolder:GetChildren()
   if #tablemon == 0 then return end
+  if _G.slash_upvr then
+    _G.slash_upvr()
+  end
   for _,mon in pairs(tablemon) do
     pcall(function()
       if mon:FindFirstChild("Hp") and mon:FindFirstChild("Hp").Value > 0 then
@@ -308,14 +311,13 @@ Setting_1:Button("Rejoin", function()
     TeleportService:Teleport(game.PlaceId)
 end)
 
--- for _, fn in ipairs(getgc(true)) do
---   if typeof(fn) == "function" and islclosure(fn) and debug.getinfo(fn).name == "MonsterBeh_SetAttackObj" then
---     print("hooking internal MonsterBeh_SetAttackObj")
---     hookfunction(fn, function(...)
---       return
---     end)
---   end
--- end
+for _, fn in ipairs(getgc(true)) do
+  if typeof(fn) == "function" and islclosure(fn) and debug.getinfo(fn).name == "slash" then
+    print("hooking internal slash_upvr")
+    _G.slash_upvr = fn
+    break
+  end
+end
 
 -- Bypass Hack Check
 
@@ -340,7 +342,9 @@ setreadonly(meta, true)
 spawn(function()
   while wait(60) do
     VirtualUser:Button2Down(Vector2.new(0,0), game.Workspace.CurrentCamera.CFrame)
-    wait(1)
+    wait(0.2)
+    VirtualUser:Button2Up(Vector2.new(0,0), game.Workspace.CurrentCamera.CFrame)
+    wait(0.2)
     VirtualUser:Button2Up(Vector2.new(0,0), game.Workspace.CurrentCamera.CFrame)
   end
 end)
