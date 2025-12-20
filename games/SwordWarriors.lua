@@ -6,6 +6,7 @@ local create, func_RFM = loadstring(game:HttpGet("https://raw.githubusercontent.
 local requestt = http_request or request or syn.request or HttpGet or HttpPost
 
 local RunService = game:GetService("RunService")
+local VirtualUser = game:GetService("VirtualUser")
 local TweenService = game:GetService("TweenService")
 local TeleportService = game:GetService("TeleportService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -336,5 +337,12 @@ meta.__namecall = newcclosure(function(Event, ...)
 end)
 setreadonly(meta, true)
 
+spawn(function()
+  while wait(60) do
+    VirtualUser:Button2Down(Vector2.new(0,0), game.Workspace.CurrentCamera.CFrame)
+    wait(1)
+    VirtualUser:Button2Up(Vector2.new(0,0), game.Workspace.CurrentCamera.CFrame)
+  end
+end)
 
 getgenv().Loaded = true
