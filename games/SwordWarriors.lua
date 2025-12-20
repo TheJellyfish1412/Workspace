@@ -43,7 +43,7 @@ function AtkMonster(MonsterFolder)
   local tablemon = MonsterFolder:GetChildren()
   if #tablemon == 0 then return end
   if _G.slash_upvr then
-    _G.slash_upvr()
+    pcall(_G.slash_upvr)
   end
   for _,mon in pairs(tablemon) do
     pcall(function()
@@ -208,7 +208,7 @@ AutoFarm_2:Toggle("Auto Upgrade", getgenv().RFManager["AutoUpgrade"], false, fun
     if point > 0 then
       local critText = LocalPlayer.PlayerGui.MainGui.UpgradeFrame.main.GCriticalHit.Plus.Rnum.Text:gsub("Lv.%s*", "")
       local critLv = tonumber(critText)
-      local pointAdd = 250 - critLv
+      local pointAdd = math.min(250 - critLv, point)
       if pointAdd > 0 then
         CurRemotes:WaitForChild("DataChange_Points"):FireServer(
           "ClickPoints",
@@ -221,7 +221,7 @@ AutoFarm_2:Toggle("Auto Upgrade", getgenv().RFManager["AutoUpgrade"], false, fun
         repeat wait()
           critText = LocalPlayer.PlayerGui.MainGui.UpgradeFrame.main.GCriticalHit.Plus.Rnum.Text:gsub("Lv.%s*", "")
           newCritLv = tonumber(critText)
-        until newCritLv >= critLv + pointAdd
+        until newCritLv >= critLv + pointAdd or not getgenv().RFManager["AutoUpgrade"]
         wait(1)
       else
         CurRemotes:WaitForChild("DataChange_Points"):FireServer(
