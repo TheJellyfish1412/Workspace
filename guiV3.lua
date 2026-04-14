@@ -245,7 +245,7 @@ function Webhook:setAuthor(name, url, iconUrl)
     self.embed.author = {
         name     = name or LocalPlayer.Name .. " | " .. LocalPlayer.DisplayName,
         url      = url      or "https://www.roblox.com/users/" .. LocalPlayer.UserId .. "/profile",
-        icon_url = iconUrl  or local url = Players:GetUserThumbnailAsync(
+        icon_url = iconUrl  or Players:GetUserThumbnailAsync(
             LocalPlayer.UserId,
             Enum.ThumbnailType.HeadShot,
             Enum.ThumbnailSize.Size420x420
