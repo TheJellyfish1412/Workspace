@@ -245,7 +245,11 @@ function Webhook:setAuthor(name, url, iconUrl)
     self.embed.author = {
         name     = name or LocalPlayer.Name .. " | " .. LocalPlayer.DisplayName,
         url      = url      or "https://www.roblox.com/users/" .. LocalPlayer.UserId .. "/profile",
-        icon_url = iconUrl  or "https://www.roblox.com/headshot-thumbnail/image?userId=" .. LocalPlayer.UserId .. "&width=420&height=420&format=png",
+        icon_url = iconUrl  or local url = Players:GetUserThumbnailAsync(
+            LocalPlayer.UserId,
+            Enum.ThumbnailType.HeadShot,
+            Enum.ThumbnailSize.Size420x420
+        ),
     }
     return self
 end
@@ -273,7 +277,11 @@ end
 
 function Webhook:setThumbnail(url, height, width)
     self.embed.thumbnail = {
-        url    = url or "https://www.roblox.com/headshot-thumbnail/image?userId=" .. LocalPlayer.UserId .. "&width=420&height=420&format=png",
+        url    = url or Players:GetUserThumbnailAsync(
+            LocalPlayer.UserId,
+            Enum.ThumbnailType.AvatarThumbnail,
+            Enum.ThumbnailSize.Size420x420
+        ),
         height = height or nil,
         width  = width  or nil,
     }
