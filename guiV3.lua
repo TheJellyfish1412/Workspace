@@ -188,6 +188,187 @@ function func_RFM:Store(path)
     writefile(path or PlayerFilePath, func_RFM:Encode(getgenv()["RFManager"]))
 end
 
+local Webhook = {}
+Webhook.__index = Webhook
+
+function Webhook:create(url)
+    local self = setmetatable({}, Webhook)
+    self.url = url
+    self.embed = {
+        fields = {},
+        footer = {},
+        image = {},
+        thumbnail = {},
+        video = {},
+        author = {},
+        provider = {}
+    }
+    return self
+end
+
+-- ── Core ──────────────────────────────────────────────────────────────────────
+
+function Webhook:setTitle(title)
+    self.embed.title = title
+    return self
+end
+
+function Webhook:setDescription(desc)
+    self.embed.description = desc
+    return self
+end
+
+function Webhook:setUrl(url)
+    self.embed.url = url
+    return self
+end
+
+function Webhook:setColor(color)
+    self.embed.color = color
+    return self
+end
+
+-- accepts ISO8601 string e.g. "2024-01-01T00:00:00.000Z"
+-- or pass true to use current time
+function Webhook:setTimestamp(value)
+    if value == true then
+        self.embed.timestamp = os.date("!%Y-%m-%dT%H:%M:%S.000Z")
+    else
+        self.embed.timestamp = value
+    end
+    return self
+end
+
+-- ── Author ────────────────────────────────────────────────────────────────────
+
+function Webhook:setAuthor(name, url, iconUrl)
+    self.embed.author = {
+        name     = name,
+        url      = url      or nil,
+        icon_url = iconUrl  or nil,
+    }
+    return self
+end
+
+-- ── Footer ────────────────────────────────────────────────────────────────────
+
+function Webhook:setFooter(text, iconUrl)
+    self.embed.footer = {
+        text     = text,
+        icon_url = iconUrl or nil,
+    }
+    return self
+end
+
+-- ── Images ───────────────────────────────────────────────────────────────────
+
+function Webhook:setImage(url, height, width)
+    self.embed.image = {
+        url    = url,
+        height = height or nil,
+        width  = width  or nil,
+    }
+    return self
+end
+
+function Webhook:setThumbnail(url, height, width)
+    self.embed.thumbnail = {
+        url    = url,
+        height = height or nil,
+        width  = width  or nil,
+    }
+    return self
+end
+
+-- video is read-only from Discord side but included for completeness
+function Webhook:setVideo(url, height, width)
+    self.embed.video = {
+        url    = url,
+        height = height or nil,
+        width  = width  or nil,
+    }
+    return self
+end
+
+-- ── Fields ───────────────────────────────────────────────────────────────────
+
+function Webhook:addField(title, value, inline)
+    table.insert(self.embed.fields, {
+        name   = title,
+        value  = value,
+        inline = inline or false,
+    })
+    return self
+end
+
+function Webhook:clearFields()
+    self.embed.fields = {}
+    return self
+end
+
+-- ── Webhook-level options ────────────────────────────────────────────────────
+
+function Webhook:setUsername(name)
+    self.username = name
+    return self
+end
+
+function Webhook:setAvatarUrl(url)
+    self.avatar_url = url
+    return self
+end
+
+function Webhook:setContent(text)
+    self.content = text
+    return self
+end
+
+-- ── Build & Send ─────────────────────────────────────────────────────────────
+
+function Webhook:build()
+    local embed = {}
+
+    local function set(k, v)
+        if v and (type(v) ~= "table" or next(v) ~= nil) then
+            embed[k] = v
+        end
+    end
+
+    set("title",       self.embed.title)
+    set("description", self.embed.description)
+    set("url",         self.embed.url)
+    set("color",       self.embed.color)
+    set("timestamp",   self.embed.timestamp)
+    set("author",      self.embed.author)
+    set("footer",      self.embed.footer)
+    set("image",       self.embed.image)
+    set("thumbnail",   self.embed.thumbnail)
+    set("video",       self.embed.video)
+
+    if #self.embed.fields > 0 then
+        embed.fields = self.embed.fields
+    end
+
+    local payload = { embeds = { embed } }
+
+    if self.username   then payload.username   = self.username   end
+    if self.avatar_url then payload.avatar_url = self.avatar_url end
+    if self.content    then payload.content    = self.content    end
+
+    return payload
+end
+
+function Webhook:send()
+    requestt({
+        Url     = self.url,
+        Method  = "POST",
+        Headers = { ["content-type"] = "application/json" },
+        Body    = Encode(self:build()),
+    })
+end
+
+func_RFM.Webhook = Webhook
+
 if not isfolder(FolderGamePath) then
     makefolder(FolderGamePath)
 end
