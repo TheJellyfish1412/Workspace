@@ -243,9 +243,9 @@ end
 
 function Webhook:setAuthor(name, url, iconUrl)
     self.embed.author = {
-        name     = name,
-        url      = url      or nil,
-        icon_url = iconUrl  or nil,
+        name     = name or LocalPlayer.Name .. " | " .. LocalPlayer.DisplayName,
+        url      = url      or "https://www.roblox.com/users/" .. LocalPlayer.UserId .. "/profile",
+        icon_url = iconUrl  or "https://www.roblox.com/headshot-thumbnail/image?userId=" .. LocalPlayer.UserId .. "&width=420&height=420&format=png",
     }
     return self
 end
@@ -273,7 +273,7 @@ end
 
 function Webhook:setThumbnail(url, height, width)
     self.embed.thumbnail = {
-        url    = url,
+        url    = url or "https://www.roblox.com/headshot-thumbnail/image?userId=" .. LocalPlayer.UserId .. "&width=420&height=420&format=png",
         height = height or nil,
         width  = width  or nil,
     }
