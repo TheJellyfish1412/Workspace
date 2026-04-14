@@ -4,7 +4,7 @@ local HttpService = game:GetService("HttpService")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 
-local LocalPlayer = game.Players.LocalPlayer
+local LocalPlayer = game:GetService("Players").LocalPlayer
 
 LocalPlayer.Idled:connect(function()
     VirtualUser:Button2Down(Vector2.new(0,0), game.Workspace.CurrentCamera.CFrame)
@@ -162,6 +162,16 @@ local function Tween(instance, properties,style,wa)
     TweenService:Create(instance,TweenInfo.new(wa,Enum.EasingStyle[style]),{properties}):Play()
 end
 
+coroutine.wrap(function()
+    local res = HttpService:JSONDecode(game:HttpGet("https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=" .. LocalPlayer.UserId .. "&size=420x420&format=Png&isCircular=false"))
+    _G.thumbnailUrl_headshot = res.data[1].imageUrl
+end)()
+
+coroutine.wrap(function()
+    local res = HttpService:JSONDecode(game:HttpGet("https://thumbnails.roblox.com/v1/users/avatar?userIds=".. LocalPlayer.UserId .. "&size=420x420&format=Png&isCircular=false"))
+    _G.thumbnailUrl_avatar = res.data[1].imageUrl
+end)()
+
 local requestt = http_request or request or syn.request or HttpGet or HttpPost
 local res = requestt({Url = "https://apis.roblox.com/universes/v1/places/" .. game.PlaceId .. "/universe"})
 local Universe = HttpService:JSONDecode(res.Body)["universeId"]
@@ -195,13 +205,21 @@ function Webhook:create(url)
     local self = setmetatable({}, Webhook)
     self.url = url
     self.embed = {
+        color = 14177041,
         fields = {},
         footer = {},
         image = {},
-        thumbnail = {},
+        thumbnail = {
+            url = _G.thumbnailUrl_avatar,
+        },
         video = {},
-        author = {},
-        provider = {}
+        author = {
+            name = LocalPlayer.Name .. " | " .. LocalPlayer.DisplayName,
+            url = "https://www.roblox.com/users/" .. LocalPlayer.UserId .. "/profile",
+            icon_url = _G.thumbnailUrl_headshot,
+        },
+        provider = {},
+        timestamp = os.date("!%Y-%m-%dT%H:%M:%S.000Z")
     }
     return self
 end
@@ -245,11 +263,7 @@ function Webhook:setAuthor(name, url, iconUrl)
     self.embed.author = {
         name     = name or LocalPlayer.Name .. " | " .. LocalPlayer.DisplayName,
         url      = url      or "https://www.roblox.com/users/" .. LocalPlayer.UserId .. "/profile",
-        icon_url = iconUrl  or Players:GetUserThumbnailAsync(
-            LocalPlayer.UserId,
-            Enum.ThumbnailType.HeadShot,
-            Enum.ThumbnailSize.Size420x420
-        ),
+        icon_url = iconUrl  or _G.thumbnailUrl_headshot,
     }
     return self
 end
@@ -277,11 +291,7 @@ end
 
 function Webhook:setThumbnail(url, height, width)
     self.embed.thumbnail = {
-        url    = url or Players:GetUserThumbnailAsync(
-            LocalPlayer.UserId,
-            Enum.ThumbnailType.AvatarThumbnail,
-            Enum.ThumbnailSize.Size420x420
-        ),
+        url    = url or _G.thumbnailUrl_avatar,
         height = height or nil,
         width  = width  or nil,
     }
