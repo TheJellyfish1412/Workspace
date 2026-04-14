@@ -363,7 +363,7 @@ function Webhook:send()
         Url     = self.url,
         Method  = "POST",
         Headers = { ["content-type"] = "application/json" },
-        Body    = Encode(self:build()),
+        Body    = func_RFM:Encode(self:build()),
     })
 end
 
