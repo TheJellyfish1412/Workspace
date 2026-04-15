@@ -175,7 +175,8 @@ end)()
 local requestt = http_request or request or syn.request or HttpGet or HttpPost
 local res = requestt({Url = "https://apis.roblox.com/universes/v1/places/" .. game.PlaceId .. "/universe"})
 local Universe = HttpService:JSONDecode(res.Body)["universeId"]
-local FolderGamePath = "RFManager/"..Universe
+local RootPath = "RFManager"
+local FolderGamePath = RootPath .. "/" .. Universe
 local PlayerFilePath = FolderGamePath .. "/" .. LocalPlayer.UserId .. ".json"
 
 local create = {}
@@ -384,9 +385,11 @@ function Webhook:send()
         Body    = func_RFM:Encode(self:build()),
     })
 end
-
 func_RFM.Webhook = Webhook
 
+if not isfolder(RootPath) then
+    makefolder(RootPath)
+end
 if not isfolder(FolderGamePath) then
     makefolder(FolderGamePath)
 end
