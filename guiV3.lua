@@ -162,19 +162,27 @@ local function Tween(instance, properties,style,wa)
     TweenService:Create(instance,TweenInfo.new(wa,Enum.EasingStyle[style]),{properties}):Play()
 end
 
+
+local function Encode(data)
+    return HttpService:JSONEncode(data)
+end
+local function Decode(data)
+    return HttpService:JSONDecode(data)
+end
+
 coroutine.wrap(function()
-    local res = HttpService:JSONDecode(game:HttpGet("https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=" .. LocalPlayer.UserId .. "&size=420x420&format=Png&isCircular=false"))
+    local res = Decode(game:HttpGet("https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=" .. LocalPlayer.UserId .. "&size=420x420&format=Png&isCircular=false"))
     _G.thumbnailUrl_headshot = res.data[1].imageUrl
 end)()
 
 coroutine.wrap(function()
-    local res = HttpService:JSONDecode(game:HttpGet("https://thumbnails.roblox.com/v1/users/avatar?userIds=".. LocalPlayer.UserId .. "&size=420x420&format=Png&isCircular=false"))
+    local res = Decode(game:HttpGet("https://thumbnails.roblox.com/v1/users/avatar?userIds=".. LocalPlayer.UserId .. "&size=420x420&format=Png&isCircular=false"))
     _G.thumbnailUrl_avatar = res.data[1].imageUrl
 end)()
 
 local requestt = http_request or request or syn.request or HttpGet or HttpPost
 local res = requestt({Url = "https://apis.roblox.com/universes/v1/places/" .. game.PlaceId .. "/universe"})
-local Universe = HttpService:JSONDecode(res.Body)["universeId"]
+local Universe = Decode(res.Body)["universeId"]
 local RootPath = "RFManager"
 local FolderGamePath = RootPath .. "/" .. Universe
 local PlayerFilePath = FolderGamePath .. "/" .. LocalPlayer.UserId .. ".json"
@@ -182,21 +190,15 @@ local PlayerFilePath = FolderGamePath .. "/" .. LocalPlayer.UserId .. ".json"
 local create = {}
 local func_RFM = {}
 
-function func_RFM:Encode(data)
-    return HttpService:JSONEncode(data)
-end
-function func_RFM:Decode(data)
-    return HttpService:JSONDecode(data)
-end
 
 function func_RFM:Write(data, path)
-    writefile(path or PlayerFilePath,func_RFM:Encode(data))
+    writefile(path or PlayerFilePath, Encode(data))
 end
 function func_RFM:Read(path)
-    return func_RFM:Decode(readfile(path or PlayerFilePath))
+    return Decode(readfile(path or PlayerFilePath))
 end
 function func_RFM:Store(path)
-    writefile(path or PlayerFilePath, func_RFM:Encode(getgenv()["RFManager"]))
+    writefile(path or PlayerFilePath, Encode(getgenv()["RFManager"]))
 end
 
 local Webhook = {}
@@ -382,7 +384,7 @@ function Webhook:send()
         Url     = self.url,
         Method  = "POST",
         Headers = { ["content-type"] = "application/json" },
-        Body    = func_RFM:Encode(self:build()),
+        Body    = Encode(self:build()),
     })
 end
 func_RFM.Webhook = Webhook
@@ -2509,7 +2511,7 @@ function create:Win(text, logo)
                 DropArbt_listimage.Position = UDim2.new(0.9, 0, 0.5, 0)
                 DropArbt_listimage.BorderSizePixel = 0
                 DropArbt_listimage.Size = UDim2.new(0, 25, 0, 25)
-                DropArbt_listimage.Image = "http://www.roblox.com/asset/?id=" .. LogoDrop
+                DropArbt_listimage.Image = "http://www.roblox.com/asset/?id=" .. tostring(LogoDrop)
                 DropArbt_listimage.ImageColor3 = Color3.fromRGB(155, 155, 155)
 
                 local ScolDown = Instance.new("ScrollingFrame")
