@@ -2911,7 +2911,7 @@ function create:Win(text, logo)
                 DropArbt_listimage.Position = UDim2.new(0.9, 0, 0.5, 0)
                 DropArbt_listimage.BorderSizePixel = 0
                 DropArbt_listimage.Size = UDim2.new(0, 25, 0, 25)
-                DropArbt_listimage.Image = "http://www.roblox.com/asset/?id=" .. LogoDrop
+                DropArbt_listimage.Image = "http://www.roblox.com/asset/?id=" .. tostring(LogoDrop)
                 DropArbt_listimage.ImageColor3 = Color3.fromRGB(155, 155, 155)
 
                 local ScolDown = Instance.new("ScrollingFrame")
