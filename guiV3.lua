@@ -4289,6 +4289,12 @@ function create:Win(text, logo)
                     LabelFarm2.Text = newtext
                 end
 
+                function extra_func:Destroy()
+                    if LabelFrame and LabelFrame.Destroy then
+                        LabelFrame:Destroy()
+                    end
+                end
+
                 return extra_func
             end
             return items
