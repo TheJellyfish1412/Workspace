@@ -137,6 +137,7 @@ AutoFarm_1:Toggle("AutoFarm", getgenv().RFManager["AutoFarm"], false, function(t
             }
             game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("leifstout_networker@0.3.1"):WaitForChild("networker"):WaitForChild("_remotes"):WaitForChild("QueueService"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
         else
+            repeat wait() until LocalPlayer.PlayerGui:FindFirstChild("Frames") and LocalPlayer.PlayerGui.Frames:FindFirstChild("Upgrades")
             local Upgrades = LocalPlayer.PlayerGui.Frames.Upgrades
 
             local function choosePriorityFromList(choices, priority)
