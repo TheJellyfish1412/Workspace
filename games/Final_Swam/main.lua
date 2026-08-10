@@ -160,7 +160,7 @@ AutoFarm_1:Toggle("AutoFarm", getgenv().RFManager["AutoFarm"], false, function(t
     end
 
     if toggle then
-        LocalPlayer:FindFirstChild("PlayerGui") and LocalPlayer.PlayerGui:FindFirstChild("Frames")
+        repeat wait() until LocalPlayer:FindFirstChild("PlayerGui") and LocalPlayer.PlayerGui:FindFirstChild("Frames")
         
         if game.PlaceId == 99521272836282 then
             repeat wait() until LocalPlayer.PlayerGui.Frames:FindFirstChild("Pop-UpFrame")
