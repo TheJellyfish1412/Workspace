@@ -263,17 +263,35 @@ AutoFarm_1:Toggle("AutoFarm", getgenv().RFManager["AutoFarm"], false, function(t
                     if getgenv()["fly_toggle"] and getgenv().RFManager["Fly"] then
                         Workspace.Gravity = 0
 
-                        local speed = getgenv().RFManager["fly_speed"]
-                        local radius = getgenv().RFManager["fly_radian"]
-                        local height = getgenv().RFManager["fly_pos_y"]
+                        if not workspace.Enemies:FindFirstChild("BossYeti") then
+                            local speed = getgenv().RFManager["fly_speed"]
+                            local radius = getgenv().RFManager["fly_radian"]
+                            local height = getgenv().RFManager["fly_pos_y"]
 
-                        angle += speed / 10 * dt
+                            angle += speed / 10 * dt
 
-                        local x = startPos.X + math.cos(angle) * radius
-                        local z = startPos.Z + math.sin(angle) * radius
-                        local y = startPos.Y + height
+                            local x = startPos.X + math.cos(angle) * radius
+                            local z = startPos.Z + math.sin(angle) * radius
+                            local y = startPos.Y + height
 
-                        Root.CFrame = CFrame.new(x, y, z)
+                            Root.CFrame = CFrame.new(x, y, z)
+                        else
+                            local BossYeti = workspace.Enemies:FindFirstChild("BossYeti")
+
+                            local speed = 10
+                            local radius = 20
+                            local height = 35
+
+                            angle += speed / 10 * dt
+
+                            local monPos = BossYeti.HumanoidRootPart.Position
+
+                            local x = monPos.X + math.cos(angle) * radius
+                            local z = monPos.Z + math.sin(angle) * radius
+                            local y = monPos.Y + height
+                            
+                            Root.CFrame = CFrame.new(x, y, z)
+                        end
                     else
                         Workspace.Gravity = gravity
                     end
