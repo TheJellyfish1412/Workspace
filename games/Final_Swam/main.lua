@@ -249,7 +249,7 @@ AutoFarm_1:Toggle("AutoFarm", getgenv().RFManager["AutoFarm"], false, function(t
                         return
                     end
 
-                    if getgenv().fly_toggle then
+                    if getgenv()["fly_toggle"] and getgenv().RFManager["Fly"] then
                         Workspace.Gravity = 0
 
                         local speed = getgenv().RFManager["fly_speed"] or 15
@@ -356,7 +356,13 @@ AutoFarm_1:Toggle("AutoFarm", getgenv().RFManager["AutoFarm"], false, function(t
             until workspace.Map:FindFirstChild("BossPortal") and workspace.Map.BossPortal:FindFirstChild("PortalPrompt") and workspace.Map.BossPortal.PortalPrompt.Enabled and workspace.Map.BossPortal:FindFirstChild("Portal Effect")
             getgenv()["fly_toggle"] = false
             wait(2)
-            LocalPlayer.Character.HumanoidRootPart.CFrame = workspace.Map.BossPortal:FindFirstChild("Portal Effect").CFrame + Vector3.new(0,5,0)
+
+            local tar = workspace.Map.BossPortal:FindFirstChild("Portal Effect").Position + Vector3.new(0,5,0)
+            if getgenv().RFManager["Tp_Center"] then
+                LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(tar.X, tar.Y, tar.Z)
+            else
+                LocalPlayer.Character.Humanoid:MoveTo(tar)
+            end
         end
     else
         getgenv()["fly_toggle"] = false
@@ -365,6 +371,18 @@ AutoFarm_1:Toggle("AutoFarm", getgenv().RFManager["AutoFarm"], false, function(t
 end)
 
 local AutoFarm_2 = AutoFarms:newpage()
+AutoFarm_2:Toggle("Fly", getgenv().RFManager["Fly"], false, function(toggle)
+    if getgenv().RFManager["Fly"] ~= toggle then
+        getgenv().RFManager["Fly"] = toggle
+        func_RFM:Store()
+    end
+end)
+AutoFarm_2:Toggle("Tp Center", getgenv().RFManager["Tp_Center"], false, function(toggle)
+    if getgenv().RFManager["Tp_Center"] ~= toggle then
+        getgenv().RFManager["Tp_Center"] = toggle
+        func_RFM:Store()
+    end
+end)
 AutoFarm_2:Slider("Fly Y", false,false, 1, 300, 15, 5, false, function(value)
   getgenv().RFManager["fly_pos_y"] = tonumber(value)
 end)
