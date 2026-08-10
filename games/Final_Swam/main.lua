@@ -1,0 +1,502 @@
+if game.PlaceId ~= 99521272836282 and game.PlaceId ~= 79787558257549 then return end
+
+local CACHE = "guiV3_cache.lua"
+local URL   = "https://raw.githubusercontent.com/TheJellyfish1412/Workspace/refs/heads/main/guiV3.lua"
+
+if not isfile(CACHE) then
+    writefile(CACHE, game:HttpGet(URL))
+end
+
+local create, func_RFM = loadstring(readfile(CACHE))()
+
+local LocalPlayer = game.Players.LocalPlayer
+local TeleportService = game:GetService("TeleportService")
+
+--  ====================================================
+
+local grouped_upgrade = {}
+local upgrade_names = {}
+for key, data in pairs(require(game:GetService("ReplicatedStorage").Shared.Modules.Data.UpgradeData)) do
+    if type(data) == "function" then continue end
+    local rarity = data["Rarity"]
+    
+    if rarity then
+        grouped_upgrade[rarity] = grouped_upgrade[rarity] or {}
+
+        grouped_upgrade[rarity][key] = {
+            name = data["name"],
+            description = data["description"],
+        }
+        upgrade_names[data["name"]] = true
+    end
+end
+
+local weapond_data = {}
+local weapon_names = {}
+for _, data in pairs(require(game:GetService("ReplicatedStorage").Shared.Modules.Data.WeaponData)) do
+    if type(data) == "function" then continue end
+    local rarity = data["rarity"]
+    
+    if rarity then
+        weapond_data[data["name"]] = {
+            name = data["name"],
+            description = data["description"],
+        }
+        weapon_names[data["name"]] = true
+    end
+end
+
+-- =====================================================
+
+local Window = create:Win("Plasma", 11390492777)
+
+local AutoFarms = Window:Taps("AutoFarm")
+local AutoFarm_1 = AutoFarms:newpage()
+
+AutoFarm_1:Toggle("AutoFarm", getgenv().RFManager["AutoFarm"], false, function(toggle)
+    if getgenv().RFManager["AutoFarm"] ~= toggle then
+        getgenv().RFManager["AutoFarm"] = toggle
+        func_RFM:Store()
+    end
+
+    if toggle then
+        if game.PlaceId == 99521272836282 then
+            local args = {
+                "PlayPressed"
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("leifstout_networker@0.3.1"):WaitForChild("networker"):WaitForChild("_remotes"):WaitForChild("QueueService"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
+            task.wait(0.2)
+            local args = {
+                "SetWorld",
+                getgenv().RFManager["Select_Map"]
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("leifstout_networker@0.3.1"):WaitForChild("networker"):WaitForChild("_remotes"):WaitForChild("WorldSelection"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
+            task.wait(0.2)
+            local args = {
+                "SetDifficulty",
+                getgenv().RFManager["Select_Mode"]
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("leifstout_networker@0.3.1"):WaitForChild("networker"):WaitForChild("_remotes"):WaitForChild("WorldSelection"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
+            task.wait(0.2)
+            local args = {
+                "PartySizeSelected",
+                1
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("leifstout_networker@0.3.1"):WaitForChild("networker"):WaitForChild("_remotes"):WaitForChild("QueueService"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
+            task.wait(0.2)
+            local args = {
+                "Created"
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("leifstout_networker@0.3.1"):WaitForChild("networker"):WaitForChild("_remotes"):WaitForChild("QueueService"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
+        else
+            local Upgrades = LocalPlayer.PlayerGui.Frames.Upgrades
+
+            local function flattenUpgradePriority(priorities)
+                local flat = {}
+                for _, favs in pairs(priorities or {}) do
+                    if type(favs) == "table" then
+                        for _, fav in ipairs(favs) do
+                            table.insert(flat, fav)
+                        end
+                    end
+                end
+                return flat
+            end
+
+            local function choosePriorityFromList(choices, priority)
+                for _, fav in ipairs(priority or {}) do
+                    for _, choice in ipairs(choices) do
+                        if choice.name == fav then
+                            return choice
+                        end
+                    end
+                end
+                return nil
+            end
+
+            local function chooseRandomSelection(choices)
+                if #choices == 0 then
+                    return nil
+                end
+                return choices[math.random(#choices)]
+            end
+
+            local function fireButtonClick(button, mode)
+                if not button then
+                    return
+                end
+
+                mode = mode or "click"
+
+                if mode == "up" then
+                    local conns = getconnections(button.MouseButton1Up)
+                    if conns and #conns > 0 then
+                        for _, conn in ipairs(conns) do
+                            if conn.Function then
+                                conn.Function()
+                            end
+                        end
+                        return
+                    end
+
+                    pcall(function()
+                        button.MouseButton1Up:Fire()
+                    end)
+                    return
+                end
+
+                if mode == "click" then
+                    local conns = getconnections(button.MouseButton1Click)
+                    if conns and #conns > 0 then
+                        for _, conn in ipairs(conns) do
+                            if conn.Function then
+                                conn.Function()
+                            end
+                        end
+                        return
+                    end
+
+                    pcall(function()
+                        button.MouseButton1Click:Fire()
+                        return
+                    end)
+                end
+
+                if button.Activated then
+                    pcall(function()
+                        button.Activated:Fire()
+                    end)
+                end
+            end
+
+            local function fireSelectionClick(selection)
+                fireButtonClick(Upgrades.Holder["Selection"..selection.index], "up")
+            end
+
+            local function fly()
+                local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+                local Root = Character:WaitForChild("HumanoidRootPart")
+
+                local startPos = Root.Position
+                local angle = 0
+                local gravity = Workspace.Gravity
+
+                game:GetService("RunService").Heartbeat:Connect(function(dt)
+                    if not Root or not Root.Parent then
+                        return
+                    end
+
+                    if getgenv().fly_toggle then
+                        Workspace.Gravity = 0
+
+                        local speed = getgenv().RFManager["fly_speed"] or 15
+                        local radius = getgenv().RFManager["fly_radian"] or 40
+                        local height = getgenv().RFManager["fly_pos_y"] or 15
+
+                        angle += speed / 10 * dt
+
+                        local x = startPos.X + math.cos(angle) * radius
+                        local z = startPos.Z + math.sin(angle) * radius
+                        local y = startPos.Y + height
+
+                        Root.CFrame = CFrame.new(x, y, z)
+                    else
+                        Workspace.Gravity = gravity
+                    end
+                end)
+            end
+
+            function select_upgrade()
+                if Upgrades.Visible then
+                    repeat task.wait() until Upgrades.RerollFrame.Visible
+                    wait(2)
+                    local choices = {}
+                    for i = 1, 3 do
+                        if Upgrades.Holder["Selection"..i].Visible then
+                            table.insert(choices, {
+                                name = Upgrades.Holder["Selection"..i].ItemTitle.Text,
+                                index = i,
+                            })
+                        end
+                    end
+
+                    local selected
+                    local firstChoice = choices[1] and choices[1].name
+                    if firstChoice and weapon_names[firstChoice] then
+                        selected = choosePriorityFromList(choices, getgenv().RFManager["SelectedTools"] or {})
+                        if selected then
+                            print("Priority weapon selected:", selected.name, "at slot", selected.index)
+                            fireSelectionClick(selected)
+                        else
+                            if Upgrades.RerollFrame.RerollButton.TextValue.Text ~= "REROLL" then
+                                print("No preferred weapon found, rerolling...")
+                                local args = {
+                                    "RerollUpgrade"
+                                }
+                                game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("leifstout_networker@0.3.0"):WaitForChild("networker"):WaitForChild("_remotes"):WaitForChild("GameService"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
+                                wait(3)
+                            else
+                                selected = chooseRandomSelection(choices)
+                                if selected then
+                                    print("Random weapon selected:", selected.name, "at slot", selected.index)
+                                    fireSelectionClick(selected)
+                                else
+                                    print("No weapon choice found")
+                                end
+                            end
+                        end
+                    else
+                        local upgradePriority = flattenUpgradePriority(getgenv().RFManager["SelectedUpgrades"])
+                        selected = choosePriorityFromList(choices, upgradePriority)
+                        if selected then
+                            print("Priority upgrade selected:", selected.name, "at slot", selected.index)
+                            fireSelectionClick(selected)
+                        else
+                            selected = chooseRandomSelection(choices)
+                            if selected then
+                                print("Random upgrade selected:", selected.name, "at slot", selected.index)
+                                fireSelectionClick(selected)
+                            else
+                                print("No upgrade choice found")
+                            end
+                        end
+                    end
+                end
+            end
+
+            task.spawn(function()
+                fly()
+                while wait(1) do
+                    select_upgrade()
+                end
+            end)
+
+            getgenv()["fly_toggle"] = true
+            repeat
+                task.wait(1)
+            until workspace.Map:FindFirstChild("BossPortal") and workspace.Map.BossPortal:FindFirstChild("PortalPrompt") and workspace.Map.BossPortal.PortalPrompt.Enabled and workspace.Map.BossPortal:FindFirstChild("Portal Effect")
+            getgenv()["fly_toggle"] = false
+            wait(2)
+            LocalPlayer.Character.HumanoidRootPart.CFrame = workspace.Map.BossPortal:FindFirstChild("Portal Effect").CFrame + Vector3.new(0,5,0)
+
+            repeat
+                task.wait(1)
+            until LocalPlayer.PlayerGui.Frames.DeathFrame.Visible
+            wait(5)
+            fireButtonClick(LocalPlayer.PlayerGui.Frames.DeathFrame.Buttons.Continue)
+            wait(5)
+            fireButtonClick(LocalPlayer.PlayerGui.Frames.RoundEnd.Buttons.Again)
+        end
+    end
+end)
+
+local AutoFarm_2 = AutoFarms:newpage()
+AutoFarm_2:Slider("Fly Y", false,false, 1, 300, 15, 5, false, function(value)
+  getgenv().RFManager["fly_pos_y"] = tonumber(value)
+end)
+AutoFarm_2:Slider("Fly Speed", false,false, 1, 100, 15, 5, false, function(value)
+  getgenv().RFManager["fly_speed"] = tonumber(value)
+end)
+AutoFarm_2:Slider("Fly Radiant", false,false, 1, 300, 40, 5, false, function(value)
+  getgenv().RFManager["fly_radian"] = tonumber(value)
+end)
+
+local maps_list = {}
+local map_data = require(game:GetService("ReplicatedStorage").Shared.Modules.Data.WaveData)
+for map_name, map_info in pairs(map_data) do
+    if not map_info["totalWaves"] then continue end
+    table.insert(maps_list, map_name)
+end
+map_data = nil
+map_name = nil
+map_info = nil
+
+getgenv().RFManager["Select_Map"] = getgenv().RFManager["Select_Map"] or "Frost Forest"
+AutoFarm_1:Drop("Select Maps", getgenv().RFManager["Select_Map"], maps_list, function(selected)
+    getgenv().RFManager["Select_Map"] = selected
+    func_RFM:Store()
+end, false)
+
+getgenv().RFManager["Select_Mode"] = getgenv().RFManager["Select_Mode"] or "Normal"
+AutoFarm_1:Drop("Select Mode", getgenv().RFManager["Select_Mode"], {"Normal", "Hard", "Nightmare"}, function(selected)
+    getgenv().RFManager["Select_Mode"] = selected
+    func_RFM:Store()
+end, false)
+
+
+local Functions = Window:Taps("Function")
+local Function_1 = Functions:newpage()
+
+for chest, ssss in pairs(require(game:GetService("ReplicatedStorage").Shared.Modules.Data.ChestData)) do
+    Function_1:Button("Buy " .. chest, function()
+        local args = {
+            "OpenMultipleChests",
+            chest,
+            100
+        }
+        game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("leifstout_networker@0.3.1"):WaitForChild("networker"):WaitForChild("_remotes"):WaitForChild("ChestService"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
+    end)
+end
+ssss = nil
+
+local Cards = Window:Taps("Cards")
+
+getgenv().RFManager["SelectedTools"] = getgenv().RFManager["SelectedTools"] or {}
+local selected_tools = getgenv().RFManager["SelectedTools"]
+
+local tools_list = {}
+for _, info in pairs(weapond_data) do
+    table.insert(tools_list, info.name)
+end
+table.sort(tools_list)
+
+local ToolPage = Cards:newpage()
+ToolPage:Label("Tool Order")
+
+local tool_labels = {}
+local function updateToolLabels(selected)
+    for i, optionText in ipairs(selected) do
+        local labelText = string.format("%d. %s", i, optionText)
+        if tool_labels[i] then
+            tool_labels[i]:SetText(labelText)
+        else
+            tool_labels[i] = ToolPage:Label(labelText, false)
+        end
+    end
+
+    for i = #selected + 1, #tool_labels do
+        if tool_labels[i] then
+            if typeof(tool_labels[i].Destroy) == "function" then
+                tool_labels[i]:Destroy()
+            end
+            tool_labels[i] = nil
+        end
+    end
+end
+
+ToolPage:MutiDrop("Select Tools", selected_tools, tools_list, function(selected)
+    selected_tools = selected
+    getgenv().RFManager["SelectedTools"] = selected_tools
+    func_RFM:Store()
+    print("Selected tools:", selected_tools)
+    updateToolLabels(selected_tools)
+end, false)
+
+if #selected_tools > 0 then
+    updateToolLabels(selected_tools)
+end
+
+getgenv().RFManager["SelectedUpgrades"] = getgenv().RFManager["SelectedUpgrades"] or {}
+local selected_upgrades = getgenv().RFManager["SelectedUpgrades"]
+
+local Card_1 = Cards:newpage()
+local page_rarity = {}
+local page_rarity_labels = {}
+
+local function updateRarityLabels(rarity, selected)
+    local labels = page_rarity_labels[rarity]
+    if not labels then
+        return
+    end
+
+    for i, optionText in ipairs(selected) do
+        local labelText = string.format("%d. %s", i, optionText)
+        if labels[i] then
+            labels[i]:SetText(labelText)
+        else
+            labels[i] = page_rarity[rarity]:Label(labelText, false)
+        end
+    end
+
+    for i = #selected + 1, #labels do
+        if labels[i] then
+            if typeof(labels[i].Destroy) == "function" then
+                labels[i]:Destroy()
+            end
+            labels[i] = nil
+        end
+    end
+end
+
+for rarity, data in pairs(grouped_upgrade) do
+    local Card_temp = Cards:newpage()
+    Card_temp:Label(rarity)
+    page_rarity[rarity] = Card_temp
+    page_rarity_labels[rarity] = {}
+end
+
+for rarity, data in pairs(grouped_upgrade) do
+    local options = {}
+    for key, info in pairs(data) do
+        table.insert(options, info.name)
+    end
+    table.sort(options)
+
+    local defaultSelection = selected_upgrades[rarity] or {}
+    local labels = page_rarity_labels[rarity]
+    Card_1:MutiDrop(rarity, defaultSelection, options, function(selected)
+        selected_upgrades[rarity] = selected
+        getgenv().RFManager["SelectedUpgrades"] = selected_upgrades
+        func_RFM:Store()
+        print(selected_upgrades)
+
+        updateRarityLabels(rarity, selected)
+    end)
+
+    if #defaultSelection > 0 then
+        updateRarityLabels(rarity, defaultSelection)
+    end
+end
+
+-- ==============================================================================
+
+local Setting = Window:Taps("Settings")
+local Setting_1 = Setting:newpage()
+
+Setting_1:Button("Update UI", function()
+  writefile(CACHE, game:HttpGet(URL))
+end)
+
+Setting_1:Button("Rejoin", function()
+    TeleportService:Teleport(game.PlaceId)
+end)
+
+Setting_1:Toggle("Test", getgenv().RFManager["Test"], true, function(toggle)
+  if getgenv().RFManager["Test"] ~= toggle then
+    getgenv().RFManager["Test"] = toggle
+    func_RFM:Store()
+  end
+
+  print(toggle)
+end)
+
+Setting_1:Slider("Walk Speed", false,false, 1, 30, 17, 5, false, function(value)
+  -- LocalPlayer.Character.Humanoid.WalkSpeed = value
+  print(value)
+end)
+
+Setting_1:Button("Send Webhook", function()
+    local webhook = func_RFM.Webhook:create("https://discord.com/api/webhooks/1488263521161707631/5t8aDb5GNy0HFWvygOSkCti3IB8gL_TaVwG7wEOyVIgi9ZDnEnT0E9G4Bfx03uVYqriu")
+    webhook:setUsername("Bot Name")
+    webhook:setAvatarUrl("https://i.imgur.com/xxx.png")
+    webhook:setContent("@here new report!")
+    webhook:setTitle("Gem Report")
+    webhook:setDescription("Player gem summary")
+    webhook:setUrl("https://example.com")
+    webhook:setColor(14177041)
+    webhook:setTimestamp(true)
+    webhook:setAuthor(LocalPlayer.Name, nil, "https://i.imgur.com/avatar.png")
+    webhook:setThumbnail("https://i.imgur.com/thumb.png")
+    webhook:setImage("https://i.imgur.com/banner.png")
+    webhook:setFooter("Game Server", "https://i.imgur.com/icon.png")
+    webhook:addField("Gems",   tostring(LocalPlayer:GetAttribute("gems")), true)
+    webhook:addField("Level",  tostring(LocalPlayer:GetAttribute("level")), true)
+    webhook:addField("Server", game.JobId, false)
+    webhook:send()
+end)
+
+Setting_1:Drop("Select Build", "", {"Option 1", "Option 2", "Option 3"}, function(selected)
+    print("Selected:", selected)
+end, false)
+
+getgenv().Loaded = true
