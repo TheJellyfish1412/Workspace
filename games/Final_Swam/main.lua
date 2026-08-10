@@ -388,13 +388,16 @@ AutoFarm_2:Toggle("Tp Center", getgenv().RFManager["Tp_Center"], false, function
     end
 end)
 AutoFarm_2:Slider("Fly Y", false,false, 1, 300, getgenv().RFManager["fly_pos_y"], 5, false, function(value)
-  getgenv().RFManager["fly_pos_y"] = tonumber(value)
+    getgenv().RFManager["fly_pos_y"] = tonumber(value)
+    func_RFM:Store()
 end)
 AutoFarm_2:Slider("Fly Speed", false,false, 1, 100, getgenv().RFManager["fly_speed"], 5, false, function(value)
-  getgenv().RFManager["fly_speed"] = tonumber(value)
+    getgenv().RFManager["fly_speed"] = tonumber(value)
+    func_RFM:Store()
 end)
 AutoFarm_2:Slider("Fly Radiant", false,false, 1, 300, getgenv().RFManager["fly_radian"], 5, false, function(value)
-  getgenv().RFManager["fly_radian"] = tonumber(value)
+    getgenv().RFManager["fly_radian"] = tonumber(value)
+    func_RFM:Store()
 end)
 
 local maps_list = {}
