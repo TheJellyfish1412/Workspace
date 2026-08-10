@@ -140,6 +140,25 @@ for _, data in pairs(require(game:GetService("ReplicatedStorage").Shared.Modules
     end
 end
 
+repeat task.wait() until game:IsLoaded() and game.CoreGui:FindFirstChild("RobloxPromptGui")
+local promptOverlay = game.CoreGui.RobloxPromptGui.promptOverlay
+promptOverlay.ChildAdded:Connect(function(child)
+    if child.Name == "ErrorPrompt" then
+        task.wait(1)
+        while true do
+            pcall(function()
+                TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId)
+            end)
+            task.wait(4)
+            -- fallback to any server
+            pcall(function()
+                TeleportService:Teleport(game.PlaceId)
+            end)
+            task.wait(3)
+        end
+    end
+end)
+
 -- =====================================================
 
 local Window = create:Win("Plasma", 11390492777)
