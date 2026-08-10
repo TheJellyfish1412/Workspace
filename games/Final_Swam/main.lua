@@ -32,13 +32,13 @@ _G.printTable = function(tbl, indent, maxDepth)
         if type(v) == "table" then
             txt = txt .. prefix .. "[" .. keyDisplay .. "] = {\n"
             txt = txt .. _G.printTable(v, indent + 1, maxDepth)
-            txt = txt .. prefix .. "}\n"
+            txt = txt .. prefix .. "},\n"
         else
             local valueDisplay = tostring(v)
             if type(v) == "string" then
                 valueDisplay = '"' .. v .. '"'
             end
-            txt = txt .. prefix .. "[" .. keyDisplay .. "] = " .. valueDisplay .. "\n"
+            txt = txt .. prefix .. "[" .. keyDisplay .. "] = " .. valueDisplay .. ",\n"
         end
     end
     return txt
@@ -137,7 +137,7 @@ AutoFarm_1:Toggle("AutoFarm", getgenv().RFManager["AutoFarm"], false, function(t
             }
             game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("leifstout_networker@0.3.1"):WaitForChild("networker"):WaitForChild("_remotes"):WaitForChild("QueueService"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
         else
-            repeat wait() until LocalPlayer.PlayerGui:FindFirstChild("Frames") and LocalPlayer.PlayerGui.Frames:FindFirstChild("Upgrades")
+            repeat wait() until LocalPlayer:FindFirstChild("PlayerGui") and LocalPlayer.PlayerGui:FindFirstChild("Frames") and LocalPlayer.PlayerGui.Frames:FindFirstChild("Upgrades")
             local Upgrades = LocalPlayer.PlayerGui.Frames.Upgrades
 
             local function choosePriorityFromList(choices, priority)
@@ -433,7 +433,12 @@ ssss = nil
 
 local Cards = Window:Taps("Cards")
 
-getgenv().RFManager["SelectedTools"] = getgenv().RFManager["SelectedTools"] or {}
+getgenv().RFManager["SelectedTools"] = getgenv().RFManager["SelectedTools"] or {
+    "Ban Hammer",
+    "Firestaff",
+    "Missile",
+    "Frost Walker"
+}
 local selected_tools = getgenv().RFManager["SelectedTools"]
 
 local tools_list = {}
@@ -478,7 +483,53 @@ if #selected_tools > 0 then
     updateToolLabels(selected_tools)
 end
 
-getgenv().RFManager["SelectedUpgrades"] = getgenv().RFManager["SelectedUpgrades"] or {}
+getgenv().RFManager["SelectedUpgrades"] = getgenv().RFManager["SelectedUpgrades"] or {
+    ["Epic"] = {
+        [1] = "Luck",
+        [2] = "Giant's Strength",
+        [3] = "Soul of Swiftness",
+        [4] = "Size",
+        [5] = "Lifesteal",
+        [6] = "Armor",
+        [7] = "Attack Speed",
+        [8] = "Damage",
+        [9] = "Health",
+        [10] = "Projectile Count",
+        [11] = "Bolt"
+    },
+    ["Legendary"] = {
+        [1] = "Multishot",
+        [2] = "Power Trio",
+        [3] = "Projectile Count",
+        [4] = "Luck",
+        [5] = "Size",
+        [6] = "Damage",
+        [7] = "Attack Speed",
+        [8] = "Health"
+    },
+    ["Common"] = {
+        [1] = "Luck",
+        [2] = "Crit Chance",
+        [3] = "Attack Speed",
+        [4] = "Damage",
+        [5] = "Health"
+    },
+    ["Rare"] = {
+        [1] = "Stand Strong",
+        [2] = "Perilous Fervor",
+        [3] = "Demon Slayer",
+        [4] = "Freeze",
+        [5] = "Blaze",
+        [6] = "Lifesteal",
+        [7] = "Crit Chance",
+        [8] = "Luck",
+        [9] = "Armor",
+        [10] = "Size",
+        [11] = "Attack Speed",
+        [12] = "Damage",
+        [13] = "Health"
+    }
+}
 local selected_upgrades = getgenv().RFManager["SelectedUpgrades"]
 
 local Card_1 = Cards:newpage()
