@@ -14,6 +14,54 @@ local TeleportService = game:GetService("TeleportService")
 
 --  ====================================================
 
+function fireButtonClick(button, mode)
+    if not button then
+        return
+    end
+
+    mode = mode or "click"
+
+    if mode == "up" then
+        local conns = getconnections(button.MouseButton1Up)
+        if conns and #conns > 0 then
+            for _, conn in ipairs(conns) do
+                if conn.Function then
+                    conn.Function()
+                end
+            end
+            return
+        end
+
+        pcall(function()
+            button.MouseButton1Up:Fire()
+        end)
+        return
+    end
+
+    if mode == "click" then
+        local conns = getconnections(button.MouseButton1Click)
+        if conns and #conns > 0 then
+            for _, conn in ipairs(conns) do
+                if conn.Function then
+                    conn.Function()
+                end
+            end
+            return
+        end
+
+        pcall(function()
+            button.MouseButton1Click:Fire()
+            return
+        end)
+    end
+
+    if button.Activated then
+        pcall(function()
+            button.Activated:Fire()
+        end)
+    end
+end
+
 _G.printTable = function(tbl, indent, maxDepth)
     local txt = ""
     indent = indent or 0
@@ -112,7 +160,14 @@ AutoFarm_1:Toggle("AutoFarm", getgenv().RFManager["AutoFarm"], false, function(t
     end
 
     if toggle then
+        LocalPlayer:FindFirstChild("PlayerGui") and LocalPlayer.PlayerGui:FindFirstChild("Frames")
+        
         if game.PlaceId == 99521272836282 then
+            repeat wait() until LocalPlayer.PlayerGui.Frames:FindFirstChild("Pop-UpFrame")
+            if LocalPlayer.PlayerGui.Frames["Pop-UpFrame"].Visible then
+                fireButtonClick(LocalPlayer.PlayerGui.Frames["Pop-UpFrame"].Rejoin.Buttons.Continue)
+                return
+            end
             local args = {
                 "PlayPressed"
             }
@@ -141,7 +196,7 @@ AutoFarm_1:Toggle("AutoFarm", getgenv().RFManager["AutoFarm"], false, function(t
             }
             game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("leifstout_networker@0.3.1"):WaitForChild("networker"):WaitForChild("_remotes"):WaitForChild("QueueService"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
         else
-            repeat wait() until LocalPlayer:FindFirstChild("PlayerGui") and LocalPlayer.PlayerGui:FindFirstChild("Frames") and LocalPlayer.PlayerGui.Frames:FindFirstChild("Upgrades")
+            repeat wait() until LocalPlayer.PlayerGui.Frames:FindFirstChild("Upgrades")
             local Upgrades = LocalPlayer.PlayerGui.Frames.Upgrades
 
             local function choosePriorityFromList(choices, priority)
@@ -184,54 +239,6 @@ AutoFarm_1:Toggle("AutoFarm", getgenv().RFManager["AutoFarm"], false, function(t
                     return nil
                 end
                 return choices[math.random(#choices)]
-            end
-
-            local function fireButtonClick(button, mode)
-                if not button then
-                    return
-                end
-
-                mode = mode or "click"
-
-                if mode == "up" then
-                    local conns = getconnections(button.MouseButton1Up)
-                    if conns and #conns > 0 then
-                        for _, conn in ipairs(conns) do
-                            if conn.Function then
-                                conn.Function()
-                            end
-                        end
-                        return
-                    end
-
-                    pcall(function()
-                        button.MouseButton1Up:Fire()
-                    end)
-                    return
-                end
-
-                if mode == "click" then
-                    local conns = getconnections(button.MouseButton1Click)
-                    if conns and #conns > 0 then
-                        for _, conn in ipairs(conns) do
-                            if conn.Function then
-                                conn.Function()
-                            end
-                        end
-                        return
-                    end
-
-                    pcall(function()
-                        button.MouseButton1Click:Fire()
-                        return
-                    end)
-                end
-
-                if button.Activated then
-                    pcall(function()
-                        button.Activated:Fire()
-                    end)
-                end
             end
 
             local function fireSelectionClick(selection)
