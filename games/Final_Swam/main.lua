@@ -298,20 +298,20 @@ AutoFarm_1:Toggle("AutoFarm", getgenv().RFManager["AutoFarm"], false, function(t
                             local BossYeti = workspace.Enemies:FindFirstChild("BossYeti")
                             local danger = false
                             local Mod_CF = CFrame.new(0, 40, 30)
-                            if workspace.VFX:FindFirstChild("DangerArea") then
-                                for i,v in pairs(workspace.VFX:GetChildren()) do 
-                                    if v.Name == "DangerArea" then 
-                                        local p = v.Part
-                                        local BossCF = BossYeti.HumanoidRootPart.CFrame
-                                        local target_TP = BossCF * Mod_CF
-                                        local target_Pos = Vector3.new(target_TP.X, target_TP.Y, target_TP.Z)
-                                        if (target_Pos - p.Position).Magnitude <= 150 then 
-                                            danger = true
-                                            break
-                                        end
-                                    end
-                                end
-                            end
+                            -- if workspace.VFX:FindFirstChild("DangerArea") then
+                            --     for i,v in pairs(workspace.VFX:GetChildren()) do 
+                            --         if v.Name == "DangerArea" then 
+                            --             local p = v.Part
+                            --             local BossCF = BossYeti.HumanoidRootPart.CFrame
+                            --             local target_TP = BossCF * Mod_CF
+                            --             local target_Pos = Vector3.new(target_TP.X, target_TP.Y, target_TP.Z)
+                            --             if (target_Pos - p.Position).Magnitude <= 150 then 
+                            --                 danger = true
+                            --                 break
+                            --             end
+                            --         end
+                            --     end
+                            -- end
                             if danger then 
                                 local speed = 10
                                 local radius = 100
