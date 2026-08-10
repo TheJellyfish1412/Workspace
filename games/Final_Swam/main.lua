@@ -14,6 +14,52 @@ local TeleportService = game:GetService("TeleportService")
 
 --  ====================================================
 
+_G.printTable = function(tbl, indent, maxDepth)
+    local txt = ""
+    indent = indent or 0
+    maxDepth = maxDepth or math.huge
+    if indent > maxDepth then
+        return string.rep("   ", indent) .. "... (depth limit)\n"
+    end
+    for i, v in pairs(tbl) do
+        local prefix = string.rep("   ", indent)  
+        local keyDisplay = tostring(i)
+        if type(i) == "string" then
+            keyDisplay = '"' .. i .. '"'
+        elseif type(i) == "userdata" then
+            keyDisplay = "Instance: " .. i.Name
+        end
+        if type(v) == "table" then
+            txt = txt .. prefix .. "[" .. keyDisplay .. "] = {\n"
+            txt = txt .. _G.printTable(v, indent + 1, maxDepth)
+            txt = txt .. prefix .. "}\n"
+        else
+            local valueDisplay = tostring(v)
+            if type(v) == "string" then
+                valueDisplay = '"' .. v .. '"'
+            end
+            txt = txt .. prefix .. "[" .. keyDisplay .. "] = " .. valueDisplay .. "\n"
+        end
+    end
+    return txt
+end
+
+_G.printt = function(v, copyToClipboard, maxDepth)
+    local txt = ""
+    if type(v) == "table" then
+        txt = txt .. "{\n"
+        txt = txt .. _G.printTable(v, 1, maxDepth)
+        txt = txt .. "}"
+    else
+        txt = txt .. tostring(v)
+    end
+    if copyToClipboard then
+        setclipboard(txt)
+    end
+    print(txt)
+    return txt
+end
+
 local grouped_upgrade = {}
 local upgrade_names = {}
 for key, data in pairs(require(game:GetService("ReplicatedStorage").Shared.Modules.Data.UpgradeData)) do
@@ -53,6 +99,8 @@ local Window = create:Win("Plasma", 11390492777)
 local AutoFarms = Window:Taps("AutoFarm")
 local AutoFarm_1 = AutoFarms:newpage()
 
+local fly_func = false
+local gravity = Workspace.Gravity
 AutoFarm_1:Toggle("AutoFarm", getgenv().RFManager["AutoFarm"], false, function(toggle)
     if getgenv().RFManager["AutoFarm"] ~= toggle then
         getgenv().RFManager["AutoFarm"] = toggle
@@ -174,12 +222,14 @@ AutoFarm_1:Toggle("AutoFarm", getgenv().RFManager["AutoFarm"], false, function(t
             end
 
             local function fly()
+                if fly_func then return end
+                fly_func = true
+
                 local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
                 local Root = Character:WaitForChild("HumanoidRootPart")
 
                 local startPos = Root.Position
                 local angle = 0
-                local gravity = Workspace.Gravity
 
                 game:GetService("RunService").Heartbeat:Connect(function(dt)
                     if not Root or not Root.Parent then
@@ -287,6 +337,9 @@ AutoFarm_1:Toggle("AutoFarm", getgenv().RFManager["AutoFarm"], false, function(t
             wait(5)
             fireButtonClick(LocalPlayer.PlayerGui.Frames.RoundEnd.Buttons.Again)
         end
+    else
+        getgenv()["fly_toggle"] = false
+        Workspace.Gravity = gravity
     end
 end)
 
@@ -425,6 +478,8 @@ for rarity, data in pairs(grouped_upgrade) do
     page_rarity_labels[rarity] = {}
 end
 
+
+
 for rarity, data in pairs(grouped_upgrade) do
     local options = {}
     for key, info in pairs(data) do
@@ -447,6 +502,15 @@ for rarity, data in pairs(grouped_upgrade) do
         updateRarityLabels(rarity, defaultSelection)
     end
 end
+
+Card_1:Button("Copy Config", function()
+    local temp = {
+        ["SelectedTools"] = getgenv().RFManager["SelectedTools"],
+        ["SelectedUpgrades"] = getgenv().RFManager["SelectedUpgrades"]
+    }
+    local x = _G.printt(temp)
+    setclipboard("getgenv().RFManager = " .. x)
+end)
 
 -- ==============================================================================
 
