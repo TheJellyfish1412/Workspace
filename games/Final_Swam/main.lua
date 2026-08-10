@@ -271,7 +271,6 @@ AutoFarm_1:Toggle("AutoFarm", getgenv().RFManager["AutoFarm"], false, function(t
             function select_upgrade()
                 if Upgrades.Visible then
                     repeat task.wait() until Upgrades.RerollFrame.Visible
-                    wait(2)
                     local choices = {}
                     for i = 1, 3 do
                         local sel = Upgrades.Holder["Selection"..i]
@@ -335,7 +334,7 @@ AutoFarm_1:Toggle("AutoFarm", getgenv().RFManager["AutoFarm"], false, function(t
 
             task.spawn(function()
                 fly()
-                while wait(1) do
+                while wait(2) do
                     select_upgrade()
                 end
             end)
