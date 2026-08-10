@@ -139,26 +139,38 @@ AutoFarm_1:Toggle("AutoFarm", getgenv().RFManager["AutoFarm"], false, function(t
         else
             local Upgrades = LocalPlayer.PlayerGui.Frames.Upgrades
 
-            local function flattenUpgradePriority(priorities)
-                local flat = {}
-                for _, favs in pairs(priorities or {}) do
-                    if type(favs) == "table" then
-                        for _, fav in ipairs(favs) do
-                            table.insert(flat, fav)
-                        end
-                    end
-                end
-                return flat
-            end
-
             local function choosePriorityFromList(choices, priority)
-                for _, fav in ipairs(priority or {}) do
-                    for _, choice in ipairs(choices) do
-                        if choice.name == fav then
-                            return choice
+                if not choices or #choices == 0 or not priority then
+                    return nil
+                end
+
+                -- If priority is a flat ordered list, pick first matching name in that order
+                if type(priority) == "table" and #priority > 0 then
+                    for _, name in ipairs(priority) do
+                        for _, choice in ipairs(choices) do
+                            if choice.name == name then
+                                return choice
+                            end
+                        end
+                    end
+                    return nil
+                end
+
+                -- If priority is a map (rarity -> ordered list), prefer the list for this rarity
+                if choices[1] and choices[1].rarity then
+                    local r = choices[1].rarity
+                    local list = priority and priority[r]
+                    if type(list) == "table" then
+                        for _, name in ipairs(list) do
+                            for _, choice in ipairs(choices) do
+                                if choice.name == name then
+                                    return choice
+                                end
+                            end
                         end
                     end
                 end
+
                 return nil
             end
 
@@ -262,10 +274,18 @@ AutoFarm_1:Toggle("AutoFarm", getgenv().RFManager["AutoFarm"], false, function(t
                     wait(2)
                     local choices = {}
                     for i = 1, 3 do
-                        if Upgrades.Holder["Selection"..i].Visible then
+                        local sel = Upgrades.Holder["Selection"..i]
+                        if sel and sel.Visible then
+                            local rarityText = nil
+                            pcall(function()
+                                if sel.FrameHolder and sel.FrameHolder.TitleLabel then
+                                    rarityText = sel.FrameHolder.TitleLabel.Text
+                                end
+                            end)
                             table.insert(choices, {
-                                name = Upgrades.Holder["Selection"..i].ItemTitle.Text,
+                                name = sel.ItemTitle and sel.ItemTitle.Text or "",
                                 index = i,
+                                rarity = rarityText,
                             })
                         end
                     end
@@ -296,8 +316,7 @@ AutoFarm_1:Toggle("AutoFarm", getgenv().RFManager["AutoFarm"], false, function(t
                             end
                         end
                     else
-                        local upgradePriority = flattenUpgradePriority(getgenv().RFManager["SelectedUpgrades"])
-                        selected = choosePriorityFromList(choices, upgradePriority)
+                        selected = choosePriorityFromList(choices, getgenv().RFManager["SelectedUpgrades"])
                         if selected then
                             print("Priority upgrade selected:", selected.name, "at slot", selected.index)
                             fireSelectionClick(selected)
