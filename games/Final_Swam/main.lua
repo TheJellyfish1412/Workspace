@@ -277,20 +277,39 @@ AutoFarm_1:Toggle("AutoFarm", getgenv().RFManager["AutoFarm"], false, function(t
                             Root.CFrame = CFrame.new(x, y, z)
                         else
                             local BossYeti = workspace.Enemies:FindFirstChild("BossYeti")
-
-                            local speed = 10
-                            local radius = 20
-                            local height = 35
-
-                            angle += speed / 10 * dt
-
-                            local monPos = BossYeti.HumanoidRootPart.Position
-
-                            local x = monPos.X + math.cos(angle) * radius
-                            local z = monPos.Z + math.sin(angle) * radius
-                            local y = monPos.Y + height
-                            
-                            Root.CFrame = CFrame.new(x, y, z)
+                            local danger = false
+                            if workspace.VFX:FindFirstChild("DangerArea") then
+                                for i,v in pairs(workspace.VFX:GetChildren()) do 
+                                    if v.Name == "DangerArea" then 
+                                        local p = v.Part
+                                        local BossCF = BossYeti.HumanoidRootPart.CFrame
+                                        local target_TP = BossCF * CFrame.new(0, 35, -20)
+                                        local target_Pos = Vector3.new(target_TP.X, target_TP.Y, target_TP.Z)
+                                        if (target_Pos - p.Position).Magnitude <= 100 then 
+                                            danger = true
+                                            break
+                                        end
+                                    end
+                                end
+                            end
+                            if danger then 
+                                local speed = 10
+                                local radius = 200
+                                local height = 35
+    
+                                angle += speed / 10 * dt
+    
+                                local monPos = BossYeti.HumanoidRootPart.Position
+    
+                                local x = monPos.X + math.cos(angle) * radius
+                                local z = monPos.Z + math.sin(angle) * radius
+                                local y = monPos.Y + height
+                                
+                                Root.CFrame = CFrame.new(x, y, z)
+                            else
+                                local BossCF = BossYeti.HumanoidRootPart.CFrame
+                                Root.CFrame = BossCF * CFrame.new(0, 35, -20)
+                            end                            
                         end
                     else
                         Workspace.Gravity = gravity
