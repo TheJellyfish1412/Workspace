@@ -99,6 +99,10 @@ local Window = create:Win("Plasma", 11390492777)
 local AutoFarms = Window:Taps("AutoFarm")
 local AutoFarm_1 = AutoFarms:newpage()
 
+getgenv().RFManager["fly_speed"] = getgenv().RFManager["fly_speed"] or 15
+getgenv().RFManager["fly_radian"] = getgenv().RFManager["fly_radian"] or 40
+getgenv().RFManager["fly_pos_y"] = getgenv().RFManager["fly_pos_y"] or 15
+
 local fly_func = false
 local gravity = Workspace.Gravity
 AutoFarm_1:Toggle("AutoFarm", getgenv().RFManager["AutoFarm"], false, function(toggle)
@@ -252,9 +256,9 @@ AutoFarm_1:Toggle("AutoFarm", getgenv().RFManager["AutoFarm"], false, function(t
                     if getgenv()["fly_toggle"] and getgenv().RFManager["Fly"] then
                         Workspace.Gravity = 0
 
-                        local speed = getgenv().RFManager["fly_speed"] or 15
-                        local radius = getgenv().RFManager["fly_radian"] or 40
-                        local height = getgenv().RFManager["fly_pos_y"] or 15
+                        local speed = getgenv().RFManager["fly_speed"]
+                        local radius = getgenv().RFManager["fly_radian"]
+                        local height = getgenv().RFManager["fly_pos_y"]
 
                         angle += speed / 10 * dt
 
@@ -335,7 +339,7 @@ AutoFarm_1:Toggle("AutoFarm", getgenv().RFManager["AutoFarm"], false, function(t
 
             task.spawn(function()
                 fly()
-                while wait(2) do
+                while wait(3) do
                     select_upgrade()
                 end
             end)
@@ -383,13 +387,13 @@ AutoFarm_2:Toggle("Tp Center", getgenv().RFManager["Tp_Center"], false, function
         func_RFM:Store()
     end
 end)
-AutoFarm_2:Slider("Fly Y", false,false, 1, 300, 15, 5, false, function(value)
+AutoFarm_2:Slider("Fly Y", false,false, 1, 300, getgenv().RFManager["fly_pos_y"], 5, false, function(value)
   getgenv().RFManager["fly_pos_y"] = tonumber(value)
 end)
-AutoFarm_2:Slider("Fly Speed", false,false, 1, 100, 15, 5, false, function(value)
+AutoFarm_2:Slider("Fly Speed", false,false, 1, 100, getgenv().RFManager["fly_speed"], 5, false, function(value)
   getgenv().RFManager["fly_speed"] = tonumber(value)
 end)
-AutoFarm_2:Slider("Fly Radiant", false,false, 1, 300, 40, 5, false, function(value)
+AutoFarm_2:Slider("Fly Radiant", false,false, 1, 300, getgenv().RFManager["fly_radian"], 5, false, function(value)
   getgenv().RFManager["fly_radian"] = tonumber(value)
 end)
 
