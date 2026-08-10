@@ -321,6 +321,16 @@ AutoFarm_1:Toggle("AutoFarm", getgenv().RFManager["AutoFarm"], false, function(t
                 end
             end)
 
+            task.spawn(function()
+                repeat
+                    task.wait(1)
+                until LocalPlayer.PlayerGui.Frames.DeathFrame.Visible
+                wait(5)
+                fireButtonClick(LocalPlayer.PlayerGui.Frames.DeathFrame.Buttons.Continue)
+                wait(5)
+                fireButtonClick(LocalPlayer.PlayerGui.Frames.RoundEnd.Buttons.Again)
+            end)
+
             getgenv()["fly_toggle"] = true
             repeat
                 task.wait(1)
@@ -328,14 +338,6 @@ AutoFarm_1:Toggle("AutoFarm", getgenv().RFManager["AutoFarm"], false, function(t
             getgenv()["fly_toggle"] = false
             wait(2)
             LocalPlayer.Character.HumanoidRootPart.CFrame = workspace.Map.BossPortal:FindFirstChild("Portal Effect").CFrame + Vector3.new(0,5,0)
-
-            repeat
-                task.wait(1)
-            until LocalPlayer.PlayerGui.Frames.DeathFrame.Visible
-            wait(5)
-            fireButtonClick(LocalPlayer.PlayerGui.Frames.DeathFrame.Buttons.Continue)
-            wait(5)
-            fireButtonClick(LocalPlayer.PlayerGui.Frames.RoundEnd.Buttons.Again)
         end
     else
         getgenv()["fly_toggle"] = false
