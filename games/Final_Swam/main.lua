@@ -314,7 +314,7 @@ AutoFarm_1:Toggle("AutoFarm", getgenv().RFManager["AutoFarm"], false, function(t
                             end
                             if danger then 
                                 local speed = 10
-                                local radius = 300
+                                local radius = 100
                                 local height = 35
     
                                 angle += speed / 10 * dt
