@@ -491,6 +491,7 @@ local Functions = Window:Taps("Function")
 local Function_1 = Functions:newpage()
 
 for chest, ssss in pairs(require(game:GetService("ReplicatedStorage").Shared.Modules.Data.ChestData)) do
+    if chest == "VoidChest" then continue end
     Function_1:Button("Buy " .. chest, function()
         local args = {
             "OpenMultipleChests",
@@ -501,6 +502,22 @@ for chest, ssss in pairs(require(game:GetService("ReplicatedStorage").Shared.Mod
     end)
 end
 ssss = nil
+
+Function_1:Button("Buy VoidChest", function()
+    local args = {
+        "PurchaseChest",
+        "VoidChest",
+        100
+    }
+    game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("leifstout_networker@0.3.1"):WaitForChild("networker"):WaitForChild("_remotes"):WaitForChild("ChestService"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
+    wait(1)
+    local args = {
+        "OpenMultipleChests",
+        "VoidChest",
+        100
+    }
+    game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("leifstout_networker@0.3.1"):WaitForChild("networker"):WaitForChild("_remotes"):WaitForChild("ChestService"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
+end)
 
 local Cards = Window:Taps("Cards")
 
