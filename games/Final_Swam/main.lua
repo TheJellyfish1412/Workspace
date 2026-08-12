@@ -269,6 +269,7 @@ AutoFarm_1:Toggle("AutoFarm", getgenv().RFManager["AutoFarm"], false, function(t
                 WorldSelection:FireServer("SetChallenge", modify_map[getgenv().RFManager["Select_Modify"]])
                 task.wait(0.2)
             end
+            task.wait(1)
             QueueService:FireServer("PartySizeSelected", 1)
             task.wait(0.2)
             QueueService:FireServer("Created")
