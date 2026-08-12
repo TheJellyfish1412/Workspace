@@ -12,6 +12,10 @@ local create, func_RFM = loadstring(readfile(CACHE))()
 local LocalPlayer = game.Players.LocalPlayer
 local TeleportService = game:GetService("TeleportService")
 
+local _Index_Module = game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index")
+local _leifstout_networker = _Index_Module:FindFirstChild("leifstout_networker@0.3.0") or _Index_Module:FindFirstChild("leifstout_networker@0.3.1")
+local _remotes = _leifstout_networker:WaitForChild("networker"):WaitForChild("_remotes")
+
 --  ====================================================
 
 function fireButtonClick(button, mode)
@@ -108,6 +112,13 @@ _G.printt = function(v, copyToClipboard, maxDepth)
     return txt
 end
 
+local modify_names = {"Base"}
+local modify_map = {}
+for _, info in pairs(require(game:GetService("ReplicatedStorage").Shared.Modules.Data.ChallengeData)) do 
+    table.insert(modify_names, info["name"])
+    modify_map[info["name"]] = info["id"]
+end
+
 local grouped_upgrade = {}
 local upgrade_names = {}
 for key, data in pairs(require(game:GetService("ReplicatedStorage").Shared.Modules.Data.UpgradeData)) do
@@ -122,6 +133,61 @@ for key, data in pairs(require(game:GetService("ReplicatedStorage").Shared.Modul
             description = data["description"],
         }
         upgrade_names[data["name"]] = true
+    end
+end
+
+local stat_limit_table = {
+    ["lifesteal"] = {
+        ["name"] = {"Lifesteal"},
+        ["default"] = 20,
+        ["min"] = 0,
+        ["max"] = 200
+    },
+    ["luck"] = {
+        ["name"] = {"Luck"},
+        ["default"] = 500,
+        ["min"] = 0,
+        ["max"] = 1200
+    },
+    ["size"] = {
+        ["name"] = {"Size"},
+        ["default"] = 10,
+        ["min"] = 0,
+        ["max"] = 10
+    },
+    ["criticalChance"] = {
+        ["name"] = {"Crit Chance"},
+        ["default"] = 100,
+        ["min"] = 1,
+        ["max"] = 100
+    },
+    ["damage"] = {
+        ["name"] = {"Damage"},
+        ["default"] = 20,
+        ["min"] = 1,
+        ["max"] = 50
+    },
+    ["attackSpeed"] = {
+        ["name"] = {"Attack Speed", "Soul of Swiftness"},
+        ["default"] = 400,
+        ["min"] = 1,
+        ["max"] = 1000
+    },
+    ["armor"] = {
+        ["name"] = {"Armor"},
+        ["default"] = 50,
+        ["min"] = 0,
+        ["max"] = 50
+    },
+}
+local stat_limit_map = {}
+getgenv().RFManager["Limit"] = getgenv().RFManager["Limit"] or {}
+for ui_name, info in pairs(stat_limit_table) do
+    for _, name_upgrade in pairs(info["name"]) do 
+        stat_limit_map[name_upgrade] = ui_name
+    end
+    if getgenv().RFManager["Limit"][ui_name] == nil then 
+        getgenv().RFManager["Limit"][ui_name] = info["default"]
     end
 end
 
@@ -170,7 +236,6 @@ getgenv().RFManager["fly_speed"] = getgenv().RFManager["fly_speed"] or 15
 getgenv().RFManager["fly_radian"] = getgenv().RFManager["fly_radian"] or 40
 getgenv().RFManager["fly_pos_y"] = getgenv().RFManager["fly_pos_y"] or 15
 
-local fly_func = false
 local gravity = Workspace.Gravity
 AutoFarm_1:Toggle("AutoFarm", getgenv().RFManager["AutoFarm"], false, function(toggle)
     if getgenv().RFManager["AutoFarm"] ~= toggle then
@@ -187,43 +252,38 @@ AutoFarm_1:Toggle("AutoFarm", getgenv().RFManager["AutoFarm"], false, function(t
                 fireButtonClick(LocalPlayer.PlayerGui.Frames["Pop-UpFrame"].Rejoin.Buttons.Continue)
                 return
             end
-            local args = {
-                "PlayPressed"
-            }
-            game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("leifstout_networker@0.3.1"):WaitForChild("networker"):WaitForChild("_remotes"):WaitForChild("QueueService"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
+            wait(5)
+            if not getgenv().RFManager["AutoFarm"] then 
+                return
+            end
+            local WorldSelection = _remotes:WaitForChild("WorldSelection"):WaitForChild("RemoteEvent")
+            local QueueService = _remotes:WaitForChild("QueueService"):WaitForChild("RemoteEvent")
+
+            QueueService:FireServer("PlayPressed")
             task.wait(0.2)
-            local args = {
-                "SetWorld",
-                getgenv().RFManager["Select_Map"]
-            }
-            game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("leifstout_networker@0.3.1"):WaitForChild("networker"):WaitForChild("_remotes"):WaitForChild("WorldSelection"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
+            WorldSelection:FireServer("SetWorld", getgenv().RFManager["Select_Map"])
             task.wait(0.2)
-            local args = {
-                "SetDifficulty",
-                getgenv().RFManager["Select_Mode"]
-            }
-            game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("leifstout_networker@0.3.1"):WaitForChild("networker"):WaitForChild("_remotes"):WaitForChild("WorldSelection"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
+            WorldSelection:FireServer("SetDifficulty", getgenv().RFManager["Select_Mode"])
             task.wait(0.2)
-            local args = {
-                "PartySizeSelected",
-                1
-            }
-            game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("leifstout_networker@0.3.1"):WaitForChild("networker"):WaitForChild("_remotes"):WaitForChild("QueueService"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
+            if getgenv().RFManager["Select_Modify"] ~= "Base" then
+                WorldSelection:FireServer("SetChallenge", modify_map[getgenv().RFManager["Select_Modify"]])
+                task.wait(0.2)
+            end
+            QueueService:FireServer("PartySizeSelected", 1)
             task.wait(0.2)
-            local args = {
-                "Created"
-            }
-            game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("leifstout_networker@0.3.1"):WaitForChild("networker"):WaitForChild("_remotes"):WaitForChild("QueueService"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
+            QueueService:FireServer("Created")
         else
             repeat wait() until LocalPlayer.PlayerGui.Frames:FindFirstChild("Upgrades")
             local Upgrades = LocalPlayer.PlayerGui.Frames.Upgrades
+            local CreateModel = require(game:GetService("ReplicatedStorage").Shared.UI.HUD.WeaponBar).CreateModel
+            local Data_Stat = debug.getupvalue(CreateModel, 1)
 
             local function choosePriorityFromList(choices, priority)
                 if not choices or #choices == 0 or not priority then
                     return nil
                 end
 
-                -- If priority is a flat ordered list, pick first matching name in that order
+                -- tool
                 if type(priority) == "table" and #priority > 0 then
                     for _, name in ipairs(priority) do
                         for _, choice in ipairs(choices) do
@@ -235,13 +295,23 @@ AutoFarm_1:Toggle("AutoFarm", getgenv().RFManager["AutoFarm"], false, function(t
                     return nil
                 end
 
-                -- If priority is a map (rarity -> ordered list), prefer the list for this rarity
+                -- upgrade
                 if choices[1] and choices[1].rarity then
                     local r = choices[1].rarity
                     local list = priority and priority[r]
                     if type(list) == "table" then
                         for _, name in ipairs(list) do
                             for _, choice in ipairs(choices) do
+                                local stat_key_name = stat_limit_map[choice.name]
+                                if stat_key_name then
+                                    local val = Data_Stat[stat_key_name]
+                                    local my_val = getgenv().RFManager["Limit"][stat_key_name]
+                                    if val >= my_val then
+                                        print(string.format("Limit [%s] : %s/%d | Skip", choice.name, tostring(val), my_val))
+                                        continue
+                                    end
+                                    print(string.format("Limit [%s] : %s/%d | Pass", choice.name, tostring(val), my_val))
+                                end
                                 if choice.name == name then
                                     return choice
                                 end
@@ -265,16 +335,13 @@ AutoFarm_1:Toggle("AutoFarm", getgenv().RFManager["AutoFarm"], false, function(t
             end
 
             local function fly()
-                if fly_func then return end
-                fly_func = true
-
                 local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
                 local Root = Character:WaitForChild("HumanoidRootPart")
 
                 local startPos = Root.Position
                 local angle = 0
 
-                game:GetService("RunService").Heartbeat:Connect(function(dt)
+                local x = game:GetService("RunService").Heartbeat:Connect(function(dt)
                     if not Root or not Root.Parent then
                         return
                     end
@@ -335,9 +402,10 @@ AutoFarm_1:Toggle("AutoFarm", getgenv().RFManager["AutoFarm"], false, function(t
                         Workspace.Gravity = gravity
                     end
                 end)
+                return x
             end
 
-            function select_upgrade()
+            local function select_upgrade()
                 if Upgrades.Visible then
                     repeat task.wait() until Upgrades.RerollFrame.Visible
                     local choices = {}
@@ -371,8 +439,8 @@ AutoFarm_1:Toggle("AutoFarm", getgenv().RFManager["AutoFarm"], false, function(t
                                 local args = {
                                     "RerollUpgrade"
                                 }
-                                game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("leifstout_networker@0.3.0"):WaitForChild("networker"):WaitForChild("_remotes"):WaitForChild("GameService"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
-                                wait(3)
+                                _remotes:WaitForChild("GameService"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
+                                wait(6)
                             else
                                 selected = chooseRandomSelection(choices)
                                 if selected then
@@ -398,31 +466,59 @@ AutoFarm_1:Toggle("AutoFarm", getgenv().RFManager["AutoFarm"], false, function(t
                             end
                         end
                     end
+                    wait(3)
                 end
             end
 
             task.spawn(function()
-                fly()
-                while wait(3) do
+                local x = fly()
+                while getgenv().RFManager["AutoFarm"] do
+                    wait(1)
                     select_upgrade()
                 end
+                x:Disconnect()
             end)
 
             task.spawn(function()
                 repeat
                     task.wait(1)
-                until LocalPlayer.PlayerGui.Frames.DeathFrame.Visible
-                wait(5)
-                fireButtonClick(LocalPlayer.PlayerGui.Frames.DeathFrame.Buttons.Continue)
-                wait(5)
-                fireButtonClick(LocalPlayer.PlayerGui.Frames.RoundEnd.Buttons.Again)
+                until LocalPlayer.PlayerGui.Frames.DeathFrame.Visible or not getgenv().RFManager["AutoFarm"]
+                if getgenv().RFManager["AutoFarm"] then
+                    local webhook = func_RFM.Webhook:create(getgenv().RFManager["webhook_url"])
+                    webhook:setTitle("Reward Report")
+                    webhook:setColor(14177041)
+
+                    for name, val in pairs(Data_Stat["rewards"]) do 
+                        webhook:addField(name, tostring(val), true)
+                    end
+
+                    local function formatNumber(n)
+                        local str = tostring(math.floor(n))
+                        return str:reverse():gsub("(%d%d%d)", "%1,"):reverse():gsub("^,", "")
+                    end
+                    local damage_report = ""
+                    for name, val in pairs(Data_Stat["weaponDamage"]) do
+                        damage_report = damage_report .. name .. " : " .. tostring(formatNumber(val)) .. "\n"
+                    end
+                    webhook:setDescription(damage_report)
+                    webhook:send()
+
+                    wait(5)
+                    fireButtonClick(LocalPlayer.PlayerGui.Frames.DeathFrame.Buttons.Continue)
+                    wait(5)
+                    fireButtonClick(LocalPlayer.PlayerGui.Frames.RoundEnd.Buttons.Again)
+                end
             end)
 
             getgenv()["fly_toggle"] = true
             repeat
                 task.wait(1)
-            until workspace.Map:FindFirstChild("BossPortal") and workspace.Map.BossPortal:FindFirstChild("PortalPrompt") and workspace.Map.BossPortal.PortalPrompt.Enabled and workspace.Map.BossPortal:FindFirstChild("Portal Effect")
+            until not getgenv().RFManager["AutoFarm"] or workspace.Map:FindFirstChild("BossPortal") and workspace.Map.BossPortal:FindFirstChild("PortalPrompt") and workspace.Map.BossPortal.PortalPrompt.Enabled and workspace.Map.BossPortal:FindFirstChild("Portal Effect")
             getgenv()["fly_toggle"] = false
+
+            if not getgenv().RFManager["AutoFarm"] then 
+                return
+            end
             wait(2)
 
             local tar = workspace.Map.BossPortal:FindFirstChild("Portal Effect").Position + Vector3.new(0,5,0)
@@ -486,6 +582,22 @@ AutoFarm_1:Drop("Select Mode", getgenv().RFManager["Select_Mode"], {"Normal", "H
     func_RFM:Store()
 end, false)
 
+getgenv().RFManager["Select_Modify"] = getgenv().RFManager["Select_Modify"] or "Base"
+AutoFarm_1:Drop("Select Modify", getgenv().RFManager["Select_Modify"], modify_names, function(selected)
+    getgenv().RFManager["Select_Modify"] = selected
+    func_RFM:Store()
+end, false)
+
+
+local AutoFarm_3 = AutoFarms:newpage()
+AutoFarm_3:Label("Limit")
+for ui_name, info in pairs(stat_limit_table) do
+    AutoFarm_3:Slider(ui_name, false,false, info["min"], info["max"], getgenv().RFManager["Limit"][ui_name], 1, false, function(value)
+        getgenv().RFManager["Limit"][ui_name] = tonumber(value)
+        func_RFM:Store()
+    end)
+end
+
 
 local Functions = Window:Taps("Function")
 local Function_1 = Functions:newpage()
@@ -498,7 +610,7 @@ for chest, ssss in pairs(require(game:GetService("ReplicatedStorage").Shared.Mod
             chest,
             100
         }
-        game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("leifstout_networker@0.3.1"):WaitForChild("networker"):WaitForChild("_remotes"):WaitForChild("ChestService"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
+        _remotes:WaitForChild("ChestService"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
     end)
 end
 ssss = nil
@@ -509,14 +621,14 @@ Function_1:Button("Buy VoidChest", function()
         "VoidChest",
         100
     }
-    game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("leifstout_networker@0.3.1"):WaitForChild("networker"):WaitForChild("_remotes"):WaitForChild("ChestService"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
+    _remotes:WaitForChild("ChestService"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
     wait(1)
     local args = {
         "OpenMultipleChests",
         "VoidChest",
         100
     }
-    game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("leifstout_networker@0.3.1"):WaitForChild("networker"):WaitForChild("_remotes"):WaitForChild("ChestService"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
+    _remotes:WaitForChild("ChestService"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
 end)
 
 local Cards = Window:Taps("Cards")
@@ -656,8 +768,6 @@ for rarity, data in pairs(grouped_upgrade) do
     page_rarity_labels[rarity] = {}
 end
 
-
-
 for rarity, data in pairs(grouped_upgrade) do
     local options = {}
     for key, info in pairs(data) do
@@ -740,5 +850,13 @@ end)
 Setting_1:Drop("Select Build", "", {"Option 1", "Option 2", "Option 3"}, function(selected)
     print("Selected:", selected)
 end, false)
+
+getgenv().RFManager["webhook_url"] = getgenv().RFManager["webhook_url"] or "https://discord.com/api/webhooks/1488263521161707631/5t8aDb5GNy0HFWvygOSkCti3IB8gL_TaVwG7wEOyVIgi9ZDnEnT0E9G4Bfx03uVYqriu"
+local Setting_2 = Setting:newpage()
+Setting_2:TextBox("webhook", "url webhook discord", function(txt)
+    if string.find(txt, "https://discord.com/api/webhooks/") then 
+        getgenv().RFManager["webhook_url"] = txt
+    end
+end)
 
 getgenv().Loaded = true
