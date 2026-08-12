@@ -847,4 +847,13 @@ Setting_2:TextBox("webhook", "url webhook discord", function(txt)
     end
 end)
 
+Setting_2:Toggle("Render", getgenv().RFManager["Render"], true, function(toggle)
+    if getgenv().RFManager["Render"] ~= toggle then
+        getgenv().RFManager["Render"] = toggle
+        func_RFM:Store()
+    end
+
+    game:GetService("RunService"):Set3dRenderingEnabled(toggle)
+end)
+
 getgenv().Loaded = true
