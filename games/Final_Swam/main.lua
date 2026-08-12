@@ -441,7 +441,7 @@ AutoFarm_1:Toggle("AutoFarm", getgenv().RFManager["AutoFarm"], false, function(t
                                     "RerollUpgrade"
                                 }
                                 _remotes:WaitForChild("GameService"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
-                                wait(6)
+                                wait(3)
                             else
                                 selected = chooseRandomSelection(choices)
                                 if selected then
@@ -467,7 +467,6 @@ AutoFarm_1:Toggle("AutoFarm", getgenv().RFManager["AutoFarm"], false, function(t
                             end
                         end
                     end
-                    wait(3)
                 end
             end
 
