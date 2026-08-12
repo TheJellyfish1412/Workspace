@@ -442,6 +442,7 @@ AutoFarm_1:Toggle("AutoFarm", getgenv().RFManager["AutoFarm"], false, function(t
                                 }
                                 _remotes:WaitForChild("GameService"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
                                 wait(3)
+                                return
                             else
                                 selected = chooseRandomSelection(choices)
                                 if selected then
