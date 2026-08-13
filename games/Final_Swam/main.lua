@@ -483,7 +483,7 @@ AutoFarm_1:Toggle("AutoFarm", getgenv().RFManager["AutoFarm"], false, function(t
             task.spawn(function()
                 repeat
                     task.wait(1)
-                until LocalPlayer.PlayerGui.Frames.DeathFrame.Visible or not getgenv().RFManager["AutoFarm"]
+                until LocalPlayer.PlayerGui.Frames.DeathFrame.Visible or LocalPlayer.PlayerGui.Frames.VictoryFrame.Visible or not getgenv().RFManager["AutoFarm"]
                 if getgenv().RFManager["AutoFarm"] then
                     if getgenv().RFManager["webhook_url"] ~= "" then
                         local webhook = func_RFM.Webhook:create(getgenv().RFManager["webhook_url"])
