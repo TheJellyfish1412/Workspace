@@ -610,7 +610,15 @@ local RayfieldLibrary = {
 -- Interface Management
 
 local RayfieldAssetId = 10804731440
-local Rayfield = useStudio and script.Parent:FindFirstChild('Rayfield') or game:GetObjects("rbxassetid://"..RayfieldAssetId)[1]
+-- game:GetObjects ของ executor บางตัวพังได้ ("attempt to call a nil value") -> สำรองด้วย InsertService
+local function loadInterface(id)
+	local ok, res = pcall(function() return game:GetObjects("rbxassetid://"..id)[1] end)
+	if ok and res then return res end
+	local ok2, res2 = pcall(function() return getService("InsertService"):LoadLocalAsset("rbxassetid://"..id) end)
+	if ok2 and res2 then return res2 end
+	error("Rayfield | Failed to load interface: "..tostring(res).." / "..tostring(res2))
+end
+local Rayfield = useStudio and script.Parent:FindFirstChild('Rayfield') or loadInterface(RayfieldAssetId)
 local correctBuild = false
 local globalLoaded
 local rayfieldDestroyed = false -- True when RayfieldLibrary:Destroy() is called
