@@ -210,7 +210,7 @@ local function print_star_award()
 	print("[SoloBrutalLoop] Stars at game end: " .. table.concat(award_lines, " | "))
 end
 
-local function claim_free()
+local function claim_bots_then_free()
 	local state = session.state
 	local owner = state and state.local_owner
 	assert(owner and owner > 0, "local_owner is not assigned")
@@ -218,20 +218,53 @@ local function claim_free()
 	assert(sim, "Could not locate local Solo Sim (set_owner/o_kind/o_alive); claim step did not run")
 	local map = sim.map or state.map
 	assert(map and map.land_list and map.land_count, "Map land list is unavailable")
-	local count = 0
-	print("[SoloBrutalLoop] Claim step started")
+	local bots, bot_tiles = {}, 0
+	for id = 1, sim.owner_total do
+		if id ~= owner and sim.o_alive[id] == 1 and sim.o_kind[id] ~= 2 then
+			bots[#bots + 1] = id
+		end
+	end
+	print(string.format("[SoloBrutalLoop] Claiming AI land first (%d AI owners)", #bots))
 	for i = 0, map.land_count - 1 do
 		if not active() then break end
 		if session.local_speed ~= nil and session.local_speed ~= SOLO_SPEED then
 			session.local_speed = SOLO_SPEED
 		end
 		local tile = buffer.readi32(map.land_list, i * 4)
-		if buffer.readi32(sim.owner, tile * 4) == 0 then
+		local current = buffer.readi32(sim.owner, tile * 4)
+		if current > 0 and current ~= owner and sim.o_kind[current] ~= 2 then
 			sim:set_owner(tile, owner)
-			count += 1
+			bot_tiles += 1
 		end
 	end
-	print(string.format("[SoloBrutalLoop] Claimed %d free tiles", count))
+	print(string.format("[SoloBrutalLoop] Took %d AI tiles; waiting for elimination", bot_tiles))
+	local deadline = os.clock() + 30
+	while active() and os.clock() < deadline do
+		local remaining = false
+		for _, id in bots do
+			if sim.o_alive[id] == 1 then remaining = true break end
+		end
+		if not remaining then break end
+		task.wait(0.1)
+	end
+	local remaining = 0
+	for _, id in bots do
+		if sim.o_alive[id] == 1 then remaining += 1 end
+	end
+	if remaining > 0 then
+		error(string.format("%d AI owners remain after timeout; free land was not claimed", remaining))
+	end
+	if not active() then return end
+	local free_tiles = 0
+	for i = 0, map.land_count - 1 do
+		if not active() then break end
+		local tile = buffer.readi32(map.land_list, i * 4)
+		if buffer.readi32(sim.owner, tile * 4) == 0 then
+			sim:set_owner(tile, owner)
+			free_tiles += 1
+		end
+	end
+	print(string.format("[SoloBrutalLoop] AI eliminated; claimed %d free tiles", free_tiles))
 end
 
 task.spawn(function()
@@ -247,7 +280,7 @@ task.spawn(function()
 			if not spawn_and_wait_protection() then break end
 			if not wait_brutal_protection() then break end
 			if not active() then break end
-			claim_free()
+			claim_bots_then_free()
 			print("[SoloBrutalLoop] Waiting for game over")
 			while active() do
 				local state = session.state
