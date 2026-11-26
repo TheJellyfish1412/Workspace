@@ -645,7 +645,7 @@ Bot = load_autoplay() or { last = "autoplay.lua not loaded", list = {}, decision
 -- ===================================================================================
 -- UI
 -- ===================================================================================
-local win = create:Win("RoWorld", "11390492777")
+local win = create:Win("RoWorld", 11390492777)
 
 -- Main: single source of truth for auto play, auto join, and the selected queue mode.
 local lobby = win:Taps("Main")
@@ -675,7 +675,6 @@ lb:Toggle("Solo: play again when a match ends", cfg.RW_SoloRegame, false, functi
 	cfg.RW_SoloRegame = on
 	pcall(RFM.Store, RFM)
 end)
-local solo_farm_status = lb:Label("Solo farm: off")
 local SOLO_FARM_PATH = "RoWorld/v3/solo_brutal_claim_loop.lua"
 local function stop_solo_farm()
 	local g = getgenv()
@@ -703,7 +702,20 @@ local function start_solo_farm()
 	if not ok then return false, tostring(run_error) end
 	return true
 end
-lb:Toggle("Auto farm: Solo Brutal", cfg.RW_SoloFarm, false, function(on)
+lb:Toggle("Plan model (PC bridge picks the plans)", cfg.RW_PlanModel, false, function(on)
+	cfg.RW_PlanModel = on
+	pcall(RFM.Store, RFM)
+end)
+local ffa_status = lb:Label("Auto join: off")
+local plan_status = lb:Label("Plan model: -")
+lb:Label("Auto spawn is handled automatically by Auto Play.")
+
+-- Star: Solo Brutal farming and its result reporting.
+local star_tab = win:Taps("Star")
+local star_farm = star_tab:newpage()
+star_farm:Label("Solo Brutal")
+local solo_farm_status = star_farm:Label("Solo farm: off")
+star_farm:Toggle("Auto farm: Solo Brutal", cfg.RW_SoloFarm, false, function(on)
 	cfg.RW_SoloFarm = on
 	if on then
 		getgenv().__RW_BRUTAL_CLAIM_STOP = false
@@ -718,13 +730,24 @@ lb:Toggle("Auto farm: Solo Brutal", cfg.RW_SoloFarm, false, function(on)
 	pcall(RFM.Store, RFM)
 	set_text(solo_farm_status, cfg.RW_SoloFarm and "Solo farm: running" or "Solo farm: off")
 end)
-lb:Toggle("Plan model (PC bridge picks the plans)", cfg.RW_PlanModel, false, function(on)
-	cfg.RW_PlanModel = on
+
+local star_webhook = star_tab:newpage()
+star_webhook:Label("Stars result report")
+star_webhook:Toggle("Send Stars report to webhook", cfg.RW_SoloFarmWebhookEnabled == true, false, function(on)
+	cfg.RW_SoloFarmWebhookEnabled = on
 	pcall(RFM.Store, RFM)
 end)
-local ffa_status = lb:Label("Auto join: off")
-local plan_status = lb:Label("Plan model: -")
-lb:Label("Auto spawn is handled automatically by Auto Play.")
+star_webhook:TextBox("Stars webhook URL", "Discord webhook URL", function(value)
+	local url = tostring(value or ""):gsub("%s+$", "")
+	if url:match("^https://discord%.com/api/webhooks/") then
+		cfg.RW_SoloFarmWebhook = url
+		pcall(RFM.Store, RFM)
+		create:Notify("Solo farm", "Stars webhook saved", 4)
+	else
+		create:Notify("Solo farm", "Enter a Discord webhook URL", 4)
+	end
+end)
+star_webhook:Label("Reports use the GUI v3 Webhook module.")
 
 -- Record -------------------------------------------------------------------------------
 local rec_tab = win:Taps("Record")
@@ -791,16 +814,6 @@ end)
 -- Second page within Main: Solo speed and Auto Play tuning.
 local pc = lobby:newpage()
 pc:Label("Game and Auto Play options")
-pc:TextBox("Stars webhook URL", "Discord webhook URL", function(value)
-	local url = tostring(value or ""):gsub("%s+$", "")
-	if url:match("^https://discord%.com/api/webhooks/") then
-		cfg.RW_SoloFarmWebhook = url
-		pcall(RFM.Store, RFM)
-		create:Notify("Solo farm", "Stars webhook saved", 4)
-	else
-		create:Notify("Solo farm", "Enter a Discord webhook URL", 4)
-	end
-end)
 local play_status = pc:Label("Auto play: off")
 local play_detail = pc:Label("-")
 pc:Toggle("Accelerate game in Solo", cfg.RW_SoloSpeed, false, function(on)
@@ -1077,6 +1090,7 @@ getgenv().RoWorld = {
 	event = function(tag, tick, data) pcall(on_event, tag, tick, data) end,   -- autoplay: ledger / macros
 	save_settings = function() return pcall(RFM.Store, RFM) end,
 	webhook = function(url)
+		if not cfg.RW_SoloFarmWebhookEnabled then return nil end
 		local target = type(url) == "string" and url or cfg.RW_SoloFarmWebhook
 		if type(target) ~= "string" or target == "" then return nil end
 		return RFM.Webhook:create(target)
